@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.13'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id 'com.diffplug.spotless' version '6.19.0'
 }
 
 group = 'kr.co.finote'
@@ -34,4 +35,34 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+spotless {
+	java {
+		// import 순서 정의
+		importOrder(
+				"java",
+				"javax",
+				"lombok",
+				"org.springframework",
+				"",
+				"\\#",
+				"org.junit",
+				"\\#org.junit",
+				"com.guide",
+				"\\#com.guide"
+		)
+		// 사용하지 않는 import 제거
+		removeUnusedImports()
+
+		// 구글 자바 포맷 적용
+		googleJavaFormat()
+
+		// 들여쓰기
+		indentWithTabs(2)
+		indentWithSpaces(4)
+
+		// 공백 제거
+		trimTrailingWhitespace()
+	}
 }
