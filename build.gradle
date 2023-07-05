@@ -35,7 +35,6 @@ dependencies {
 	runtimeOnly 'org.postgresql:postgresql'
 
 	//For test
-	runtimeOnly 'com.mysql:mysql-connector-j'
 	implementation 'org.springframework.boot:spring-boot-starter-mustache'
 }
 

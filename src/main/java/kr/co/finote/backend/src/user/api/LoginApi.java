@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequiredArgsConstructor
-public class LoginController {
+public class LoginApi {
 
     private final UserRepository userRepository;
 

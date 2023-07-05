@@ -1,10 +1,8 @@
 package kr.co.finote.backend.src.user.domain;
 
 import java.sql.Timestamp;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+
 import kr.co.finote.backend.global.entity.BaseEntity;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +12,7 @@ import org.hibernate.annotations.CreationTimestamp;
 @Entity
 @Data
 @NoArgsConstructor
+@Table(name = "USERS")
 public class User extends BaseEntity {
 
     @Id
