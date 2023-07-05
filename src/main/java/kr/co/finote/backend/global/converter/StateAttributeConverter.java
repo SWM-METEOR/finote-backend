@@ -1,10 +1,8 @@
 package kr.co.finote.backend.global.converter;
 
-import kr.co.finote.backend.global.entity.BaseEntity;
-import kr.co.finote.backend.global.entity.State;
-
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
+import kr.co.finote.backend.global.entity.State;
 
 @Converter
 public class StateAttributeConverter implements AttributeConverter<State, Integer> {
@@ -18,7 +16,6 @@ public class StateAttributeConverter implements AttributeConverter<State, Intege
             databaseData = 0;
         }
         return databaseData;
-
     }
 
     @Override

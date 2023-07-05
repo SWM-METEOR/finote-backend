@@ -1,13 +1,12 @@
 package kr.co.finote.backend.global.authentication;
 
+import java.util.Collection;
+import java.util.Map;
 import kr.co.finote.backend.src.user.domain.User;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-
-import java.util.Collection;
-import java.util.Map;
 
 @Data
 public class PrincipalDetails implements UserDetails, OAuth2User {
