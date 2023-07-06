@@ -1,5 +1,6 @@
 package kr.co.finote.backend.global.authentication.oauth;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import kr.co.finote.backend.global.authentication.PrincipalDetails;
 import kr.co.finote.backend.src.user.domain.User;
@@ -38,10 +39,13 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
                             .email(email)
                             .provider(provider)
                             .providerId(providerId)
+                            .lastLoginDate(LocalDateTime.now())
                             .build();
             userRepository.save(userEntity);
         } else {
             userEntity = findUser.get();
+            userEntity.setLastLoginDate(LocalDateTime.now());
+            userRepository.save(userEntity);
         }
 
         return new PrincipalDetails(userEntity, oAuth2User.getAttributes());
