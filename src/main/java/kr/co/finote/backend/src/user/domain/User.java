@@ -1,13 +1,12 @@
 package kr.co.finote.backend.src.user.domain;
 
-import java.sql.Timestamp;
-import javax.persistence.*;
-
 import kr.co.finote.backend.global.entity.BaseEntity;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -27,6 +26,8 @@ public class User extends BaseEntity {
     private String provider;
     private String providerId;
 
+    private LocalDateTime lastLoginDate;
+
     @Builder
     public User(
             String username,
@@ -34,12 +35,14 @@ public class User extends BaseEntity {
             String email,
             String role,
             String provider,
-            String providerId) {
+            String providerId,
+            LocalDateTime lastLoginDate) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.role = role;
         this.provider = provider;
         this.providerId = providerId;
+        this.lastLoginDate = lastLoginDate;
     }
 }
