@@ -1,12 +1,11 @@
 package kr.co.finote.backend.src.user.domain;
 
+import java.time.LocalDateTime;
+import javax.persistence.*;
 import kr.co.finote.backend.global.entity.BaseEntity;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Data
