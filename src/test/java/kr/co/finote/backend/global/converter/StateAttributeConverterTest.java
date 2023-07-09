@@ -1,9 +1,9 @@
 package kr.co.finote.backend.global.converter;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import kr.co.finote.backend.global.entity.State;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class StateAttributeConverterTest {
 
