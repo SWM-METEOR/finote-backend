@@ -34,13 +34,13 @@ public class LoginService {
     public GoogleAccessTokenDto getGoogleAccessToken(String code) {
         Map<String, String> params = new HashMap<>();
         params.put("code", code);
-        params.put("client_id", googleOauth.getGOOGLE_CLIENT_ID());
-        params.put("client_secret", googleOauth.getGOOGLE_CLIENT_SECRET());
-        params.put("redirect_uri", googleOauth.getGOOGLE_CALLBACK_URL());
+        params.put("client_id", googleOauth.getGoogleClientId());
+        params.put("client_secret", googleOauth.getGoogleClientSecret());
+        params.put("redirect_uri", googleOauth.getGoogleCallbackUrl());
         params.put("grant_type", "authorization_code");
 
         ResponseEntity<String> responseEntity =
-                restTemplate.postForEntity(googleOauth.getGOOGLE_TOKEN_URL(), params, String.class);
+                restTemplate.postForEntity(googleOauth.getGoogleTokenUrl(), params, String.class);
 
         String accessToken = responseEntity.getBody();
         log.info(accessToken);
@@ -57,12 +57,12 @@ public class LoginService {
 
     public GoogleOauthUserInfoDto getGoogleUserInfo(GoogleAccessTokenDto googleAccessTokenDto) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + googleAccessTokenDto.getAccess_token());
+        headers.add("Authorization", "Bearer " + googleAccessTokenDto.getAccessToken());
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
         ResponseEntity<String> response =
                 restTemplate.exchange(
-                        googleOauth.getGOOGLE_USERINFO_URL(), HttpMethod.GET, request, String.class);
+                        googleOauth.getGoogleUserInfoUrl(), HttpMethod.GET, request, String.class);
 
         String userInfo = response.getBody();
         log.info(userInfo);
@@ -70,9 +70,7 @@ public class LoginService {
         ObjectMapper objectMapper = new ObjectMapper();
         GoogleOauthUserInfoDto googleOauthUserInfoDto = null;
         try {
-            log.info("start");
             googleOauthUserInfoDto = objectMapper.readValue(userInfo, GoogleOauthUserInfoDto.class);
-            log.info("end");
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

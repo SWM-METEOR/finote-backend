@@ -1,5 +1,6 @@
 package kr.co.finote.backend.global.authentication.oauth.google;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,12 +8,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class GoogleLoginResponseDto {
-    private String access_token;
-    private String refresh_token;
+
+    private String accessToken;
+    private String refreshToken;
 
     @Builder
-    public GoogleLoginResponseDto(String access_token, String refresh_token) {
-        this.access_token = access_token;
-        this.refresh_token = refresh_token;
+    public GoogleLoginResponseDto(String accessToken, String refreshToken) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
     }
 }

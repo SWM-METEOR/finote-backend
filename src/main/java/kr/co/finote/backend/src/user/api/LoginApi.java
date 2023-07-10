@@ -21,12 +21,6 @@ public class LoginApi {
     private final GoogleOauth googleOauth;
     private final LoginService loginService;
 
-    @GetMapping("/")
-    public String index() {
-        log.info("[index]");
-        return "index";
-    }
-
     // TODO : Front에서 Access Token을 위한 코드 발급 완성 시 삭제
     @GetMapping("/login-google")
     public void loginGoogle(HttpServletResponse response) {
@@ -52,22 +46,11 @@ public class LoginApi {
         // TODO : ResponseDTO 반환
         GoogleLoginResponseDto response =
                 GoogleLoginResponseDto.builder()
-                        .access_token(googleAccessToken.getAccess_token())
-                        .refresh_token(googleAccessToken.getRefresh_token())
+                        .accessToken(googleAccessToken.getAccessToken())
+                        .refreshToken(googleAccessToken.getRefreshToken())
                         .build();
-        log.info(response.getAccess_token());
-        log.info(response.getRefresh_token());
 
         return response;
     }
 
-    @GetMapping("/test/custom")
-    public void test() {
-        //        throw new CustomException(ResponseCode.TEST_ERROR);
-    }
-
-    @GetMapping("/test/ex")
-    public void testEx() throws Exception {
-        throw new Exception();
-    }
 }

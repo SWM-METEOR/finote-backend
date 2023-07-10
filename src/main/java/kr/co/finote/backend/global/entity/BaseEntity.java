@@ -18,5 +18,6 @@ public class BaseEntity {
 
     @LastModifiedDate private LocalDateTime lastModifiedDate;
 
-    protected State is_deleted = State.FALSE;
+    @Enumerated(EnumType.STRING)
+    protected State isDeleted = State.FALSE;
 }

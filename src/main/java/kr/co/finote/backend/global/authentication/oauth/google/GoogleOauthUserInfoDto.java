@@ -1,5 +1,6 @@
 package kr.co.finote.backend.global.authentication.oauth.google;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,10 +14,13 @@ public class GoogleOauthUserInfoDto {
 
     private String id;
     private String email;
-    private Boolean verified_email;
+    @JsonProperty("verified_email")
+    private Boolean verifiedEmail;
     private String name;
-    private String given_name;
-    private String family_name;
+    @JsonProperty("given_name")
+    private String givenName;
+    @JsonProperty("family_name")
+    private String familyName;
     private String picture;
     private String locale;
 }

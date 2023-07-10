@@ -24,7 +24,8 @@ public class User extends BaseEntity {
     private String provider;
     private String providerId;
 
-    private Enum role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     private LocalDateTime lastLoginDate;
 
@@ -35,7 +36,7 @@ public class User extends BaseEntity {
             String email,
             String provider,
             String providerId,
-            Enum role,
+            Role role,
             LocalDateTime lastLoginDate) {
         this.username = username;
         this.password = password;
