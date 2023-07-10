@@ -1,5 +1,7 @@
 package kr.co.finote.backend.src.user.api;
 
+import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
 import kr.co.finote.backend.global.authentication.oauth.google.GoogleAccessTokenDto;
 import kr.co.finote.backend.global.authentication.oauth.google.GoogleLoginResponseDto;
 import kr.co.finote.backend.global.authentication.oauth.google.GoogleOauth;
@@ -10,9 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,7 +27,7 @@ public class LoginApi {
         return "index";
     }
 
-    //TODO : Front에서 Access Token을 위한 코드 발급 완성 시 삭제
+    // TODO : Front에서 Access Token을 위한 코드 발급 완성 시 삭제
     @GetMapping("/login-google")
     public void loginGoogle(HttpServletResponse response) {
         log.info("/login-google");
@@ -47,14 +46,15 @@ public class LoginApi {
         GoogleAccessTokenDto googleAccessToken = loginService.getGoogleAccessToken(code);
         GoogleOauthUserInfoDto GoogleOauthUserInfo = loginService.getGoogleUserInfo(googleAccessToken);
 
-        //TODO : userinfo를 가지고 repository 접근해서 최초 로그인과 이미 존재하는 회원 구분
+        // TODO : userinfo를 가지고 repository 접근해서 최초 로그인과 이미 존재하는 회원 구분
         loginService.saveUser(GoogleOauthUserInfo);
 
-        //TODO : ResponseDTO 반환
-        GoogleLoginResponseDto response = GoogleLoginResponseDto.builder()
-                .access_token(googleAccessToken.getAccess_token())
-                .refresh_token(googleAccessToken.getRefresh_token())
-                .build();
+        // TODO : ResponseDTO 반환
+        GoogleLoginResponseDto response =
+                GoogleLoginResponseDto.builder()
+                        .access_token(googleAccessToken.getAccess_token())
+                        .refresh_token(googleAccessToken.getRefresh_token())
+                        .build();
         log.info(response.getAccess_token());
         log.info(response.getRefresh_token());
 
@@ -63,7 +63,7 @@ public class LoginApi {
 
     @GetMapping("/test/custom")
     public void test() {
-//        throw new CustomException(ResponseCode.TEST_ERROR);
+        //        throw new CustomException(ResponseCode.TEST_ERROR);
     }
 
     @GetMapping("/test/ex")

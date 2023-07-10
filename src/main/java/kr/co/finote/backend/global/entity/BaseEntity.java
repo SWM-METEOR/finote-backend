@@ -2,7 +2,6 @@ package kr.co.finote.backend.global.entity;
 
 import java.time.LocalDateTime;
 import javax.persistence.*;
-
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;

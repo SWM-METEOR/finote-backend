@@ -4,7 +4,7 @@ import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 import kr.co.finote.backend.global.entity.State;
 
-//TODO : State가 @Enumerate(EnumType.STRING)이 됨에 따라 필요하지 않을 때 삭제
+// TODO : State가 @Enumerate(EnumType.STRING)이 됨에 따라 필요하지 않을 때 삭제
 @Converter
 public class StateAttributeConverter implements AttributeConverter<State, Integer> {
 

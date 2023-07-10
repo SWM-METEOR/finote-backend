@@ -1,13 +1,12 @@
 package kr.co.finote.backend.global.authentication.oauth.google;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -41,9 +40,10 @@ public class GoogleOauth {
         params.put("client_id", GOOGLE_CLIENT_ID);
         params.put("redirect_uri", GOOGLE_CALLBACK_URL);
 
-        String parameterString = params.entrySet().stream()
-                .map(x -> x.getKey() + "=" + x.getValue())
-                .collect(Collectors.joining("&"));
+        String parameterString =
+                params.entrySet().stream()
+                        .map(x -> x.getKey() + "=" + x.getValue())
+                        .collect(Collectors.joining("&"));
 
         String redirectURL = GOOGLE_BASE_URL + "?" + parameterString;
         log.info(redirectURL);
