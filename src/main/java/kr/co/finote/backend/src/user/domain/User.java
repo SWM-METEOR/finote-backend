@@ -20,10 +20,12 @@ public class User extends BaseEntity {
     private String username;
     private String password;
     private String email;
-    private String role;
 
     private String provider;
     private String providerId;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     private LocalDateTime lastLoginDate;
 
@@ -32,16 +34,16 @@ public class User extends BaseEntity {
             String username,
             String password,
             String email,
-            String role,
             String provider,
             String providerId,
+            Role role,
             LocalDateTime lastLoginDate) {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.role = role;
         this.provider = provider;
         this.providerId = providerId;
+        this.role = role;
         this.lastLoginDate = lastLoginDate;
     }
 }
