@@ -52,5 +52,4 @@ public class LoginApi {
 
         return response;
     }
-
 }
