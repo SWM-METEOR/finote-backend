@@ -1,9 +1,8 @@
 package kr.co.finote.backend.global.entity;
 
 import java.time.LocalDateTime;
-import javax.persistence.Column;
-import javax.persistence.EntityListeners;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
+
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -20,5 +19,5 @@ public class BaseEntity {
 
     @LastModifiedDate private LocalDateTime lastModifiedDate;
 
-    protected State mark = State.ACTIVE;
+    protected State is_deleted = State.FALSE;
 }

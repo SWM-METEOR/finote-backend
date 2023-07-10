@@ -8,6 +8,8 @@ server:
       force: true
 
 spring:
+  profiles:
+    active: local
   mvc:
     view:
       prefix: /templates/
@@ -33,8 +35,12 @@ spring:
       client:
         registration:
           google:
+            url: ${GOOGLE_BASE_URL}
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
+            redirect-uri: ${GOOGLE_CALLBACK_URL}
+            token-uri: ${GOOGLE_TOKEN_URL}
+            userinfo-request-uri: ${GOOGLE_USERINFO_URL}
             scope:
-              - email
               - profile
+              - email

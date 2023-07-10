@@ -24,7 +24,6 @@ public class SecurityConfig {
                 .permitAll()
                 .and()
                 .oauth2Login()
-                .loginPage("/loginForm")
                 .userInfoEndpoint()
                 .userService(principalOauth2UserService);
 
