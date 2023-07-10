@@ -2,6 +2,10 @@ package kr.co.finote.backend.src.user.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import kr.co.finote.backend.global.authentication.oauth.google.GoogleAccessTokenDto;
 import kr.co.finote.backend.global.authentication.oauth.google.GoogleOauth;
 import kr.co.finote.backend.global.authentication.oauth.google.GoogleOauthUserInfoDto;
@@ -17,11 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -62,7 +61,8 @@ public class LoginService {
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
         ResponseEntity<String> response =
-                restTemplate.exchange(googleOauth.getGOOGLE_USERINFO_URL(), HttpMethod.GET, request, String.class);
+                restTemplate.exchange(
+                        googleOauth.getGOOGLE_USERINFO_URL(), HttpMethod.GET, request, String.class);
 
         String userInfo = response.getBody();
         log.info(userInfo);
@@ -87,16 +87,17 @@ public class LoginService {
             User user = findUser.get();
             user.setLastLoginDate(LocalDateTime.now());
             userRepository.save(user);
-        }else{
+        } else {
             log.info("not present");
-            User user = User.builder()
-                    .username(userInfo.getName())
-                    .email(userInfo.getEmail())
-                    .provider("Google")
-                    .providerId(userInfo.getId())
-                    .role(Role.USER)
-                    .lastLoginDate(LocalDateTime.now())
-                    .build();
+            User user =
+                    User.builder()
+                            .username(userInfo.getName())
+                            .email(userInfo.getEmail())
+                            .provider("Google")
+                            .providerId(userInfo.getId())
+                            .role(Role.USER)
+                            .lastLoginDate(LocalDateTime.now())
+                            .build();
             userRepository.save(user);
         }
     }
