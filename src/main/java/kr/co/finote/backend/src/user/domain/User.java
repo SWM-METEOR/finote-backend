@@ -3,6 +3,7 @@ package kr.co.finote.backend.src.user.domain;
 import java.time.LocalDateTime;
 import javax.persistence.*;
 import kr.co.finote.backend.global.entity.BaseEntity;
+import kr.co.finote.backend.src.blog.domain.Blog;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,6 +30,12 @@ public class User extends BaseEntity {
 
     private LocalDateTime lastLoginDate;
 
+    private String nickName;
+    private String profileImageUrl;
+
+    @OneToOne(mappedBy = "user")
+    private Blog blog;
+
     @Builder
     public User(
             String username,
@@ -37,7 +44,9 @@ public class User extends BaseEntity {
             String provider,
             String providerId,
             Role role,
-            LocalDateTime lastLoginDate) {
+            LocalDateTime lastLoginDate,
+            String nickName,
+            String profileImageUrl) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -45,5 +54,7 @@ public class User extends BaseEntity {
         this.providerId = providerId;
         this.role = role;
         this.lastLoginDate = lastLoginDate;
+        this.nickName = nickName;
+        this.profileImageUrl = profileImageUrl;
     }
 }
