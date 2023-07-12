@@ -82,7 +82,7 @@ public class LoginService {
         return googleOauthUserInfoDto;
     }
 
-    public void saveUser(GoogleOauthUserInfoDto userInfo) {
+    public Boolean saveUser(GoogleOauthUserInfoDto userInfo) {
         Optional<User> findUser = Optional.ofNullable(userRepository.findByEmail(userInfo.getEmail()));
 
         if (findUser.isPresent()) {
@@ -90,6 +90,7 @@ public class LoginService {
             User user = findUser.get();
             user.setLastLoginDate(LocalDateTime.now());
             userRepository.save(user);
+            return false;
         } else {
             log.info("not present");
             User user =
@@ -112,6 +113,7 @@ public class LoginService {
                     .url(user.getUsername()+"/"+user.getNickName())
                     .build();
             blogRepository.save(blog);
+            return true;
         }
     }
 }

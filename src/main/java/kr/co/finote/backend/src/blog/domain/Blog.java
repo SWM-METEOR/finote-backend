@@ -3,10 +3,14 @@ package kr.co.finote.backend.src.blog.domain;
 import kr.co.finote.backend.global.entity.BaseEntity;
 import kr.co.finote.backend.src.user.domain.User;
 import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
+@Data
+@NoArgsConstructor
 public class Blog extends BaseEntity {
 
     @Id

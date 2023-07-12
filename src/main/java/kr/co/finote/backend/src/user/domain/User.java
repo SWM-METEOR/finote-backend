@@ -33,9 +33,6 @@ public class User extends BaseEntity {
     private String nickName;
     private String profileImageUrl;
 
-    @OneToOne(mappedBy = "user")
-    private Blog blog;
-
     @Builder
     public User(
             String username,
