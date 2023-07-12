@@ -3,7 +3,6 @@ package kr.co.finote.backend.src.user.domain;
 import java.time.LocalDateTime;
 import javax.persistence.*;
 import kr.co.finote.backend.global.entity.BaseEntity;
-import kr.co.finote.backend.src.blog.domain.Blog;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;

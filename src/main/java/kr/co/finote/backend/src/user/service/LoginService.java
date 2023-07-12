@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-
 import kr.co.finote.backend.global.authentication.oauth.google.GoogleAccessTokenDto;
 import kr.co.finote.backend.global.authentication.oauth.google.GoogleOauth;
 import kr.co.finote.backend.global.authentication.oauth.google.GoogleOauthUserInfoDto;
@@ -106,12 +105,13 @@ public class LoginService {
                             .build();
             userRepository.save(user);
 
-            Blog blog = Blog.builder()
-                    .user(user)
-                    .name(user.getNickName())
-                    //TODO : 배포 후 + 실제 블로그 URL 전략 결정 후 수정
-                    .url(user.getUsername()+"/"+user.getNickName())
-                    .build();
+            Blog blog =
+                    Blog.builder()
+                            .user(user)
+                            .name(user.getNickName())
+                            // TODO : 배포 후 + 실제 블로그 URL 전략 결정 후 수정
+                            .url(user.getUsername() + "/" + user.getNickName())
+                            .build();
             blogRepository.save(blog);
             return true;
         }

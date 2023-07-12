@@ -12,11 +12,8 @@ public class GoogleLoginResponseDto {
     private String refreshToken;
     private Boolean newUser;
 
-
     @Builder
-    public GoogleLoginResponseDto(String accessToken,
-                                  String refreshToken,
-                                  Boolean newUser) {
+    public GoogleLoginResponseDto(String accessToken, String refreshToken, Boolean newUser) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.newUser = newUser;

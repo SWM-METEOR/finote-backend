@@ -1,12 +1,11 @@
 package kr.co.finote.backend.src.blog.domain;
 
+import javax.persistence.*;
 import kr.co.finote.backend.global.entity.BaseEntity;
 import kr.co.finote.backend.src.user.domain.User;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @Entity
 @Data
@@ -25,12 +24,9 @@ public class Blog extends BaseEntity {
     private String url;
 
     @Builder
-    public Blog(User user,
-                String name,
-                String url) {
+    public Blog(User user, String name, String url) {
         this.user = user;
         this.name = name;
         this.url = url;
     }
-
 }
