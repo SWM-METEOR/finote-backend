@@ -29,6 +29,9 @@ public class User extends BaseEntity {
 
     private LocalDateTime lastLoginDate;
 
+    private String nickName;
+    private String profileImageUrl;
+
     @Builder
     public User(
             String username,
@@ -37,7 +40,9 @@ public class User extends BaseEntity {
             String provider,
             String providerId,
             Role role,
-            LocalDateTime lastLoginDate) {
+            LocalDateTime lastLoginDate,
+            String nickName,
+            String profileImageUrl) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -45,5 +50,7 @@ public class User extends BaseEntity {
         this.providerId = providerId;
         this.role = role;
         this.lastLoginDate = lastLoginDate;
+        this.nickName = nickName;
+        this.profileImageUrl = profileImageUrl;
     }
 }
