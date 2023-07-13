@@ -15,10 +15,11 @@ public enum ResponseCode {
     /** error */
     INTERNAL_ERROR(INTERNAL_SERVER_ERROR, "500_INTERNAL_SERVER_ERROR", "서버 내부에 오류가 발생했습니다."),
 
-    /** custom error code */
-    TEST_ERROR(BAD_REQUEST, "400_BAD_REQUEST", "잘못된 요청입니다.");
+    INVALID_INPUT_VALUE(BAD_REQUEST, "400_BAD_REQUEST", "입력값이 올바르지 않습니다.");
 
+    /** custom error code */
     private final HttpStatus status;
+
     private final String code;
     private final String message;
 }

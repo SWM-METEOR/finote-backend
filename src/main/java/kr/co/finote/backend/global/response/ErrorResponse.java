@@ -1,5 +1,6 @@
 package kr.co.finote.backend.global.response;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,14 @@ public class ErrorResponse {
     private int status;
     private String code;
     private String message;
-    // TODO field error 처리
+    private List<DetailError> detail;
 
+    @Setter
+    @Getter
+    @AllArgsConstructor
+    public static class DetailError {
+        private String field;
+        private String value;
+        private String reason;
+    }
 }
