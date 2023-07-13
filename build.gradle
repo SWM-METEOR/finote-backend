@@ -34,6 +34,8 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	runtimeOnly 'org.postgresql:postgresql'
+
+	implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
 }
 
 tasks.named('test') {
@@ -67,5 +69,8 @@ spotless {
 
 		// 공백 제거
 		trimTrailingWhitespace()
+
+		// 끝 부분 new line 처리
+		endWithNewline()
 	}
 }
