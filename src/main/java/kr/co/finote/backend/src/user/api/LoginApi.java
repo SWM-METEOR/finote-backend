@@ -35,7 +35,8 @@ public class LoginApi {
         }
     }
 
-    @GetMapping("/auth/google")
+
+    @GetMapping("/auth/google/")
     public GoogleLoginResponseDto auth(@RequestParam String code) {
         log.info("Code from Google social Login API {}", code);
 
@@ -43,13 +44,14 @@ public class LoginApi {
         GoogleOauthUserInfoDto GoogleOauthUserInfo = loginService.getGoogleUserInfo(googleAccessToken);
 
         // TODO : userinfo를 가지고 repository 접근해서 최초 로그인과 이미 존재하는 회원 구분
-        loginService.saveUser(GoogleOauthUserInfo);
+        Boolean newUser = loginService.saveUser(GoogleOauthUserInfo);
 
         // TODO : ResponseDTO 반환
         GoogleLoginResponseDto response =
                 GoogleLoginResponseDto.builder()
                         .accessToken(googleAccessToken.getAccessToken())
                         .refreshToken(googleAccessToken.getRefreshToken())
+                        .newUser(newUser)
                         .build();
 
         return response;
