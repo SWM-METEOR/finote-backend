@@ -22,7 +22,7 @@ public class ErrorResponse {
     @AllArgsConstructor
     public static class DetailError {
         private String field;
-        private String value;
+        private String rejectedValue;
         private String reason;
     }
 }
