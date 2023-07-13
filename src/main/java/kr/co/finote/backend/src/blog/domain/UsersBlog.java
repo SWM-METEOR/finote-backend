@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @NoArgsConstructor
-public class Blog extends BaseEntity {
+public class UsersBlog extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +24,7 @@ public class Blog extends BaseEntity {
     private String url;
 
     @Builder
-    public Blog(User user, String name, String url) {
+    public UsersBlog(User user, String name, String url) {
         this.user = user;
         this.name = name;
         this.url = url;

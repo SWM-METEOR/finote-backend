@@ -7,11 +7,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import javax.transaction.Transactional;
 import kr.co.finote.backend.global.authentication.oauth.google.GoogleAccessTokenDto;
 import kr.co.finote.backend.global.authentication.oauth.google.GoogleOauth;
 import kr.co.finote.backend.global.authentication.oauth.google.GoogleOauthUserInfoDto;
-import kr.co.finote.backend.src.blog.domain.Blog;
-import kr.co.finote.backend.src.blog.repository.BlogRepository;
+import kr.co.finote.backend.src.blog.domain.UsersBlog;
+import kr.co.finote.backend.src.blog.repository.UsersBlogRepository;
 import kr.co.finote.backend.src.user.domain.Role;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.repository.UserRepository;
@@ -33,7 +34,7 @@ public class LoginService {
     private final GoogleOauth googleOauth;
     private final RestTemplate restTemplate;
     private final UserRepository userRepository;
-    private final BlogRepository blogRepository;
+    private final UsersBlogRepository usersBlogRepository;
 
     public GoogleAccessTokenDto getGoogleAccessToken(String code) {
         Map<String, String> params = new HashMap<>();
@@ -47,7 +48,6 @@ public class LoginService {
                 restTemplate.postForEntity(googleOauth.getGoogleTokenUrl(), params, String.class);
 
         String accessToken = responseEntity.getBody();
-        log.info(accessToken);
 
         ObjectMapper objectMapper = new ObjectMapper();
         GoogleAccessTokenDto googleAccessTokenDto = null;
@@ -69,7 +69,6 @@ public class LoginService {
                         googleOauth.getGoogleUserInfoUrl(), HttpMethod.GET, request, String.class);
 
         String userInfo = response.getBody();
-        log.info(userInfo);
 
         ObjectMapper objectMapper = new ObjectMapper();
         GoogleOauthUserInfoDto googleOauthUserInfoDto = null;
@@ -81,6 +80,7 @@ public class LoginService {
         return googleOauthUserInfoDto;
     }
 
+    @Transactional
     public Boolean saveUser(GoogleOauthUserInfoDto userInfo) {
         Optional<User> findUser = Optional.ofNullable(userRepository.findByEmail(userInfo.getEmail()));
 
@@ -88,7 +88,6 @@ public class LoginService {
             log.info("present");
             User user = findUser.get();
             user.setLastLoginDate(LocalDateTime.now());
-            userRepository.save(user);
             return false;
         } else {
             log.info("not present");
@@ -105,14 +104,14 @@ public class LoginService {
                             .build();
             userRepository.save(user);
 
-            Blog blog =
-                    Blog.builder()
+            UsersBlog usersBlog =
+                    UsersBlog.builder()
                             .user(user)
                             .name(user.getNickName())
                             // TODO : 배포 후 + 실제 블로그 URL 전략 결정 후 수정
                             .url(user.getUsername() + "/" + user.getNickName())
                             .build();
-            blogRepository.save(blog);
+            usersBlogRepository.save(usersBlog);
             return true;
         }
     }

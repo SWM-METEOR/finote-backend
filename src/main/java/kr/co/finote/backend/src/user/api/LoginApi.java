@@ -34,7 +34,7 @@ public class LoginApi {
     }
 
     // TODO : 배포 후 URL 매핑 변경
-    @GetMapping("/login/oauth2/code/google/")
+    @GetMapping("/auth/google/")
     public GoogleLoginResponseDto auth(@RequestParam String code) {
         log.info("Code from Google social Login API {}", code);
 
