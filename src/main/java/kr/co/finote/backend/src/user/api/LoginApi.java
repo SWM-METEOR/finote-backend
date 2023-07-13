@@ -35,7 +35,6 @@ public class LoginApi {
         }
     }
 
-
     @GetMapping("/auth/google/")
     public GoogleLoginResponseDto auth(@RequestParam String code) {
         log.info("Code from Google social Login API {}", code);
