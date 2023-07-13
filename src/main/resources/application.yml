@@ -44,3 +44,12 @@ spring:
             scope:
               - profile
               - email
+
+springdoc:
+  swagger-ui:
+    path: /finote-api-docs
+    disable-swagger-default-url: true
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /api-docs
