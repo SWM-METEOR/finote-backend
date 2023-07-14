@@ -13,6 +13,7 @@ import kr.co.finote.backend.src.blog.domain.UsersBlog;
 import kr.co.finote.backend.src.blog.repository.UsersBlogRepository;
 import kr.co.finote.backend.src.user.domain.Role;
 import kr.co.finote.backend.src.user.domain.User;
+import kr.co.finote.backend.src.user.dto.SaveUserResponse;
 import kr.co.finote.backend.src.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -82,13 +83,13 @@ public class LoginService {
     }
 
     @Transactional
-    public Boolean saveUser(GoogleOauthUserInfoResponse userInfo) {
+    public SaveUserResponse saveUser(GoogleOauthUserInfoResponse userInfo) {
         Optional<User> findUser = Optional.ofNullable(userRepository.findByEmail(userInfo.getEmail()));
 
         if (findUser.isPresent()) {
             User user = findUser.get();
             user.setLastLoginDate(LocalDateTime.now());
-            return false;
+            return new SaveUserResponse(user, false);
         } else {
             // 중복 nickname이 없을 때까지 랜덤 nickname 생성
             String randomNickname = StringUtils.makeRandomString();
@@ -118,7 +119,7 @@ public class LoginService {
                             .url(user.getUsername() + "/" + user.getNickname())
                             .build();
             usersBlogRepository.save(usersBlog);
-            return true;
+            return new SaveUserResponse(user, true);
         }
     }
 }
