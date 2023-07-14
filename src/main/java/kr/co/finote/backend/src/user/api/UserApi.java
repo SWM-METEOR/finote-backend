@@ -21,13 +21,13 @@ public class UserApi {
     private final UserService userService;
 
     @PostMapping(value = "/validation/nickname", consumes = APPLICATION_JSON_VALUE)
-    public Map<String, String> validateNickname(@RequestBody Map<String, String> requestData) {
+    public Map<String, Boolean> validateNickname(@RequestBody Map<String, String> requestData) {
         String nickname = requestData.get("nickname");
 
         boolean isDuplicated = userService.duplicateNickname(nickname);
 
-        Map<String, String> map = new HashMap<>();
-        map.put("isDuplicated", Boolean.toString(isDuplicated));
+        Map<String, Boolean> map = new HashMap<>();
+        map.put("isDuplicated", isDuplicated);
         return map;
     }
 }

@@ -21,24 +21,24 @@ public class UsersBlogApi {
     private final UsersBlogService usersBlogService;
 
     @PostMapping(value = "/validation/blog-name", consumes = APPLICATION_JSON_VALUE)
-    public Map<String, String> validateBlogName(@RequestBody Map<String, String> requestData) {
+    public Map<String, Boolean> validateBlogName(@RequestBody Map<String, String> requestData) {
         String blogName = requestData.get("blogName");
 
         boolean isDuplicated = usersBlogService.duplicateBlogName(blogName);
 
-        Map<String, String> map = new HashMap<>();
-        map.put("isDuplicated", Boolean.toString(isDuplicated));
+        Map<String, Boolean> map = new HashMap<>();
+        map.put("isDuplicated", isDuplicated);
         return map;
     }
 
     @PostMapping(value = "/validation/blog-url", consumes = APPLICATION_JSON_VALUE)
-    public Map<String, String> validateBlogUrl(@RequestBody Map<String, String> requestData) {
+    public Map<String, Boolean> validateBlogUrl(@RequestBody Map<String, String> requestData) {
         String blogUrl = requestData.get("blogUrl");
 
         boolean isDuplicated = usersBlogService.duplicateBlogUrl(blogUrl);
 
-        Map<String, String> map = new HashMap<>();
-        map.put("isDuplicated", Boolean.toString(isDuplicated));
+        Map<String, Boolean> map = new HashMap<>();
+        map.put("isDuplicated", isDuplicated);
         return map;
     }
 }
