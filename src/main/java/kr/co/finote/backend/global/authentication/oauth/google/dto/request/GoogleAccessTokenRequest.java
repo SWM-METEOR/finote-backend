@@ -1,4 +1,4 @@
-package kr.co.finote.backend.global.authentication.oauth.google;
+package kr.co.finote.backend.global.authentication.oauth.google.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-public class GoogleAccessTokenDto {
+public class GoogleAccessTokenRequest {
 
     @JsonProperty("access_token")
     private String accessToken;

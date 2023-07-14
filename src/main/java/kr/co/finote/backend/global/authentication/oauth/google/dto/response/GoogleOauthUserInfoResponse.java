@@ -1,4 +1,4 @@
-package kr.co.finote.backend.global.authentication.oauth.google;
+package kr.co.finote.backend.global.authentication.oauth.google.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class GoogleOauthUserInfoDto {
+public class GoogleOauthUserInfoResponse {
 
     private String id;
     private String email;

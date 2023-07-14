@@ -8,9 +8,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import javax.transaction.Transactional;
-import kr.co.finote.backend.global.authentication.oauth.google.GoogleAccessTokenDto;
 import kr.co.finote.backend.global.authentication.oauth.google.GoogleOauth;
-import kr.co.finote.backend.global.authentication.oauth.google.GoogleOauthUserInfoDto;
+import kr.co.finote.backend.global.authentication.oauth.google.dto.request.GoogleAccessTokenRequest;
+import kr.co.finote.backend.global.authentication.oauth.google.dto.response.GoogleOauthUserInfoResponse;
 import kr.co.finote.backend.src.blog.domain.UsersBlog;
 import kr.co.finote.backend.src.blog.repository.UsersBlogRepository;
 import kr.co.finote.backend.src.user.domain.Role;
@@ -36,7 +36,7 @@ public class LoginService {
     private final UserRepository userRepository;
     private final UsersBlogRepository usersBlogRepository;
 
-    public GoogleAccessTokenDto getGoogleAccessToken(String code) {
+    public GoogleAccessTokenRequest getGoogleAccessToken(String code) {
         Map<String, String> params = new HashMap<>();
         params.put("code", code);
         params.put("client_id", googleOauth.getGoogleClientId());
@@ -50,18 +50,20 @@ public class LoginService {
         String accessToken = responseEntity.getBody();
 
         ObjectMapper objectMapper = new ObjectMapper();
-        GoogleAccessTokenDto googleAccessTokenDto = null;
+        GoogleAccessTokenRequest googleAccessTokenRequest = null;
         try {
-            googleAccessTokenDto = objectMapper.readValue(accessToken, GoogleAccessTokenDto.class);
+            googleAccessTokenRequest =
+                    objectMapper.readValue(accessToken, GoogleAccessTokenRequest.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        return googleAccessTokenDto;
+        return googleAccessTokenRequest;
     }
 
-    public GoogleOauthUserInfoDto getGoogleUserInfo(GoogleAccessTokenDto googleAccessTokenDto) {
+    public GoogleOauthUserInfoResponse getGoogleUserInfo(
+            GoogleAccessTokenRequest googleAccessTokenRequest) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + googleAccessTokenDto.getAccessToken());
+        headers.add("Authorization", "Bearer " + googleAccessTokenRequest.getAccessToken());
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
         ResponseEntity<String> response =
@@ -71,17 +73,18 @@ public class LoginService {
         String userInfo = response.getBody();
 
         ObjectMapper objectMapper = new ObjectMapper();
-        GoogleOauthUserInfoDto googleOauthUserInfoDto = null;
+        GoogleOauthUserInfoResponse googleOauthUserInfoResponse = null;
         try {
-            googleOauthUserInfoDto = objectMapper.readValue(userInfo, GoogleOauthUserInfoDto.class);
+            googleOauthUserInfoResponse =
+                    objectMapper.readValue(userInfo, GoogleOauthUserInfoResponse.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        return googleOauthUserInfoDto;
+        return googleOauthUserInfoResponse;
     }
 
     @Transactional
-    public Boolean saveUser(GoogleOauthUserInfoDto userInfo) {
+    public Boolean saveUser(GoogleOauthUserInfoResponse userInfo) {
         Optional<User> findUser = Optional.ofNullable(userRepository.findByEmail(userInfo.getEmail()));
 
         if (findUser.isPresent()) {
