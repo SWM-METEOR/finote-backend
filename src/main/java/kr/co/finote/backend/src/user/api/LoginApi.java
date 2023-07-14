@@ -1,15 +1,21 @@
 package kr.co.finote.backend.src.user.api;
 
 import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import kr.co.finote.backend.global.authentication.oauth.google.GoogleOauth;
 import kr.co.finote.backend.global.authentication.oauth.google.dto.request.GoogleAccessTokenRequest;
 import kr.co.finote.backend.global.authentication.oauth.google.dto.response.GoogleLoginResponse;
 import kr.co.finote.backend.global.authentication.oauth.google.dto.response.GoogleOauthUserInfoResponse;
+import kr.co.finote.backend.src.user.dto.SaveUserResponse;
 import kr.co.finote.backend.src.user.service.LoginService;
+import kr.co.finote.backend.src.user.service.SessionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,6 +25,7 @@ public class LoginApi {
 
     private final GoogleOauth googleOauth;
     private final LoginService loginService;
+    private final SessionService sessionService;
 
     // TODO : Front에서 Access Token을 위한 코드 발급 완성 시 삭제
     @GetMapping("/login-google")
@@ -33,19 +40,21 @@ public class LoginApi {
     }
 
     @GetMapping("/auth/google/")
-    public GoogleLoginResponse auth(@RequestParam String code) {
+    public GoogleLoginResponse auth(@RequestParam String code, HttpServletRequest request) {
         log.info("Code from Google social Login API {}", code);
 
         GoogleAccessTokenRequest googleAccessToken = loginService.getGoogleAccessToken(code);
         GoogleOauthUserInfoResponse GoogleOauthUserInfo =
                 loginService.getGoogleUserInfo(googleAccessToken);
 
-        Boolean newUser = loginService.saveUser(GoogleOauthUserInfo);
+        SaveUserResponse saveUserResponse = loginService.saveUser(GoogleOauthUserInfo);
+        // TODO : 이후 로그아웃 API를 통해 명시적 세션 만료 기능 추가해야함.
+        sessionService.startSession(request, saveUserResponse.getUser());
 
         return GoogleLoginResponse.builder()
                 .accessToken(googleAccessToken.getAccessToken())
                 .refreshToken(googleAccessToken.getRefreshToken())
-                .newUser(newUser)
+                .newUser(saveUserResponse.getNewUser())
                 .build();
     }
 }
