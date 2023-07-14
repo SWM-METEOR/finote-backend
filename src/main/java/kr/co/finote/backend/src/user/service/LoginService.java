@@ -3,14 +3,12 @@ package kr.co.finote.backend.src.user.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import javax.transaction.Transactional;
 import kr.co.finote.backend.global.authentication.oauth.google.GoogleOauth;
 import kr.co.finote.backend.global.authentication.oauth.google.dto.request.GoogleAccessTokenRequest;
 import kr.co.finote.backend.global.authentication.oauth.google.dto.response.GoogleOauthUserInfoResponse;
+import kr.co.finote.backend.global.utils.StringUtils;
 import kr.co.finote.backend.src.blog.domain.UsersBlog;
 import kr.co.finote.backend.src.blog.repository.UsersBlogRepository;
 import kr.co.finote.backend.src.user.domain.Role;
@@ -88,12 +86,17 @@ public class LoginService {
         Optional<User> findUser = Optional.ofNullable(userRepository.findByEmail(userInfo.getEmail()));
 
         if (findUser.isPresent()) {
-            log.info("present");
             User user = findUser.get();
             user.setLastLoginDate(LocalDateTime.now());
             return false;
         } else {
-            log.info("not present");
+            // 중복 nickname이 없을 때까지 랜덤 nickname 생성
+            String randomNickname = StringUtils.makeRandomString();
+            boolean existsByNickName = userRepository.existsByNickname(randomNickname);
+            while (existsByNickName) {
+                randomNickname = StringUtils.makeRandomString();
+                existsByNickName = userRepository.existsByNickname(randomNickname);
+            }
             User user =
                     User.builder()
                             .username(userInfo.getName())
@@ -102,7 +105,7 @@ public class LoginService {
                             .providerId(userInfo.getId())
                             .role(Role.USER)
                             .lastLoginDate(LocalDateTime.now())
-                            .nickName(UUID.randomUUID().toString())
+                            .nickname(randomNickname)
                             .profileImageUrl(null)
                             .build();
             userRepository.save(user);
@@ -110,9 +113,9 @@ public class LoginService {
             UsersBlog usersBlog =
                     UsersBlog.builder()
                             .user(user)
-                            .name(user.getNickName())
+                            .name(user.getNickname())
                             // TODO : 배포 후 + 실제 블로그 URL 전략 결정 후 수정
-                            .url(user.getUsername() + "/" + user.getNickName())
+                            .url(user.getUsername() + "/" + user.getNickname())
                             .build();
             usersBlogRepository.save(usersBlog);
             return true;

@@ -6,6 +6,7 @@ import kr.co.finote.backend.global.entity.BaseEntity;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Data
@@ -14,8 +15,10 @@ import lombok.NoArgsConstructor;
 public class User extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")
+    @Column(length = 36, nullable = false, updatable = false)
+    private String id;
 
     private String username;
     private String password;
@@ -29,7 +32,9 @@ public class User extends BaseEntity {
 
     private LocalDateTime lastLoginDate;
 
-    private String nickName;
+    @Column(unique = true)
+    private String nickname;
+
     private String profileImageUrl;
 
     @Builder
@@ -41,7 +46,7 @@ public class User extends BaseEntity {
             String providerId,
             Role role,
             LocalDateTime lastLoginDate,
-            String nickName,
+            String nickname,
             String profileImageUrl) {
         this.username = username;
         this.password = password;
@@ -50,7 +55,7 @@ public class User extends BaseEntity {
         this.providerId = providerId;
         this.role = role;
         this.lastLoginDate = lastLoginDate;
-        this.nickName = nickName;
+        this.nickname = nickname;
         this.profileImageUrl = profileImageUrl;
     }
 }

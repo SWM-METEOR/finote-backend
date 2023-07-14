@@ -42,13 +42,10 @@ public class LoginApi {
 
         Boolean newUser = loginService.saveUser(GoogleOauthUserInfo);
 
-        GoogleLoginResponse response =
-                GoogleLoginResponse.builder()
-                        .accessToken(googleAccessToken.getAccessToken())
-                        .refreshToken(googleAccessToken.getRefreshToken())
-                        .newUser(newUser)
-                        .build();
-
-        return response;
+        return GoogleLoginResponse.builder()
+                .accessToken(googleAccessToken.getAccessToken())
+                .refreshToken(googleAccessToken.getRefreshToken())
+                .newUser(newUser)
+                .build();
     }
 }

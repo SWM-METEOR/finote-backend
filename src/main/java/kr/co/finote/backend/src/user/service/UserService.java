@@ -13,6 +13,6 @@ public class UserService {
     private final UserRepository userRepository;
 
     public boolean duplicateNickname(String nickname) {
-        return userRepository.existsByNickName(nickname);
+        return userRepository.existsByNickname(nickname);
     }
 }
