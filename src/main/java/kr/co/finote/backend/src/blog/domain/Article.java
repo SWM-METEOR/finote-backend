@@ -4,6 +4,7 @@ import javax.persistence.*;
 import kr.co.finote.backend.global.entity.BaseEntity;
 import kr.co.finote.backend.src.user.domain.User;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Getter
@@ -12,9 +13,12 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Article extends BaseEntity {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @GeneratedValue(generator = "uuid2")
+    @Column(length = 36, nullable = false, updatable = false)
+    private String id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

@@ -1,5 +1,7 @@
 package kr.co.finote.backend.src.blog.service;
 
+import kr.co.finote.backend.global.code.ResponseCode;
+import kr.co.finote.backend.global.exception.CustomException;
 import kr.co.finote.backend.src.blog.domain.Article;
 import kr.co.finote.backend.src.blog.dto.request.ArticleRequest;
 import kr.co.finote.backend.src.blog.repository.ArticleRepository;
@@ -12,7 +14,7 @@ public class ArticleService {
 
     private final ArticleRepository articleRepository;
 
-    public Long save(ArticleRequest articleRequest) {
+    public String save(ArticleRequest articleRequest) {
         Article article =
                 Article.builder()
                         .title(articleRequest.getTitle())
@@ -21,5 +23,11 @@ public class ArticleService {
                         .build();
 
         return articleRepository.save(article).getId();
+    }
+
+    public Article findById(String articleId) {
+        return articleRepository
+                .findByIdAndIsDeleted(articleId, false)
+                .orElseThrow(() -> new CustomException(ResponseCode.ARTICLE_NOT_FOUND));
     }
 }
