@@ -17,8 +17,13 @@ public enum ResponseCode {
 
     INVALID_INPUT_VALUE(BAD_REQUEST, "400_BAD_REQUEST", "입력값이 올바르지 않습니다."),
 
+    /** Users error */
+    DUPLICATE_NICKNAME(BAD_REQUEST, "400_BAD_REQUEST", "중복된 닉네임입니다."),
+
     /** UsersBlog error */
     BLOG_NOT_FOUND(NOT_FOUND, "404_BLOG_NOT_FOUND", "유저의 블로그를 찾을 수 없습니다."),
+    DUPLICATE_BLOG_NAME(BAD_REQUEST, "400_BAD_REQUEST", "중복된 블로그명입니다."),
+    DUPLICATE_BLOG_URL(BAD_REQUEST, "400_BAD_REQUEST", "중복된 블로그 url 입니다."),
 
     /** article error */
     ARTICLE_NOT_FOUND(NOT_FOUND, "404_ARTICLE_NOT_FOUND", "해당 게시글을 찾을 수 없습니다."),
