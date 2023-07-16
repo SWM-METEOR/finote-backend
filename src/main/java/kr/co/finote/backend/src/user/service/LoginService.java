@@ -9,8 +9,6 @@ import kr.co.finote.backend.global.authentication.oauth.google.GoogleOauth;
 import kr.co.finote.backend.global.authentication.oauth.google.dto.request.GoogleAccessTokenRequest;
 import kr.co.finote.backend.global.authentication.oauth.google.dto.response.GoogleOauthUserInfoResponse;
 import kr.co.finote.backend.global.utils.StringUtils;
-import kr.co.finote.backend.src.blog.domain.UsersBlog;
-import kr.co.finote.backend.src.blog.repository.UsersBlogRepository;
 import kr.co.finote.backend.src.user.domain.Role;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.dto.response.SaveUserResponse;
@@ -33,7 +31,6 @@ public class LoginService {
     private final GoogleOauth googleOauth;
     private final RestTemplate restTemplate;
     private final UserRepository userRepository;
-    private final UsersBlogRepository usersBlogRepository;
 
     public GoogleAccessTokenRequest getGoogleAccessToken(String code) {
         Map<String, String> params = new HashMap<>();
@@ -108,17 +105,11 @@ public class LoginService {
                             .lastLoginDate(LocalDateTime.now())
                             .nickname(randomNickname)
                             .profileImageUrl(null)
+                            .blogName(randomNickname)
+                            .blogUrl(userInfo.getName() + "/" + randomNickname)
                             .build();
             userRepository.save(user);
 
-            UsersBlog usersBlog =
-                    UsersBlog.builder()
-                            .user(user)
-                            .name(user.getNickname())
-                            // TODO : 배포 후 + 실제 블로그 URL 전략 결정 후 수정
-                            .url(user.getUsername() + "/" + user.getNickname())
-                            .build();
-            usersBlogRepository.save(usersBlog);
             return new SaveUserResponse(user, true);
         }
     }

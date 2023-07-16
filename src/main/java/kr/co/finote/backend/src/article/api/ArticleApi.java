@@ -1,13 +1,13 @@
-package kr.co.finote.backend.src.blog.api;
+package kr.co.finote.backend.src.article.api;
 
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import javax.validation.Valid;
-import kr.co.finote.backend.src.blog.domain.Article;
-import kr.co.finote.backend.src.blog.dto.request.ArticleRequest;
-import kr.co.finote.backend.src.blog.dto.response.ArticleResponse;
-import kr.co.finote.backend.src.blog.service.ArticleService;
+import kr.co.finote.backend.src.article.domain.Article;
+import kr.co.finote.backend.src.article.dto.request.ArticleRequest;
+import kr.co.finote.backend.src.article.dto.response.ArticleResponse;
+import kr.co.finote.backend.src.article.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
