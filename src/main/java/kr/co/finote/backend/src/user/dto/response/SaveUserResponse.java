@@ -1,4 +1,4 @@
-package kr.co.finote.backend.src.user.dto;
+package kr.co.finote.backend.src.user.dto.response;
 
 import kr.co.finote.backend.src.user.domain.User;
 import lombok.*;

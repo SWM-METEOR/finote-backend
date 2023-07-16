@@ -13,7 +13,7 @@ import kr.co.finote.backend.src.blog.domain.UsersBlog;
 import kr.co.finote.backend.src.blog.repository.UsersBlogRepository;
 import kr.co.finote.backend.src.user.domain.Role;
 import kr.co.finote.backend.src.user.domain.User;
-import kr.co.finote.backend.src.user.dto.SaveUserResponse;
+import kr.co.finote.backend.src.user.dto.response.SaveUserResponse;
 import kr.co.finote.backend.src.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -84,7 +84,7 @@ public class LoginService {
 
     @Transactional
     public SaveUserResponse saveUser(GoogleOauthUserInfoResponse userInfo) {
-        Optional<User> findUser = Optional.ofNullable(userRepository.findByEmail(userInfo.getEmail()));
+        Optional<User> findUser = userRepository.findByEmailAndIsDeleted(userInfo.getEmail(), false);
 
         if (findUser.isPresent()) {
             User user = findUser.get();

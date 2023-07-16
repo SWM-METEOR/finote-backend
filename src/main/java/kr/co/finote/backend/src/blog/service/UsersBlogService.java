@@ -5,6 +5,7 @@ import kr.co.finote.backend.global.exception.CustomException;
 import kr.co.finote.backend.src.blog.domain.UsersBlog;
 import kr.co.finote.backend.src.blog.repository.UsersBlogRepository;
 import kr.co.finote.backend.src.user.domain.User;
+import kr.co.finote.backend.src.user.dto.request.AdditionalInfoRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,5 +27,23 @@ public class UsersBlogService {
         return usersBlogRepository
                 .findByUserAndIsDeleted(user, false)
                 .orElseThrow(() -> new CustomException(ResponseCode.BLOG_NOT_FOUND));
+    }
+
+    public void editBlogInfo(User user, AdditionalInfoRequest infoRequest) {
+        if (duplicateBlogUrl(infoRequest.getBlogUrl())) {
+            throw new CustomException(ResponseCode.DUPLICATE_BLOG_URL);
+        }
+
+        if (duplicateBlogName(infoRequest.getBlogName())) {
+            throw new CustomException(ResponseCode.DUPLICATE_BLOG_NAME);
+        }
+
+        UsersBlog findBlog =
+                usersBlogRepository
+                        .findByUserAndIsDeleted(user, false)
+                        .orElseThrow(() -> new CustomException(ResponseCode.UNAUTHENTICATED));
+
+        findBlog.setName(infoRequest.getBlogName());
+        findBlog.setUrl(infoRequest.getBlogUrl());
     }
 }

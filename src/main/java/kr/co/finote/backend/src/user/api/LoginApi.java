@@ -7,7 +7,7 @@ import kr.co.finote.backend.global.authentication.oauth.google.GoogleOauth;
 import kr.co.finote.backend.global.authentication.oauth.google.dto.request.GoogleAccessTokenRequest;
 import kr.co.finote.backend.global.authentication.oauth.google.dto.response.GoogleLoginResponse;
 import kr.co.finote.backend.global.authentication.oauth.google.dto.response.GoogleOauthUserInfoResponse;
-import kr.co.finote.backend.src.user.dto.SaveUserResponse;
+import kr.co.finote.backend.src.user.dto.response.SaveUserResponse;
 import kr.co.finote.backend.src.user.service.LoginService;
 import kr.co.finote.backend.src.user.service.SessionService;
 import lombok.RequiredArgsConstructor;

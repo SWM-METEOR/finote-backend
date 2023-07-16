@@ -6,11 +6,14 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import java.util.HashMap;
 import java.util.Map;
 import kr.co.finote.backend.global.exception.CustomException;
+import kr.co.finote.backend.src.blog.service.UsersBlogService;
 import kr.co.finote.backend.src.user.domain.User;
+import kr.co.finote.backend.src.user.dto.request.AdditionalInfoRequest;
 import kr.co.finote.backend.src.user.service.UserService;
 import kr.co.finote.backend.src.user.utils.SessionUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserApi {
 
     private final UserService userService;
+    private final UsersBlogService usersBlogService;
 
     @PostMapping(value = "/validation/nickname", consumes = APPLICATION_JSON_VALUE)
     public Map<String, Boolean> validateNickname(@RequestBody Map<String, String> requestData) {
@@ -44,5 +48,19 @@ public class UserApi {
         map.put("nickname", loginUser.getNickname());
 
         return map;
+    }
+
+    @PostMapping("/additional-info")
+    @Transactional
+    public void additionalInfo(
+            @SessionAttribute(name = SessionUtils.LOGIN_USER, required = false) User loginUser,
+            @RequestBody AdditionalInfoRequest additionalInfoRequest) {
+
+        if (loginUser == null) {
+            throw new CustomException(UNAUTHENTICATED);
+        }
+
+        userService.editNickname(loginUser, additionalInfoRequest.getNickname());
+        usersBlogService.editBlogInfo(loginUser, additionalInfoRequest);
     }
 }
