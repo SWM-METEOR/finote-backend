@@ -3,14 +3,11 @@ package kr.co.finote.backend.src.user.domain;
 import java.time.LocalDateTime;
 import javax.persistence.*;
 import kr.co.finote.backend.global.entity.BaseEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-@Data
+@Getter @Setter
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
