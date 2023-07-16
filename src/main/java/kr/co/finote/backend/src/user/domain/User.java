@@ -7,7 +7,8 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
@@ -39,6 +40,4 @@ public class User extends BaseEntity {
 
     private String blogName;
     private String blogUrl;
-
-
 }

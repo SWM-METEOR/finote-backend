@@ -42,9 +42,10 @@ public class UserService {
             throw new CustomException(ResponseCode.DUPLICATE_BLOG_NAME);
         }
 
-        User findUser = userRepository.findById(user.getId())
-                .orElseThrow(() -> new CustomException(ResponseCode.UNAUTHENTICATED));
-
+        User findUser =
+                userRepository
+                        .findById(user.getId())
+                        .orElseThrow(() -> new CustomException(ResponseCode.UNAUTHENTICATED));
 
         findUser.setNickname(infoRequest.getNickname());
         findUser.setBlogName(infoRequest.getBlogName());

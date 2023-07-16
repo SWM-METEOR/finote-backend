@@ -6,9 +6,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import java.util.HashMap;
 import java.util.Map;
 import kr.co.finote.backend.global.exception.CustomException;
-import kr.co.finote.backend.src.user.dto.response.BlogResponse;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.dto.request.AdditionalInfoRequest;
+import kr.co.finote.backend.src.user.dto.response.BlogResponse;
 import kr.co.finote.backend.src.user.service.UserService;
 import kr.co.finote.backend.src.user.utils.SessionUtils;
 import lombok.RequiredArgsConstructor;
@@ -72,7 +72,6 @@ public class UserApi {
         return map;
     }
 
-
     @GetMapping("/blog-info")
     public BlogResponse getBlogInfo(
             @SessionAttribute(name = SessionUtils.LOGIN_USER, required = false) User loginUser) {
@@ -96,5 +95,4 @@ public class UserApi {
 
         userService.editAdditionalInfo(loginUser, additionalInfoRequest);
     }
-
 }
