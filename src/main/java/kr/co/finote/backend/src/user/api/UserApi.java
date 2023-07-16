@@ -6,7 +6,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import java.util.HashMap;
 import java.util.Map;
 import kr.co.finote.backend.global.exception.CustomException;
-import kr.co.finote.backend.src.blog.dto.response.BlogResponse;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.service.UserService;
 import kr.co.finote.backend.src.user.utils.SessionUtils;
@@ -45,16 +44,5 @@ public class UserApi {
         map.put("nickname", loginUser.getNickname());
 
         return map;
-    }
-
-    @GetMapping("/blog-info")
-    public BlogResponse getBlogInfo(
-            @SessionAttribute(name = SessionUtils.LOGIN_USER, required = false) User loginUser) {
-
-        if (loginUser == null) {
-            throw new CustomException(UNAUTHENTICATED);
-        }
-
-        return userService.getBlogInfo(loginUser);
     }
 }
