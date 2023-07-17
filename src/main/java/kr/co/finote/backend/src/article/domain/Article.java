@@ -1,4 +1,4 @@
-package kr.co.finote.backend.src.blog.domain;
+package kr.co.finote.backend.src.article.domain;
 
 import javax.persistence.*;
 import kr.co.finote.backend.global.entity.BaseEntity;

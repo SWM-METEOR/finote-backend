@@ -1,4 +1,4 @@
-package kr.co.finote.backend.src.blog.dto.response;
+package kr.co.finote.backend.src.article.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;

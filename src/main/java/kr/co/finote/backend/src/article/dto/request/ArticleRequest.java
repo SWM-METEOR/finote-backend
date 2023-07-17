@@ -1,4 +1,4 @@
-package kr.co.finote.backend.src.blog.dto.request;
+package kr.co.finote.backend.src.article.dto.request;
 
 import javax.validation.constraints.NotBlank;
 import lombok.Getter;

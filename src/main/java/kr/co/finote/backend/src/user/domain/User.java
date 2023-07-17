@@ -3,14 +3,15 @@ package kr.co.finote.backend.src.user.domain;
 import java.time.LocalDateTime;
 import javax.persistence.*;
 import kr.co.finote.backend.global.entity.BaseEntity;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 @Table(name = "users")
 public class User extends BaseEntity {
 
@@ -37,25 +38,6 @@ public class User extends BaseEntity {
 
     private String profileImageUrl;
 
-    @Builder
-    public User(
-            String username,
-            String password,
-            String email,
-            String provider,
-            String providerId,
-            Role role,
-            LocalDateTime lastLoginDate,
-            String nickname,
-            String profileImageUrl) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.provider = provider;
-        this.providerId = providerId;
-        this.role = role;
-        this.lastLoginDate = lastLoginDate;
-        this.nickname = nickname;
-        this.profileImageUrl = profileImageUrl;
-    }
+    private String blogName;
+    private String blogUrl;
 }

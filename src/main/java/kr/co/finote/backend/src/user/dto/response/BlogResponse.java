@@ -1,4 +1,4 @@
-package kr.co.finote.backend.src.blog.dto.response;
+package kr.co.finote.backend.src.user.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
