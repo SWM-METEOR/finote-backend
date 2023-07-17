@@ -25,36 +25,22 @@ public class UserApi {
 
     /* Field Validation API */
     @PostMapping(value = "/validation/nickname", consumes = APPLICATION_JSON_VALUE)
-    public Map<String, Boolean> validateNickname(@RequestBody Map<String, String> requestData) {
+    public void validateNickname(@RequestBody Map<String, String> requestData) {
         String nickname = requestData.get("nickname");
-
-        boolean isDuplicated = userService.duplicateNickname(nickname);
-
-        Map<String, Boolean> map = new HashMap<>();
-        map.put("isDuplicated", isDuplicated);
-        return map;
+        userService.validateNickname(
+                nickname); // throws exception if nickname is invalid (e.g. duplicated)
     }
 
     @PostMapping(value = "/validation/blog-name", consumes = APPLICATION_JSON_VALUE)
-    public Map<String, Boolean> validateBlogName(@RequestBody Map<String, String> requestData) {
+    public void validateBlogName(@RequestBody Map<String, String> requestData) {
         String blogName = requestData.get("blogName");
-
-        boolean isDuplicated = userService.duplicateBlogName(blogName);
-
-        Map<String, Boolean> map = new HashMap<>();
-        map.put("isDuplicated", isDuplicated);
-        return map;
+        userService.validateBlogName(blogName);
     }
 
     @PostMapping(value = "/validation/blog-url", consumes = APPLICATION_JSON_VALUE)
-    public Map<String, Boolean> validateBlogUrl(@RequestBody Map<String, String> requestData) {
+    public void validateBlogUrl(@RequestBody Map<String, String> requestData) {
         String blogUrl = requestData.get("blogUrl");
-
-        boolean isDuplicated = userService.duplicateBlogUrl(blogUrl);
-
-        Map<String, Boolean> map = new HashMap<>();
-        map.put("isDuplicated", isDuplicated);
-        return map;
+        userService.validateBlogUrl(blogUrl);
     }
 
     /* Field Getter API */

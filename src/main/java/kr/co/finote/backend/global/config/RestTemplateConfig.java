@@ -1,6 +1,6 @@
 package kr.co.finote.backend.global.config;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +16,7 @@ public class RestTemplateConfig {
         return restTemplateBuilder
                 .requestFactory(
                         () -> new BufferingClientHttpRequestFactory((new SimpleClientHttpRequestFactory())))
-                .additionalMessageConverters(new StringHttpMessageConverter(Charset.forName("UTF-8")))
+                .additionalMessageConverters(new StringHttpMessageConverter(StandardCharsets.UTF_8))
                 .build();
     }
 }
