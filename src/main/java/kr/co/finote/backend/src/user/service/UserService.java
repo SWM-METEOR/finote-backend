@@ -17,30 +17,38 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public boolean duplicateNickname(String nickname) {
-        return userRepository.existsByNickname(nickname);
+    public void validateNickname(String nickname) {
+        boolean existsByNickname = userRepository.existsByNickname(nickname);
+        if (existsByNickname) {
+            throw new CustomException(ResponseCode.DUPLICATE_NICKNAME);
+        } else if (nickname.length() > 100) {
+            throw new CustomException(ResponseCode.NICKNAME_TOO_LONG);
+        } // 그 외 금지문자 포함 등의 error 처리 예정
     }
 
-    public boolean duplicateBlogName(String blogName) {
-        return userRepository.existsByBlogName(blogName);
+    public void validateBlogName(String blogName) {
+        boolean existsByBlogName = userRepository.existsByBlogName(blogName);
+        if (existsByBlogName) {
+            throw new CustomException(ResponseCode.DUPLICATE_BLOG_NAME);
+        } else if (blogName.length() > 100) {
+            throw new CustomException(ResponseCode.BLOG_NAME_TOO_LONG);
+        } // 그 외 금지문자 포함 등의 error 처리 예정
     }
 
-    public boolean duplicateBlogUrl(String url) {
-        return userRepository.existsByBlogUrl(url);
+    public void validateBlogUrl(String blogUrl) {
+        boolean existsByBlogUrl = userRepository.existsByBlogUrl(blogUrl);
+        if (existsByBlogUrl) {
+            throw new CustomException(ResponseCode.DUPLICATE_BLOG_URL);
+        } else if (blogUrl.length() > 100) {
+            throw new CustomException(ResponseCode.BLOG_URL_TOO_LONG);
+        } // 그 외 금지문자 포함 등의 error 처리 예정
     }
 
     @Transactional
     public void editAdditionalInfo(User user, AdditionalInfoRequest infoRequest) {
-        if (duplicateNickname(infoRequest.getNickname())) {
-            throw new CustomException(ResponseCode.DUPLICATE_NICKNAME);
-        }
-        if (duplicateBlogUrl(infoRequest.getBlogUrl())) {
-            throw new CustomException(ResponseCode.DUPLICATE_BLOG_URL);
-        }
-
-        if (duplicateBlogName(infoRequest.getBlogName())) {
-            throw new CustomException(ResponseCode.DUPLICATE_BLOG_NAME);
-        }
+        validateNickname(infoRequest.getNickname());
+        validateBlogName(infoRequest.getBlogName());
+        validateBlogUrl(infoRequest.getBlogUrl());
 
         User findUser =
                 userRepository

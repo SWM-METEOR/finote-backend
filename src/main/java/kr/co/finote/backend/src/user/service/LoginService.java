@@ -46,7 +46,7 @@ public class LoginService {
         String accessToken = responseEntity.getBody();
 
         ObjectMapper objectMapper = new ObjectMapper();
-        GoogleAccessTokenRequest googleAccessTokenRequest = null;
+        GoogleAccessTokenRequest googleAccessTokenRequest;
         try {
             googleAccessTokenRequest =
                     objectMapper.readValue(accessToken, GoogleAccessTokenRequest.class);
@@ -69,7 +69,7 @@ public class LoginService {
         String userInfo = response.getBody();
 
         ObjectMapper objectMapper = new ObjectMapper();
-        GoogleOauthUserInfoResponse googleOauthUserInfoResponse = null;
+        GoogleOauthUserInfoResponse googleOauthUserInfoResponse;
         try {
             googleOauthUserInfoResponse =
                     objectMapper.readValue(userInfo, GoogleOauthUserInfoResponse.class);
