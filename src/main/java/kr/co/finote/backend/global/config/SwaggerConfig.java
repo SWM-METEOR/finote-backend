@@ -2,6 +2,8 @@ package kr.co.finote.backend.global.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +21,20 @@ public class SwaggerConfig {
                         .title("FiNote API 명세서")
                         .description("FiNote Backend Server의 API 명세서입니다.");
 
-        return new OpenAPI().info(info);
+        SecurityScheme securityScheme =
+                new SecurityScheme()
+                        .description("Authorization using JSESSIONID")
+                        .type(SecurityScheme.Type.APIKEY)
+                        .in(SecurityScheme.In.COOKIE)
+                        .name("JSESSIONID");
+
+        SecurityRequirement securityRequirement = new SecurityRequirement().addList("JSESSIONID");
+
+        return new OpenAPI()
+                .addSecurityItem(securityRequirement)
+                .components(
+                        new io.swagger.v3.oas.models.Components()
+                                .addSecuritySchemes("JSESSIONID", securityScheme))
+                .info(info);
     }
 }
