@@ -5,6 +5,7 @@ import javax.persistence.*;
 import kr.co.finote.backend.global.entity.BaseEntity;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
@@ -13,6 +14,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Builder
 @AllArgsConstructor
 @Table(name = "users")
+@Where(clause = "is_deleted = false")
 public class User extends BaseEntity {
 
     @Id

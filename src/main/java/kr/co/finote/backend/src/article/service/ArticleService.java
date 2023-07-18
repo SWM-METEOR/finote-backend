@@ -14,7 +14,7 @@ public class ArticleService {
 
     private final ArticleRepository articleRepository;
 
-    public String save(ArticleRequest articleRequest) {
+    public Long save(ArticleRequest articleRequest) {
         Article article =
                 Article.builder()
                         .title(articleRequest.getTitle())
@@ -25,9 +25,9 @@ public class ArticleService {
         return articleRepository.save(article).getId();
     }
 
-    public Article findById(String articleId) {
+    public Article findById(Long articleId) {
         return articleRepository
-                .findByIdAndIsDeleted(articleId, false)
+                .findById(articleId)
                 .orElseThrow(() -> new CustomException(ResponseCode.ARTICLE_NOT_FOUND));
     }
 }
