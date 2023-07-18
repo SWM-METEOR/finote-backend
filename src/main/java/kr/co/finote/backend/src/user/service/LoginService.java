@@ -81,7 +81,7 @@ public class LoginService {
 
     @Transactional
     public SaveUserResponse saveUser(GoogleOauthUserInfoResponse userInfo) {
-        Optional<User> findUser = userRepository.findByEmailAndIsDeleted(userInfo.getEmail(), false);
+        Optional<User> findUser = userRepository.findByEmail(userInfo.getEmail());
 
         if (findUser.isPresent()) {
             User user = findUser.get();

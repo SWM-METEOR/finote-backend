@@ -24,15 +24,15 @@ public class ArticleApi {
 
     @Operation(summary = "블로그 글 작성")
     @PostMapping
-    public Map<String, String> postArticles(@RequestBody @Valid ArticleRequest articleRequest) {
-        Map<String, String> map = new HashMap<>();
+    public Map<String, Long> postArticles(@RequestBody @Valid ArticleRequest articleRequest) {
+        Map<String, Long> map = new HashMap<>();
         map.put("articleId", articleService.save(articleRequest));
         return map;
     }
 
     @Operation(summary = "블로그 글 조회")
     @GetMapping("/{articleId}")
-    public ArticleResponse getArticle(@PathVariable String articleId, HttpSession httpSession) {
+    public ArticleResponse getArticle(@PathVariable Long articleId, HttpSession httpSession) {
         User loginUser = (User) httpSession.getAttribute(SessionUtils.LOGIN_USER);
         Article article = articleService.findById(articleId);
         return ArticleResponse.builder()

@@ -31,7 +31,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
         String email = oAuth2User.getAttribute("email");
 
-        Optional<User> findUser = userRepository.findByUsernameAndIsDeleted(username, false);
+        Optional<User> findUser = userRepository.findByUsername(username);
         User userEntity;
 
         if (findUser.isEmpty()) {

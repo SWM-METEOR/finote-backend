@@ -9,7 +9,7 @@ import lombok.Setter;
 @Builder
 public class ArticleResponse {
 
-    private String id;
+    private Long id;
     private String title;
     private String body;
     private String createDate;

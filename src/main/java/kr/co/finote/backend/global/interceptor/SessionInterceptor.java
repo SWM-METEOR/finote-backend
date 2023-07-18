@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import kr.co.finote.backend.global.code.ResponseCode;
 import kr.co.finote.backend.global.exception.CustomException;
+import kr.co.finote.backend.src.user.utils.SessionUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -16,7 +17,7 @@ public class SessionInterceptor implements HandlerInterceptor {
             throws Exception {
         log.info(request.getRequestURL().toString());
         HttpSession session = request.getSession();
-        if (session.getAttribute("loginUser") == null) {
+        if (session.getAttribute(SessionUtils.LOGIN_USER) == null) {
             throw new CustomException(ResponseCode.UNAUTHENTICATED);
         } else return true;
     }

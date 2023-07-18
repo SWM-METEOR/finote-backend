@@ -5,9 +5,9 @@ import kr.co.finote.backend.src.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, String> {
-    Optional<User> findByUsernameAndIsDeleted(String username, Boolean isDeleted);
+    Optional<User> findByUsername(String username);
 
-    Optional<User> findByEmailAndIsDeleted(String email, Boolean isDeleted);
+    Optional<User> findByEmail(String email);
 
     boolean existsByNickname(String nickName);
 
