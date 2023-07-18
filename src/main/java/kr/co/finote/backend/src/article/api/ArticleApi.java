@@ -24,9 +24,11 @@ public class ArticleApi {
 
     @Operation(summary = "블로그 글 작성")
     @PostMapping
-    public Map<String, Long> postArticles(@RequestBody @Valid ArticleRequest articleRequest) {
+    public Map<String, Long> postArticles(
+            @RequestBody @Valid ArticleRequest articleRequest, HttpSession httpSession) {
+        User loginUser = (User) httpSession.getAttribute(SessionUtils.LOGIN_USER);
         Map<String, Long> map = new HashMap<>();
-        map.put("articleId", articleService.save(articleRequest));
+        map.put("articleId", articleService.save(articleRequest, loginUser));
         return map;
     }
 
@@ -39,9 +41,9 @@ public class ArticleApi {
                 .id(article.getId())
                 .title(article.getTitle())
                 .body(article.getTitle())
-                //                .authorId(article.getUser().getId())   // TODO user 연결 후 주석 해제
-                //                .authorNickname(article.getUser().getNickName())
-                //                .profileImageUrl(article.getUser().getProfileImageUrl())
+                .authorId(article.getUser().getId())
+                .authorNickname(article.getUser().getNickname())
+                .profileImageUrl(article.getUser().getProfileImageUrl())
                 .createDate(article.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .build();
     }

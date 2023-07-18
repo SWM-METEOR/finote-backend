@@ -12,7 +12,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry
                 .addInterceptor(new SessionInterceptor())
-                .addPathPatterns("/users/**")
+                .addPathPatterns("/users/**", "/articles/**")
                 .excludePathPatterns("/users/login-google", "/users/auth/google", "/users/validation/**");
     }
 }
