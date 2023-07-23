@@ -54,3 +54,12 @@ springdoc:
     operations-sorter: alpha
   api-docs:
     path: /api-docs
+
+
+# ChatGpt
+chatgpt:
+  api-key: ${FINOTE_GPT_KEY}
+  endpoint: ${GPT_ENDPOINT}
+  model: ${GPT_MODEL}
+  max-token: ${GPT_MAX_TOKEN}
+  temperature: ${GPT_TEMPERATURE}
