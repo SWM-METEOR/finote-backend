@@ -6,6 +6,10 @@ server:
       charset: UTF-8
       enabled: true
       force: true
+    session:
+      cookie:
+        same-site: none
+        secure: true
 
 spring:
   profiles:
