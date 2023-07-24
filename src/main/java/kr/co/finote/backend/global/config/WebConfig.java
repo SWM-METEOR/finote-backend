@@ -13,12 +13,6 @@ public class WebConfig implements WebMvcConfigurer {
         registry
                 .addInterceptor(new SessionInterceptor())
                 .addPathPatterns("/users/**", "/articles/**")
-                //                .excludePathPatterns("/users/login-google", "/users/auth/google",
-                // "/users/validation/**");
-                // TODO : 테스트 과정에서만 /articles/ai-search 로그인 필터링 제외
-                .excludePathPatterns(
-                        "/users/login-google",
-                        "/users/auth/google",
-                        "/users/validation/**," + "/articles/ai-search");
+                .excludePathPatterns("/users/login-google", "/users/auth/google", "/users/validation/**");
     }
 }
