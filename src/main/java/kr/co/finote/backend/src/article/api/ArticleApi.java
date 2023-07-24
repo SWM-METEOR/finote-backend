@@ -27,9 +27,9 @@ public class ArticleApi {
     public Map<String, Long> postArticles(
             @RequestBody @Valid ArticleRequest articleRequest, HttpSession httpSession) {
         // TODO 유저 로그인 후 session 검증
-//        User loginUser = (User) httpSession.getAttribute(SessionUtils.LOGIN_USER);
+        //        User loginUser = (User) httpSession.getAttribute(SessionUtils.LOGIN_USER);
         Map<String, Long> map = new HashMap<>();
-//        map.put("articleId", articleService.save(articleRequest, loginUser));
+        //        map.put("articleId", articleService.save(articleRequest, loginUser));
         map.put("articleId", articleService.save(articleRequest));
         return map;
     }

@@ -5,7 +5,6 @@ import kr.co.finote.backend.global.exception.CustomException;
 import kr.co.finote.backend.src.article.domain.Article;
 import kr.co.finote.backend.src.article.dto.request.ArticleRequest;
 import kr.co.finote.backend.src.article.repository.ArticleRepository;
-import kr.co.finote.backend.src.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +19,7 @@ public class ArticleService {
                 Article.builder()
                         .title(articleRequest.getTitle())
                         .body(articleRequest.getBody())
-//                        .user(user)   // TODO 로그인 후 user 정보 연결 추가
+                        //                        .user(user)   // TODO 로그인 후 user 정보 연결 추가
                         .build();
 
         return articleRepository.save(article).getId();
