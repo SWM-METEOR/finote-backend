@@ -18,7 +18,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     public void validateNickname(String nickname) {
-        boolean existsByNickname = userRepository.existsByNickname(nickname);
+        boolean existsByNickname = userRepository.existsByNicknameAndIsDeleted(nickname, false);
         if (existsByNickname) {
             throw new CustomException(ResponseCode.DUPLICATE_NICKNAME);
         } else if (nickname.length() > 100) {
@@ -27,7 +27,7 @@ public class UserService {
     }
 
     public void validateBlogName(String blogName) {
-        boolean existsByBlogName = userRepository.existsByBlogName(blogName);
+        boolean existsByBlogName = userRepository.existsByBlogNameAndIsDeleted(blogName, false);
         if (existsByBlogName) {
             throw new CustomException(ResponseCode.DUPLICATE_BLOG_NAME);
         } else if (blogName.length() > 100) {
@@ -36,7 +36,7 @@ public class UserService {
     }
 
     public void validateBlogUrl(String blogUrl) {
-        boolean existsByBlogUrl = userRepository.existsByBlogUrl(blogUrl);
+        boolean existsByBlogUrl = userRepository.existsByBlogUrlAndIsDeleted(blogUrl, false);
         if (existsByBlogUrl) {
             throw new CustomException(ResponseCode.DUPLICATE_BLOG_URL);
         } else if (blogUrl.length() > 100) {

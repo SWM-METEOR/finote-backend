@@ -81,7 +81,7 @@ public class LoginService {
 
     @Transactional
     public SaveUserResponse saveUser(GoogleOauthUserInfoResponse userInfo) {
-        Optional<User> findUser = userRepository.findByEmail(userInfo.getEmail());
+        Optional<User> findUser = userRepository.findByIdAndIsDeleted(userInfo.getEmail(), false);
 
         if (findUser.isPresent()) {
             User user = findUser.get();
@@ -90,10 +90,10 @@ public class LoginService {
         } else {
             // 중복 nickname이 없을 때까지 랜덤 nickname 생성
             String randomNickname = StringUtils.makeRandomString();
-            boolean existsByNickName = userRepository.existsByNickname(randomNickname);
+            boolean existsByNickName = userRepository.existsByNicknameAndIsDeleted(randomNickname, false);
             while (existsByNickName) {
                 randomNickname = StringUtils.makeRandomString();
-                existsByNickName = userRepository.existsByNickname(randomNickname);
+                existsByNickName = userRepository.existsByNicknameAndIsDeleted(randomNickname, false);
             }
             User user =
                     User.builder()

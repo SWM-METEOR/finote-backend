@@ -4,7 +4,6 @@ import javax.persistence.*;
 import kr.co.finote.backend.global.entity.BaseEntity;
 import kr.co.finote.backend.src.user.domain.User;
 import lombok.*;
-import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
@@ -12,7 +11,6 @@ import org.hibernate.annotations.Where;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Where(clause = "is_deleted = false")
 public class Article extends BaseEntity {
 
     @Id

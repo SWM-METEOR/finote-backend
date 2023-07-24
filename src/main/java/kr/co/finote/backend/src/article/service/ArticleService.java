@@ -28,7 +28,7 @@ public class ArticleService {
 
     public Article findById(Long articleId) {
         return articleRepository
-                .findById(articleId)
+                .findByIdAndIsDeleted(articleId, false)
                 .orElseThrow(() -> new CustomException(ResponseCode.ARTICLE_NOT_FOUND));
     }
 }
