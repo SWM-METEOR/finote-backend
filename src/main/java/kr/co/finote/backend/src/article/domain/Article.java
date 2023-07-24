@@ -12,7 +12,6 @@ import org.hibernate.annotations.Where;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Where(clause = "is_deleted = false")
 public class Article extends BaseEntity {
 
     @Id
