@@ -19,6 +19,7 @@ public class ExceptionHandler {
     @org.springframework.web.bind.annotation.ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(
             MethodArgumentNotValidException e) {
+        log.error(e.getMessage());
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setCode(ResponseCode.INVALID_INPUT_VALUE.getCode());
         errorResponse.setStatus(ResponseCode.INVALID_INPUT_VALUE.getStatus().value());
@@ -38,6 +39,7 @@ public class ExceptionHandler {
 
     @org.springframework.web.bind.annotation.ExceptionHandler(CustomException.class)
     protected ResponseEntity<ErrorResponse> handleCustomException(CustomException e) {
+        log.error(e.getMessage());
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setCode(e.getResponseCode().getCode());
         errorResponse.setStatus(e.getResponseCode().getStatus().value());
