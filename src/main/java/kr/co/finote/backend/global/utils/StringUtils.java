@@ -2,6 +2,7 @@ package kr.co.finote.backend.global.utils;
 
 public class StringUtils {
 
+    @SuppressWarnings("PMD.AvoidLiteralsInIfCondition")
     // 10자리 랜덤 해시 스트링 생성 함수
     public static String makeRandomString() {
         StringBuilder randomString = new StringBuilder();
