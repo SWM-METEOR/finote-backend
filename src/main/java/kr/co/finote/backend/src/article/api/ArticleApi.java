@@ -40,7 +40,7 @@ public class ArticleApi {
         return ArticleResponse.builder()
                 .id(article.getId())
                 .title(article.getTitle())
-                .body(article.getTitle())
+                .body(article.getBody())
                 .authorId("author")
                 .authorNickname("nickname")
                 .profileImageUrl("")
