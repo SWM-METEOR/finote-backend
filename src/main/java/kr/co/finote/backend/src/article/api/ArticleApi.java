@@ -1,6 +1,7 @@
 package kr.co.finote.backend.src.article.api;
 
 import io.swagger.v3.oas.annotations.Operation;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,10 +41,10 @@ public class ArticleApi {
                 .id(article.getId())
                 .title(article.getTitle())
                 .body(article.getTitle())
-                .authorId(article.getUser().getId())
-                .authorNickname(article.getUser().getNickname())
-                .profileImageUrl(article.getUser().getProfileImageUrl())
-                .createDate(article.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .authorId("author")
+                .authorNickname("nickname")
+                .profileImageUrl("")
+                .createDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .build();
     }
 }
