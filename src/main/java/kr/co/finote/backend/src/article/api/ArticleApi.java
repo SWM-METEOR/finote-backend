@@ -10,8 +10,6 @@ import kr.co.finote.backend.src.article.domain.Article;
 import kr.co.finote.backend.src.article.dto.request.ArticleRequest;
 import kr.co.finote.backend.src.article.dto.response.ArticleResponse;
 import kr.co.finote.backend.src.article.service.ArticleService;
-import kr.co.finote.backend.src.user.domain.User;
-import kr.co.finote.backend.src.user.utils.SessionUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +35,6 @@ public class ArticleApi {
     @Operation(summary = "블로그 글 조회")
     @GetMapping("/{articleId}")
     public ArticleResponse getArticle(@PathVariable Long articleId, HttpSession httpSession) {
-        User loginUser = (User) httpSession.getAttribute(SessionUtils.LOGIN_USER);
         Article article = articleService.findById(articleId);
         return ArticleResponse.builder()
                 .id(article.getId())

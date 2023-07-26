@@ -15,13 +15,16 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
 
+    public static final int NICK_NAME_MAX_LENGTH = 100;
+    public static final int BLOG_NAME_MAX_LENGTH = 100;
+    public static final int BLOG_URL_MAX_LENGTH = 100;
     private final UserRepository userRepository;
 
     public void validateNickname(String nickname) {
         boolean existsByNickname = userRepository.existsByNicknameAndIsDeleted(nickname, false);
         if (existsByNickname) {
             throw new CustomException(ResponseCode.DUPLICATE_NICKNAME);
-        } else if (nickname.length() > 100) {
+        } else if (nickname.length() > NICK_NAME_MAX_LENGTH) {
             throw new CustomException(ResponseCode.NICKNAME_TOO_LONG);
         } // 그 외 금지문자 포함 등의 error 처리 예정
     }
@@ -30,7 +33,7 @@ public class UserService {
         boolean existsByBlogName = userRepository.existsByBlogNameAndIsDeleted(blogName, false);
         if (existsByBlogName) {
             throw new CustomException(ResponseCode.DUPLICATE_BLOG_NAME);
-        } else if (blogName.length() > 100) {
+        } else if (blogName.length() > BLOG_NAME_MAX_LENGTH) {
             throw new CustomException(ResponseCode.BLOG_NAME_TOO_LONG);
         } // 그 외 금지문자 포함 등의 error 처리 예정
     }
@@ -39,7 +42,7 @@ public class UserService {
         boolean existsByBlogUrl = userRepository.existsByBlogUrlAndIsDeleted(blogUrl, false);
         if (existsByBlogUrl) {
             throw new CustomException(ResponseCode.DUPLICATE_BLOG_URL);
-        } else if (blogUrl.length() > 100) {
+        } else if (blogUrl.length() > BLOG_URL_MAX_LENGTH) {
             throw new CustomException(ResponseCode.BLOG_URL_TOO_LONG);
         } // 그 외 금지문자 포함 등의 error 처리 예정
     }
