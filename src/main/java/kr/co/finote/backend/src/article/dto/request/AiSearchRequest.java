@@ -11,8 +11,6 @@ import lombok.*;
 @AllArgsConstructor
 public class AiSearchRequest {
 
-    private Boolean code;
-
     @NotEmpty(message = "GPT 질문 내용이 있어야합니다.")
     @Size(max = 1000)
     private String prompt;

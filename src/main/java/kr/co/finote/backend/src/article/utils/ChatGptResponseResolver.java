@@ -16,16 +16,15 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class ChatGptResponseResolver {
 
-    public AiSearchResponse resolve(List<ChatgptResponse.Choice> choices, AiSearchType aiSearchType) {
+    public AiSearchResponse resolve(List<ChatgptResponse.Choice> choices) {
 
         String gptResponse =
                 choices.stream()
                         .map(choice -> choice.getMessage().getContent())
                         .collect(Collectors.joining(""));
 
-        String content = aiSearchType.getRESPONSE_PREFIX() + gptResponse;
-        log.info("답변 = {}", content);
+        log.info("답변 = {}", gptResponse);
 
-        return new AiSearchResponse(aiSearchType.getType(), content);
+        return new AiSearchResponse(gptResponse);
     }
 }

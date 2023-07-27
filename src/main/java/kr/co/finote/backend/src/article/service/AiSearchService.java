@@ -17,9 +17,9 @@ public class AiSearchService {
     private final ChatGptRequestSender chatGptRequestSender;
     private final ChatGptResponseResolver chatGptResponseResolver;
 
-    public AiSearchResponse getResponse(String prompt, AiSearchType aiSearchType) {
+    public AiSearchResponse getResponse(String prompt) {
 
         ChatgptResponse chatgptResponse = chatGptRequestSender.sendMessage(prompt);
-        return chatGptResponseResolver.resolve(chatgptResponse.getChoices(), aiSearchType);
+        return chatGptResponseResolver.resolve(chatgptResponse.getChoices());
     }
 }
