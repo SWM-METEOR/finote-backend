@@ -20,7 +20,7 @@ public class AiSearchApi {
 
     @Operation(summary = "AI 검색")
     @PostMapping("/ai-search")
-    public AiSearchResponse meaning(@RequestBody @Valid AiSearchRequest aiSearchRequest) {
+    public AiSearchResponse AiSearch(@RequestBody @Valid AiSearchRequest aiSearchRequest) {
 
         String prompt = aiSearchRequest.getPrompt() + ChatGptPromptUtils.PROMPT_SUFFIX;
         return aiSearchService.getResponse(prompt);
