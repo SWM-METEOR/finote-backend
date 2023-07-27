@@ -1,6 +1,5 @@
 package kr.co.finote.backend.src.article.service;
 
-import kr.co.finote.backend.src.article.domain.AiSearchType;
 import kr.co.finote.backend.src.article.dto.response.AiSearchResponse;
 import kr.co.finote.backend.src.article.dto.response.ChatgptResponse;
 import kr.co.finote.backend.src.article.utils.ChatGptRequestSender;

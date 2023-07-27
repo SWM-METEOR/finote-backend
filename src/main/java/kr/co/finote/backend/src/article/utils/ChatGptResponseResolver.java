@@ -2,7 +2,6 @@ package kr.co.finote.backend.src.article.utils;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import kr.co.finote.backend.src.article.domain.AiSearchType;
 import kr.co.finote.backend.src.article.dto.response.AiSearchResponse;
 import kr.co.finote.backend.src.article.dto.response.ChatgptResponse;
 import lombok.Getter;
