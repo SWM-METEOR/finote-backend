@@ -9,6 +9,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AiSearchResponse {
 
-    private String type;
     private String content;
 }
