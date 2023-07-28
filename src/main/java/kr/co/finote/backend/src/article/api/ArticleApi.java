@@ -42,7 +42,7 @@ public class ArticleApi {
                 .title(article.getTitle())
                 .body(article.getBody())
                 .authorId("author")
-                .authorNickname("nickname")
+                .authorNickname("유리")
                 .profileImageUrl("")
                 .createDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .build();
