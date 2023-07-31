@@ -1,8 +1,5 @@
 name: Build and Deploy Spring Boot to AWS EC2
 
-permissions:
-  contents: read
-
 on:
   push:
     branches: [ "dev" ]
@@ -18,6 +15,11 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
     - uses: actions/checkout@v3
 
@@ -39,8 +41,7 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_PRIVATE_ACCESS_KEY }}
+        role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
         aws-region: ap-northeast-2
 
     - name: Upload to S3
