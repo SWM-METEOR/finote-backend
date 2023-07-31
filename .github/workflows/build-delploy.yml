@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ "dev" ]
 
+permissions:
+  id-token: write
+  contents: read
+
 env:
   PROJECT_NAME: finote_backend
   BUCKET_NAME: cicd-finote-bucket
@@ -35,7 +39,7 @@ jobs:
       shell: bash
 
     - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@master
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_PRIVATE_ACCESS_KEY }}
