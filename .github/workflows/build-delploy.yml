@@ -41,6 +41,7 @@ jobs:
         arguments: build
 
   deploy:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Make Zip File
@@ -59,8 +60,8 @@ jobs:
 
       - name: Code Deploy To EC2 instance
         run: aws deploy create-deployment
-              --application-name $CODE_DEPLOY_APP_NAME
-              --deployment-config-name CodeDeployDefault.AllAtOnce
-              --deployment-group-name $DEPLOYMENT_GROUP_NAME
-              --s3-location bucket=$BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/$GITHUB_SHA.zip
+          --application-name $CODE_DEPLOY_APP_NAME
+          --deployment-config-name CodeDeployDefault.AllAtOnce
+          --deployment-group-name $DEPLOYMENT_GROUP_NAME
+          --s3-location bucket=$BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/$GITHUB_SHA.zip
 }
