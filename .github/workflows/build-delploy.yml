@@ -3,7 +3,7 @@ name: Build and Deploy Spring Boot to AWS EC2
 on:
   push:
     branches: [ "dev" ]
-  pull_request:
+  pull_request_target:
     branches: [ "dev" ]
 
 env:
@@ -48,9 +48,9 @@ jobs:
     - name: Upload to S3
       run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$BUCKET_NAME/$PROJECT_NAME/$GITHUB_SHA.zip
 
-#    - name: Code Deploy To EC2 instance
-#      run: aws deploy create-deployment
-#        --application-name $CODE_DEPLOY_APP_NAME
-#        --deployment-config-name CodeDeployDefault.AllAtOnce
-#        --deployment-group-name $DEPLOYMENT_GROUP_NAME
-#        --s3-location bucket=$BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/$GITHUB_SHA.zip
+    - name: Code Deploy To EC2 instance
+      run: aws deploy create-deployment
+        --application-name $CODE_DEPLOY_APP_NAME
+        --deployment-config-name CodeDeployDefault.AllAtOnce
+        --deployment-group-name $DEPLOYMENT_GROUP_NAME
+        --s3-location bucket=$BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/$GITHUB_SHA.zip
