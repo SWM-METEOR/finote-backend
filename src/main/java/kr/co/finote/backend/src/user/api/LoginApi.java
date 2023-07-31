@@ -32,13 +32,10 @@ public class LoginApi {
                 loginService.getGoogleUserInfo(googleAccessToken);
 
         SaveUserResponse saveUserResponse = loginService.saveUser(GoogleOauthUserInfo);
+
         // TODO : 이후 로그아웃 API를 통해 명시적 세션 만료 기능 추가해야함.
         sessionService.startSession(request, saveUserResponse.getUser());
 
-        return GoogleLoginResponse.builder()
-                .accessToken(googleAccessToken.getAccessToken())
-                .refreshToken(googleAccessToken.getRefreshToken())
-                .newUser(saveUserResponse.getNewUser())
-                .build();
+        return new GoogleLoginResponse(saveUserResponse.getIsNewUser());
     }
 }

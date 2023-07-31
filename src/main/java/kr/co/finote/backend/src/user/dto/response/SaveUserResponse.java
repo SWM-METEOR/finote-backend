@@ -5,11 +5,18 @@ import lombok.*;
 
 @Builder
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class SaveUserResponse {
 
     private User user;
-    private Boolean newUser;
+    private Boolean isNewUser;
+
+    public static SaveUserResponse newUser(User user) {
+        return SaveUserResponse.builder().user(user).isNewUser(true).build();
+    }
+
+    public static SaveUserResponse oldUser(User user) {
+        return SaveUserResponse.builder().user(user).isNewUser(false).build();
+    }
 }

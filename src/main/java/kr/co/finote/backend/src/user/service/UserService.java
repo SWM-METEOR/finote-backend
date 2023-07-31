@@ -58,8 +58,6 @@ public class UserService {
                         .findById(user.getId())
                         .orElseThrow(() -> new CustomException(ResponseCode.UNAUTHENTICATED));
 
-        findUser.setNickname(infoRequest.getNickname());
-        findUser.setBlogName(infoRequest.getBlogName());
-        findUser.setBlogUrl(infoRequest.getBlogUrl());
+        findUser.updateAdditionalInfo(infoRequest);
     }
 }

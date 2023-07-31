@@ -2,6 +2,7 @@ package kr.co.finote.backend.global.authentication.oauth;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import javax.transaction.Transactional;
 import kr.co.finote.backend.global.authentication.PrincipalDetails;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.repository.UserRepository;
@@ -20,6 +21,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
 
+    @Transactional
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
@@ -28,28 +30,19 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         String provider = userRequest.getClientRegistration().getRegistrationId();
         String providerId = oAuth2User.getAttribute("sub");
         String username = provider + "_" + providerId;
-
         String email = oAuth2User.getAttribute("email");
 
         Optional<User> findUser = userRepository.findByUsernameAndIsDeleted(username, false);
-        User userEntity;
+        User user;
 
         if (findUser.isEmpty()) {
-            userEntity =
-                    User.builder()
-                            .username(username)
-                            .email(email)
-                            .provider(provider)
-                            .providerId(providerId)
-                            .lastLoginDate(LocalDateTime.now())
-                            .build();
-            userRepository.save(userEntity);
+            user = User.newSocialUser(username, email, provider, providerId, LocalDateTime.now());
+            userRepository.save(user);
         } else {
-            userEntity = findUser.get();
-            userEntity.setLastLoginDate(LocalDateTime.now());
-            userRepository.save(userEntity);
+            user = findUser.get();
+            user.updateLastLoginDate(LocalDateTime.now());
         }
 
-        return new PrincipalDetails(userEntity, oAuth2User.getAttributes());
+        return new PrincipalDetails(user, oAuth2User.getAttributes());
     }
 }

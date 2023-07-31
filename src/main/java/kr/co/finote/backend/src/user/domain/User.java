@@ -2,15 +2,16 @@ package kr.co.finote.backend.src.user.domain;
 
 import java.time.LocalDateTime;
 import javax.persistence.*;
+import kr.co.finote.backend.global.authentication.oauth.google.dto.response.GoogleOauthUserInfoResponse;
 import kr.co.finote.backend.global.entity.BaseEntity;
+import kr.co.finote.backend.src.user.dto.request.AdditionalInfoRequest;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Getter
-@Setter
-@NoArgsConstructor
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
 public class User extends BaseEntity {
@@ -40,4 +41,48 @@ public class User extends BaseEntity {
 
     private String blogName;
     private String blogUrl;
+
+    // TODO principalService에 사용(추후에 확인 필요)
+    public static User newSocialUser(
+            String username,
+            String email,
+            String provider,
+            String providerId,
+            LocalDateTime lastLoginDate) {
+        return User.builder()
+                .username(username)
+                .email(email)
+                .provider(provider)
+                .providerId(providerId)
+                .lastLoginDate(lastLoginDate)
+                .build();
+    }
+
+    public static User newGoogleUser(
+            GoogleOauthUserInfoResponse googleOauthUserInfoResponse,
+            String randomNickname,
+            LocalDateTime lastLoginDate) {
+        return User.builder()
+                .username(googleOauthUserInfoResponse.getName())
+                .email(googleOauthUserInfoResponse.getEmail())
+                .provider(SocialType.GOOGLE.getValue())
+                .providerId(googleOauthUserInfoResponse.getId())
+                .role(Role.USER)
+                .lastLoginDate(lastLoginDate)
+                .nickname(randomNickname)
+                .profileImageUrl(null)
+                .blogName(randomNickname)
+                .blogUrl(googleOauthUserInfoResponse.getName() + "/" + randomNickname)
+                .build();
+    }
+
+    public void updateLastLoginDate(LocalDateTime lastLoginDate) {
+        this.lastLoginDate = lastLoginDate;
+    }
+
+    public void updateAdditionalInfo(AdditionalInfoRequest additionalInfoRequest) {
+        this.nickname = additionalInfoRequest.getNickname();
+        this.blogName = additionalInfoRequest.getBlogName();
+        this.blogUrl = additionalInfoRequest.getBlogUrl();
+    }
 }
