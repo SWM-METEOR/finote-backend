@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ "dev" ]
 
+permissions:
+  contents: read
+
 env:
   PROJECT_NAME: finote_backend
   BUCKET_NAME: cicd-finote-bucket
