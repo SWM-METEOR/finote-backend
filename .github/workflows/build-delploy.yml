@@ -6,10 +6,6 @@ on:
   pull_request:
     branches: [ "dev" ]
 
-permissions:
-  id-token: write
-  contents: read
-
 env:
   PROJECT_NAME: finote_backend
   BUCKET_NAME: cicd-finote-bucket
@@ -19,6 +15,10 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: write
 
     steps:
     - uses: actions/checkout@v3
