@@ -10,7 +10,7 @@ name: Build and Deploy Spring Boot to AWS EC2
 on:
   push:
     branches: [ "dev" ]
-  pull_request:
+  pull_request_target:
     branches: [ "dev" ]
 
 permissions:
