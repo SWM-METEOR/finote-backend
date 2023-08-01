@@ -7,4 +7,8 @@ import lombok.*;
 public class GoogleLoginResponse {
 
     private Boolean newUser;
+
+    public static GoogleLoginResponse createGoogleLoginResponse(boolean newUser) {
+        return new GoogleLoginResponse(newUser);
+    }
 }

@@ -27,7 +27,7 @@ public class Article extends BaseEntity {
 
     private int totalLike;
 
-    public static Article newArticle(ArticleRequest articleRequest, User user) {
+    public static Article createArticle(ArticleRequest articleRequest, User user) {
         return Article.builder()
                 .title(articleRequest.getTitle())
                 .body(articleRequest.getBody())

@@ -1,7 +1,6 @@
 package kr.co.finote.backend.src.user.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.*;
 import javax.transaction.Transactional;
@@ -31,7 +30,7 @@ public class LoginService {
     private final RestTemplate restTemplate;
     private final UserRepository userRepository;
 
-    public GoogleAccessTokenRequest getGoogleAccessToken(String code) {
+    public GoogleAccessTokenRequest getGoogleAccessToken(String code) throws JsonProcessingException {
         Map<String, String> params = new HashMap<>();
         params.put("code", code);
         params.put("client_id", googleOauth.getGoogleClientId());
@@ -44,43 +43,27 @@ public class LoginService {
 
         String accessToken = responseEntity.getBody();
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        GoogleAccessTokenRequest googleAccessTokenRequest;
-        try {
-            googleAccessTokenRequest =
-                    objectMapper.readValue(accessToken, GoogleAccessTokenRequest.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-        return googleAccessTokenRequest;
+        return GoogleAccessTokenRequest.createGoogleAccessTokenRequest(accessToken);
     }
 
-    public GoogleOauthUserInfoResponse getGoogleUserInfo(
-            GoogleAccessTokenRequest googleAccessTokenRequest) {
+    public GoogleOauthUserInfoResponse getGoogleUserInfo(GoogleAccessTokenRequest request)
+            throws JsonProcessingException {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + googleAccessTokenRequest.getAccessToken());
+        headers.add("Authorization", "Bearer " + request.getAccessToken());
 
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
+        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(headers);
         ResponseEntity<String> response =
                 restTemplate.exchange(
-                        googleOauth.getGoogleUserInfoUrl(), HttpMethod.GET, request, String.class);
+                        googleOauth.getGoogleUserInfoUrl(), HttpMethod.GET, requestEntity, String.class);
 
         String userInfo = response.getBody();
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        GoogleOauthUserInfoResponse googleOauthUserInfoResponse;
-        try {
-            googleOauthUserInfoResponse =
-                    objectMapper.readValue(userInfo, GoogleOauthUserInfoResponse.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-        return googleOauthUserInfoResponse;
+        return GoogleOauthUserInfoResponse.createGoogleOauthUserInfoResponse(userInfo);
     }
 
     @Transactional
-    public SaveUserResponse saveUser(GoogleOauthUserInfoResponse userInfo) {
-        Optional<User> findUser = userRepository.findByEmailAndIsDeleted(userInfo.getEmail(), false);
+    public SaveUserResponse saveUser(GoogleOauthUserInfoResponse response) {
+        Optional<User> findUser = userRepository.findByEmailAndIsDeleted(response.getEmail(), false);
 
         if (findUser.isPresent()) {
             User user = findUser.get();
@@ -95,7 +78,7 @@ public class LoginService {
                 existsByNickName = userRepository.existsByNicknameAndIsDeleted(randomNickname, false);
             }
 
-            User user = User.newGoogleUser(userInfo, randomNickname, LocalDateTime.now());
+            User user = User.newGoogleUser(response, randomNickname, LocalDateTime.now());
             userRepository.save(user);
 
             return SaveUserResponse.newUser(user);
