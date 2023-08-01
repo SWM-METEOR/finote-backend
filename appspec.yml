@@ -4,6 +4,7 @@ os: linux
 files:
   - source: /
     destination: /home/ubuntu/finote/finote-backend
+file_exists_behavior: OVERWRITE
 permissions:
   - object: /home/ubuntu/finote/finote-backend/
     owner: ubuntu
