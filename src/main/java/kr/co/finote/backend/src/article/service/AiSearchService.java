@@ -1,7 +1,9 @@
 package kr.co.finote.backend.src.article.service;
 
+import kr.co.finote.backend.src.article.dto.request.AiSearchRequest;
 import kr.co.finote.backend.src.article.dto.response.AiSearchResponse;
 import kr.co.finote.backend.src.article.dto.response.ChatgptResponse;
+import kr.co.finote.backend.src.article.utils.ChatGptPromptUtils;
 import kr.co.finote.backend.src.article.utils.ChatGptRequestSender;
 import kr.co.finote.backend.src.article.utils.ChatGptResponseResolver;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +18,8 @@ public class AiSearchService {
     private final ChatGptRequestSender chatGptRequestSender;
     private final ChatGptResponseResolver chatGptResponseResolver;
 
-    public AiSearchResponse getResponse(String prompt) {
-
+    public AiSearchResponse getResponse(AiSearchRequest request) {
+        String prompt = request.getPrompt() + ChatGptPromptUtils.PROMPT_SUFFIX;
         ChatgptResponse chatgptResponse = chatGptRequestSender.sendMessage(prompt);
         return chatGptResponseResolver.resolve(chatgptResponse.getChoices());
     }

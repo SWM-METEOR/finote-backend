@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class SessionService {
 
-    public void startSession(HttpServletRequest request, User loginUser) {
-        HttpSession session = request.getSession();
+    public void startSession(HttpServletRequest servletRequest, User loginUser) {
+        HttpSession session = servletRequest.getSession();
         session.setAttribute(SessionUtils.LOGIN_USER, loginUser);
     }
 }

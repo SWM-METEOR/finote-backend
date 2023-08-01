@@ -8,4 +8,8 @@ import lombok.Getter;
 public class PostArticleResponse {
 
     private Long articleId;
+
+    public static PostArticleResponse createPostArticleResponse(Long articleId) {
+        return new PostArticleResponse(articleId);
+    }
 }

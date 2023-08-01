@@ -27,25 +27,21 @@ public class UserApi {
     /* Field Validation API */
     @Operation(summary = "닉네임 중복 검사")
     @PostMapping(value = "/validation/nickname")
-    public void validateNickname(
-            @RequestBody @Valid NicknameDuplicateCheckRequest nicknameDuplicateCheckRequest) {
+    public void validateNickname(@RequestBody @Valid NicknameDuplicateCheckRequest request) {
         userService.validateNickname(
-                nicknameDuplicateCheckRequest
-                        .getNickname()); // throws exception if nickname is invalid (e.g. duplicated)
+                request.getNickname()); // throws exception if nickname is invalid (e.g. duplicated)
     }
 
     @Operation(summary = "블로그 이름 중복 검사")
     @PostMapping(value = "/validation/blog-name")
-    public void validateBlogName(
-            @RequestBody @Valid BlogNameDuplicateCheckRequest blogNameDuplicateCheckRequest) {
-        userService.validateBlogName(blogNameDuplicateCheckRequest.getBlogName());
+    public void validateBlogName(@RequestBody @Valid BlogNameDuplicateCheckRequest request) {
+        userService.validateBlogName(request.getBlogName());
     }
 
     @Operation(summary = "블로그 URL 중복 검사")
     @PostMapping(value = "/validation/blog-url")
-    public void validateBlogUrl(
-            @RequestBody @Valid BlogUrlDuplicateCheckRequest blogUrlDuplicateCheckRequest) {
-        userService.validateBlogUrl(blogUrlDuplicateCheckRequest.getBlogUrl());
+    public void validateBlogUrl(@RequestBody @Valid BlogUrlDuplicateCheckRequest request) {
+        userService.validateBlogUrl(request.getBlogUrl());
     }
 
     /* Field Getter API */
@@ -67,8 +63,8 @@ public class UserApi {
     @Operation(summary = "추가 정보 입력")
     @PostMapping("/additional-info")
     public void additionalInfo(
-            HttpSession httpSession, @RequestBody @Valid AdditionalInfoRequest additionalInfoRequest) {
+            HttpSession httpSession, @RequestBody @Valid AdditionalInfoRequest request) {
         User loginUser = (User) httpSession.getAttribute(SessionUtils.LOGIN_USER);
-        userService.editAdditionalInfo(loginUser, additionalInfoRequest);
+        userService.editAdditionalInfo(loginUser, request);
     }
 }

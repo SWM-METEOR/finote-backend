@@ -8,4 +8,8 @@ import lombok.Getter;
 public class AiSearchResponse {
 
     private String content;
+
+    public static AiSearchResponse createAiSearchResponse(String content) {
+        return new AiSearchResponse(content);
+    }
 }

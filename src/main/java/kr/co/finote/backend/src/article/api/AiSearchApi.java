@@ -5,7 +5,6 @@ import javax.validation.Valid;
 import kr.co.finote.backend.src.article.dto.request.AiSearchRequest;
 import kr.co.finote.backend.src.article.dto.response.AiSearchResponse;
 import kr.co.finote.backend.src.article.service.AiSearchService;
-import kr.co.finote.backend.src.article.utils.ChatGptPromptUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +19,7 @@ public class AiSearchApi {
 
     @Operation(summary = "AI 검색")
     @PostMapping("/ai-search")
-    public AiSearchResponse AiSearch(@RequestBody @Valid AiSearchRequest aiSearchRequest) {
-        String prompt = aiSearchRequest.getPrompt() + ChatGptPromptUtils.PROMPT_SUFFIX;
-        return aiSearchService.getResponse(prompt);
+    public AiSearchResponse AiSearch(@RequestBody @Valid AiSearchRequest request) {
+        return aiSearchService.getResponse(request);
     }
 }

@@ -1,12 +1,13 @@
 package kr.co.finote.backend.global.authentication.oauth.google.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Setter
 public class GoogleAccessTokenRequest {
 
     @JsonProperty("access_token")
@@ -26,4 +27,10 @@ public class GoogleAccessTokenRequest {
 
     @JsonProperty("id_token")
     private String idToken;
+
+    public static GoogleAccessTokenRequest createGoogleAccessTokenRequest(String accessToken)
+            throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(accessToken, GoogleAccessTokenRequest.class);
+    }
 }

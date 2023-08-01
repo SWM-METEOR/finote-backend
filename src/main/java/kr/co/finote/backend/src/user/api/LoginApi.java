@@ -26,16 +26,17 @@ public class LoginApi {
 
     @Operation(summary = "구글 로그인 처리", description = "프론트에서 발급받은 Code를 전달해주어야 함.")
     @GetMapping("/auth/google")
-    public GoogleLoginResponse auth(@RequestParam String code, HttpServletRequest request) {
-        GoogleAccessTokenRequest googleAccessToken = loginService.getGoogleAccessToken(code);
-        GoogleOauthUserInfoResponse GoogleOauthUserInfo =
-                loginService.getGoogleUserInfo(googleAccessToken);
+    public GoogleLoginResponse auth(@RequestParam String code, HttpServletRequest servletRequest)
+            throws Exception {
+        GoogleAccessTokenRequest googleAccessTokenRequest = loginService.getGoogleAccessToken(code);
+        GoogleOauthUserInfoResponse googleOauthUserInfoResponse =
+                loginService.getGoogleUserInfo(googleAccessTokenRequest);
 
-        SaveUserResponse saveUserResponse = loginService.saveUser(GoogleOauthUserInfo);
+        SaveUserResponse saveUserResponse = loginService.saveUser(googleOauthUserInfoResponse);
 
         // TODO : 이후 로그아웃 API를 통해 명시적 세션 만료 기능 추가해야함.
-        sessionService.startSession(request, saveUserResponse.getUser());
+        sessionService.startSession(servletRequest, saveUserResponse.getUser());
 
-        return new GoogleLoginResponse(saveUserResponse.getIsNewUser());
+        return GoogleLoginResponse.createGoogleLoginResponse(saveUserResponse.getIsNewUser());
     }
 }

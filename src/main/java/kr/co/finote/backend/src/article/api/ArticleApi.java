@@ -21,11 +21,11 @@ public class ArticleApi {
     @Operation(summary = "블로그 글 작성")
     @PostMapping
     public PostArticleResponse postArticles(
-            @RequestBody @Valid ArticleRequest articleRequest, HttpSession httpSession) {
+            @RequestBody @Valid ArticleRequest request, HttpSession httpSession) {
         // TODO 유저 로그인 후 session 검증
         //        User loginUser = (User) httpSession.getAttribute(SessionUtils.LOGIN_USER);
-        Long articleId = articleService.save(articleRequest);
-        return new PostArticleResponse(articleId);
+        Long articleId = articleService.save(request);
+        return PostArticleResponse.createPostArticleResponse(articleId);
     }
 
     @Operation(summary = "블로그 글 조회")

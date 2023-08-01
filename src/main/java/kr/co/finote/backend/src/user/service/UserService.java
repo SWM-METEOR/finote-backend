@@ -48,16 +48,16 @@ public class UserService {
     }
 
     @Transactional
-    public void editAdditionalInfo(User user, AdditionalInfoRequest infoRequest) {
-        validateNickname(infoRequest.getNickname());
-        validateBlogName(infoRequest.getBlogName());
-        validateBlogUrl(infoRequest.getBlogUrl());
+    public void editAdditionalInfo(User user, AdditionalInfoRequest request) {
+        validateNickname(request.getNickname());
+        validateBlogName(request.getBlogName());
+        validateBlogUrl(request.getBlogUrl());
 
         User findUser =
                 userRepository
-                        .findById(user.getId())
+                        .findByIdAndIsDeleted(user.getId(), false)
                         .orElseThrow(() -> new CustomException(ResponseCode.UNAUTHENTICATED));
 
-        findUser.updateAdditionalInfo(infoRequest);
+        findUser.updateAdditionalInfo(request);
     }
 }

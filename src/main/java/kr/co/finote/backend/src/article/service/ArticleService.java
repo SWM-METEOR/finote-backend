@@ -15,7 +15,7 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
 
     public Long save(ArticleRequest articleRequest) {
-        Article article = Article.newArticle(articleRequest, null);
+        Article article = Article.createArticle(articleRequest, null);
         return articleRepository.save(article).getId();
     }
 
