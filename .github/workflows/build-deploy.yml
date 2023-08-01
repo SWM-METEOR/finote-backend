@@ -11,6 +11,7 @@ on:
     branches: [ "dev" ]
   pull_request:
     branches: [ "dev" ]
+
 permissions:
   contents: read
 
@@ -40,6 +41,7 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/dev' && github.event.head_commit != null
 
     steps:
       - uses: actions/checkout@v2
