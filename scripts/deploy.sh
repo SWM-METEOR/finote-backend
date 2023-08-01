@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 REPOSITORY=/home/ubuntu/finote/finote-backend
 cd $REPOSITORY
 
