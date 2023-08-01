@@ -4,7 +4,6 @@ import java.util.List;
 import lombok.*;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @ToString
 public class ChatgptResponse {

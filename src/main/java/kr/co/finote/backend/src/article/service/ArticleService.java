@@ -15,13 +15,7 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
 
     public Long save(ArticleRequest articleRequest) {
-        Article article =
-                Article.builder()
-                        .title(articleRequest.getTitle())
-                        .body(articleRequest.getBody())
-                        //                        .user(user)   // TODO 로그인 후 user 정보 연결 추가
-                        .build();
-
+        Article article = Article.newArticle(articleRequest, null);
         return articleRepository.save(article).getId();
     }
 

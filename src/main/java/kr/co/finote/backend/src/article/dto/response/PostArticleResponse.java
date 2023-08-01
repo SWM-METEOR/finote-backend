@@ -3,9 +3,9 @@ package kr.co.finote.backend.src.article.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@Getter
 @AllArgsConstructor
-public class AiSearchResponse {
+@Getter
+public class PostArticleResponse {
 
-    private String content;
+    private Long articleId;
 }

@@ -9,7 +9,6 @@ import kr.co.finote.backend.global.authentication.oauth.google.GoogleOauth;
 import kr.co.finote.backend.global.authentication.oauth.google.dto.request.GoogleAccessTokenRequest;
 import kr.co.finote.backend.global.authentication.oauth.google.dto.response.GoogleOauthUserInfoResponse;
 import kr.co.finote.backend.global.utils.StringUtils;
-import kr.co.finote.backend.src.user.domain.Role;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.dto.response.SaveUserResponse;
 import kr.co.finote.backend.src.user.repository.UserRepository;
@@ -85,8 +84,8 @@ public class LoginService {
 
         if (findUser.isPresent()) {
             User user = findUser.get();
-            user.setLastLoginDate(LocalDateTime.now());
-            return new SaveUserResponse(user, false);
+            user.updateLastLoginDate(LocalDateTime.now());
+            return SaveUserResponse.oldUser(user);
         } else {
             // 중복 nickname이 없을 때까지 랜덤 nickname 생성
             String randomNickname = StringUtils.makeRandomString();
@@ -95,22 +94,11 @@ public class LoginService {
                 randomNickname = StringUtils.makeRandomString();
                 existsByNickName = userRepository.existsByNicknameAndIsDeleted(randomNickname, false);
             }
-            User user =
-                    User.builder()
-                            .username(userInfo.getName())
-                            .email(userInfo.getEmail())
-                            .provider("Google")
-                            .providerId(userInfo.getId())
-                            .role(Role.USER)
-                            .lastLoginDate(LocalDateTime.now())
-                            .nickname(randomNickname)
-                            .profileImageUrl(null)
-                            .blogName(randomNickname)
-                            .blogUrl(userInfo.getName() + "/" + randomNickname)
-                            .build();
+
+            User user = User.newGoogleUser(userInfo, randomNickname, LocalDateTime.now());
             userRepository.save(user);
 
-            return new SaveUserResponse(user, true);
+            return SaveUserResponse.newUser(user);
         }
     }
 }
