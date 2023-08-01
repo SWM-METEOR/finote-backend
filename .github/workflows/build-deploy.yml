@@ -43,6 +43,7 @@ jobs:
 
     steps:
       - name: Make Zip File
+        uses: actions/checkout@v2
         run: zip -qq -r ./$GITHUB_SHA.zip .
         shell: bash
 
