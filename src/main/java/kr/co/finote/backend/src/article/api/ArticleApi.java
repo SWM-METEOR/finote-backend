@@ -8,6 +8,8 @@ import kr.co.finote.backend.src.article.dto.request.ArticleRequest;
 import kr.co.finote.backend.src.article.dto.response.ArticleResponse;
 import kr.co.finote.backend.src.article.dto.response.PostArticleResponse;
 import kr.co.finote.backend.src.article.service.ArticleService;
+import kr.co.finote.backend.src.user.domain.User;
+import kr.co.finote.backend.src.user.utils.SessionUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,9 +24,8 @@ public class ArticleApi {
     @PostMapping
     public PostArticleResponse postArticles(
             @RequestBody @Valid ArticleRequest request, HttpSession httpSession) {
-        // TODO 유저 로그인 후 session 검증
-        //        User loginUser = (User) httpSession.getAttribute(SessionUtils.LOGIN_USER);
-        Long articleId = articleService.save(request);
+        User loginUser = (User) httpSession.getAttribute(SessionUtils.LOGIN_USER);
+        Long articleId = articleService.save(request, loginUser);
         return PostArticleResponse.createPostArticleResponse(articleId);
     }
 

@@ -12,11 +12,12 @@ import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
-@org.springframework.web.bind.annotation.RestControllerAdvice(
+@RestControllerAdvice(
         basePackages = "kr.co.finote.backend.src")
-public class RestControllerAdvice implements ResponseBodyAdvice<Object> {
+public class GlobalRestControllerAdvice implements ResponseBodyAdvice<Object> {
     @Override
     public boolean supports(@Nullable MethodParameter returnType, @Nullable Class converterType) {
         return true;
