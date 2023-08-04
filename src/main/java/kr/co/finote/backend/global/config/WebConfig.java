@@ -13,7 +13,6 @@ public class WebConfig implements WebMvcConfigurer {
         registry
                 .addInterceptor(new SessionInterceptor())
                 .addPathPatterns("/users/**", "/articles/**") // TODO https 설정 후 글쓰기 권한 확인 필요
-                .excludePathPatterns("/users/auth/google", "/users/validation/**",
-                        "/articles/{articleId}");
+                .excludePathPatterns("/users/auth/google", "/users/validation/**", "/articles/{articleId}");
     }
 }

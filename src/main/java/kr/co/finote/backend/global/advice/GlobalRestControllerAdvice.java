@@ -15,8 +15,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
-@RestControllerAdvice(
-        basePackages = "kr.co.finote.backend.src")
+@RestControllerAdvice(basePackages = "kr.co.finote.backend.src")
 public class GlobalRestControllerAdvice implements ResponseBodyAdvice<Object> {
     @Override
     public boolean supports(@Nullable MethodParameter returnType, @Nullable Class converterType) {

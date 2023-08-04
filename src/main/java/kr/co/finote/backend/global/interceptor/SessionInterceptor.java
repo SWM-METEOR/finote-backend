@@ -13,13 +13,14 @@ import org.springframework.web.servlet.HandlerInterceptor;
 public class SessionInterceptor implements HandlerInterceptor {
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+    public boolean preHandle(
+            HttpServletRequest request, HttpServletResponse response, Object handler) {
         log.info(request.getRequestURL().toString());
         log.info(request.getRequestURI());
         log.info(request.getMethod());
         HttpSession session = request.getSession(false);
 
-        if(session == null || session.getAttribute(SessionUtils.LOGIN_USER) == null) {
+        if (session == null || session.getAttribute(SessionUtils.LOGIN_USER) == null) {
             throw new CustomException(ResponseCode.UNAUTHENTICATED);
         }
         return true;
