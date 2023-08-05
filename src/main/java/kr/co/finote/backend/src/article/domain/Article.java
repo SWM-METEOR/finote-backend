@@ -31,7 +31,7 @@ public class Article extends BaseEntity {
         return Article.builder()
                 .title(articleRequest.getTitle())
                 .body(articleRequest.getBody())
-                //                        .user(user)   // TODO 로그인 후 user 정보 연결 추가
+                .user(user)
                 .build();
     }
 }

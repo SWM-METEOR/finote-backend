@@ -5,6 +5,7 @@ import kr.co.finote.backend.global.exception.CustomException;
 import kr.co.finote.backend.src.article.domain.Article;
 import kr.co.finote.backend.src.article.dto.request.ArticleRequest;
 import kr.co.finote.backend.src.article.repository.ArticleRepository;
+import kr.co.finote.backend.src.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +15,8 @@ public class ArticleService {
 
     private final ArticleRepository articleRepository;
 
-    public Long save(ArticleRequest articleRequest) {
-        Article article = Article.createArticle(articleRequest, null);
+    public Long save(ArticleRequest articleRequest, User loginUser) {
+        Article article = Article.createArticle(articleRequest, loginUser);
         return articleRepository.save(article).getId();
     }
 

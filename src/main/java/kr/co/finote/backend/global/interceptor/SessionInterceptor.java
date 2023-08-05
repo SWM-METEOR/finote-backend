@@ -13,18 +13,16 @@ import org.springframework.web.servlet.HandlerInterceptor;
 public class SessionInterceptor implements HandlerInterceptor {
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-            throws Exception {
+    public boolean preHandle(
+            HttpServletRequest request, HttpServletResponse response, Object handler) {
         log.info(request.getRequestURL().toString());
         log.info(request.getRequestURI());
         log.info(request.getMethod());
-        HttpSession session = request.getSession();
-        if (request.getMethod().equals("GET")
-                && request.getRequestURI().contains("/articles/")
-                && request.getRequestURI().contains("/health-check"))
-            return true; // 블로그 글 조회인 경우 인증되지 않은 사용자도 조회 가능
-        else if (session.getAttribute(SessionUtils.LOGIN_USER) == null) {
+        HttpSession session = request.getSession(false);
+
+        if (session == null || session.getAttribute(SessionUtils.LOGIN_USER) == null) {
             throw new CustomException(ResponseCode.UNAUTHENTICATED);
-        } else return true;
+        }
+        return true;
     }
 }
