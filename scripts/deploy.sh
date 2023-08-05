@@ -22,4 +22,4 @@ echo "> Deploy - $JAR_PATH "
 BUILD_REPOSITORY=/home/ubuntu/finote/finote-backend/build/libs
 # shellcheck disable=SC2164
 cd $BUILD_REPOSITORY
-nohup java -jar "$JAR_NAME" &
+nohup java -jar "$JAR_NAME" > /dev/null 2> /dev/null < /dev/null &
