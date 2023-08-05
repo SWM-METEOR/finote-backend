@@ -1,8 +1,7 @@
 package kr.co.finote.backend.global.advice;
 
 import kr.co.finote.backend.global.code.ResponseCode;
-import kr.co.finote.backend.global.exception.NotFoundException;
-import kr.co.finote.backend.global.exception.UnAuthorizedException;
+import kr.co.finote.backend.global.exception.CustomException;
 import kr.co.finote.backend.global.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 @Slf4j
-public class GlobalExHandler {
+public class GlobalExceptionHandler {
 
     // @Valid 실패 시 발생하는 예외 공통 처리 로직
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -25,16 +24,8 @@ public class GlobalExHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(NotFoundException.class)
-    protected ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException e) {
-        log.error(e.getMessage());
-
-        ErrorResponse errorResponse = ErrorResponse.noDetailError(e.getResponseCode());
-        return new ResponseEntity<>(errorResponse, e.getResponseCode().getStatus());
-    }
-
-    @ExceptionHandler(UnAuthorizedException.class)
-    protected ResponseEntity<ErrorResponse> handleUnAuthorizedException(UnAuthorizedException e) {
+    @ExceptionHandler(CustomException.class)
+    protected ResponseEntity<ErrorResponse> handleCustomException(CustomException e) {
         log.error(e.getMessage());
 
         ErrorResponse errorResponse = ErrorResponse.noDetailError(e.getResponseCode());
