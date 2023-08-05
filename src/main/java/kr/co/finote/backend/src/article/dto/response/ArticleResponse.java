@@ -1,6 +1,5 @@
 package kr.co.finote.backend.src.article.dto.response;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import kr.co.finote.backend.src.article.domain.Article;
 import lombok.Builder;
