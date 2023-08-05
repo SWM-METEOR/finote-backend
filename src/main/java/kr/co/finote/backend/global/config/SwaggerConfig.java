@@ -5,13 +5,18 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @RequiredArgsConstructor
 @Configuration
 public class SwaggerConfig {
+
+    @Value("${SWAGGER_SERVERS_URL}")
+    private String SWAGGER_SERVERS_URL;
 
     @Bean
     public OpenAPI openAPI() {
@@ -31,8 +36,10 @@ public class SwaggerConfig {
 
         SecurityRequirement securityRequirement = new SecurityRequirement().addList("JSESSIONID");
 
+        Server server = new Server().url(SWAGGER_SERVERS_URL);
+
         return new OpenAPI()
-                .addServersItem(new Server().url("/"))
+                .servers(List.of(server))
                 .addSecurityItem(securityRequirement)
                 .components(
                         new io.swagger.v3.oas.models.Components()
