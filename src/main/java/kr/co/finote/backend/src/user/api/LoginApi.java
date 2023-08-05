@@ -39,4 +39,10 @@ public class LoginApi {
 
         return GoogleLoginResponse.createGoogleLoginResponse(saveUserResponse.getIsNewUser());
     }
+
+    @Operation(summary = "유저 로그인 상태 확인")
+    @GetMapping("/check-login-status")
+    public boolean checkLoginStatus(HttpServletRequest servletRequest) {
+        return sessionService.checkLoginStatus(servletRequest);
+    }
 }
