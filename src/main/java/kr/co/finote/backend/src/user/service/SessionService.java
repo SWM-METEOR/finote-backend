@@ -15,4 +15,9 @@ public class SessionService {
         HttpSession session = servletRequest.getSession();
         session.setAttribute(SessionUtils.LOGIN_USER, loginUser);
     }
+
+    public boolean checkLoginStatus(HttpServletRequest servletRequest) {
+        HttpSession session = servletRequest.getSession(false);
+        return session != null && session.getAttribute(SessionUtils.LOGIN_USER) != null;
+    }
 }
