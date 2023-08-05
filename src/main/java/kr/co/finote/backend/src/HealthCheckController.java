@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/")
 public class HealthCheckController {
 
-    @Operation(summary = "서버 상태 체크")
+    @Operation(summary = "Server Health Check")
     @GetMapping("/health-check")
     public boolean getHealthCheck() {
         return true;
