@@ -8,8 +8,7 @@ JAR_PATH=$REPOSITORY/build/libs/$JAR_NAME
 
 CURRENT_PID=$(lsof -t -i :8080)
 
-if [ -z "$CURRENT_PID" ]
-then
+if [ -z "$CURRENT_PID" ]; then
   echo "> 종료할 애플리케이션이 없습니다."
 else
   echo "> kill -9 $CURRENT_PID"
@@ -18,4 +17,9 @@ else
 fi
 
 echo "> Deploy - $JAR_PATH "
-nohup java -jar "$JAR_PATH" > /dev/null 2> /dev/null < /dev/null &
+./gradlew clean build
+
+BUILD_REPOSITORY=/home/ubuntu/finote/finote-backend/build/libs
+# shellcheck disable=SC2164
+cd $BUILD_REPOSITORY
+nohup java -jar "$JAR_NAME" &
