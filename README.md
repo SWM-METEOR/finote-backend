@@ -1,3 +1,11 @@
+### 기술 노트
+`프로젝트 진행 중 기술적으로 공부 및 의견 공유를 진행하며 작성한 노트입니다`
+> https://soma-meteor.notion.site/36932554e25e4db090e25ab6323cca55
+
+### 트러블 슈팅
+`프로젝트 진행 중 겪었던 트러블과 해결하는 과정을 정리한 문서입니다`
+> https://soma-meteor.notion.site/BE-a468c3ed290f48c88d9334cc4e15dd03?pvs=4
+
 ![image](https://github.com/YuriKwon/web08-ChoBab/assets/55318618/23cc16c0-cafb-41f0-a1b5-3cdadd48dfc0)
 ---
 <p>블로그 글을 읽을 때의 <strong>새로운 경험</strong>,</p>
