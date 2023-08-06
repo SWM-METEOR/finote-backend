@@ -14,9 +14,11 @@ public class WebConfig implements WebMvcConfigurer {
                 .addInterceptor(new SessionInterceptor())
                 .addPathPatterns("/users/**", "/articles/**")
                 .excludePathPatterns(
+                        "/users/callback", // 백엔드 구글 로그인 테스트를 위함
                         "/users/auth/google",
                         "/users/validation/**",
                         "/users/check-login-status",
-                        "/articles/{articleId}");
+                        "/articles/{articleId}",
+                        "/articles");
     }
 }

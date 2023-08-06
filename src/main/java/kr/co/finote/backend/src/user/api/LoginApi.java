@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import kr.co.finote.backend.global.authentication.oauth.google.dto.request.GoogleAccessTokenRequest;
 import kr.co.finote.backend.global.authentication.oauth.google.dto.response.GoogleLoginResponse;
 import kr.co.finote.backend.global.authentication.oauth.google.dto.response.GoogleOauthUserInfoResponse;
+import kr.co.finote.backend.src.user.dto.response.GoogleLoginCodeResponse;
 import kr.co.finote.backend.src.user.dto.response.SaveUserResponse;
 import kr.co.finote.backend.src.user.service.LoginService;
 import kr.co.finote.backend.src.user.service.SessionService;
@@ -44,5 +45,15 @@ public class LoginApi {
     @GetMapping("/check-login-status")
     public boolean checkLoginStatus(HttpServletRequest servletRequest) {
         return sessionService.checkLoginStatus(servletRequest);
+    }
+
+    @Operation(
+            summary = "구글 로그인 콜백 처리",
+            description =
+                    "백엔드 로그인 테스트용. 요청 url [https://accounts.google.com/o/oauth2/v2/auth?client_id=96307152718-ku7cun76hfk7scuo8pohntmjpfu1eauq.apps.googleusercontent.com&redirect_uri=http://localhost:8080/users/callback&response_type=code&scope=profile email&access_type=offline]")
+    @GetMapping("/callback")
+    public GoogleLoginCodeResponse callback(@RequestParam String code) {
+        log.info("code : {}", code);
+        return GoogleLoginCodeResponse.createGoogleLoginCodeResponse(code);
     }
 }
