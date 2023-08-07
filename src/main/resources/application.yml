@@ -67,3 +67,9 @@ chatgpt:
   model: ${GPT_MODEL}
   max-token: ${GPT_MAX_TOKEN}
   temperature: ${GPT_TEMPERATURE}
+
+logging:
+  slack:
+    webhook-uri: ${SLACK_WEBHOOK_URI}
+  config: classpath:logback-slack.xml
+
