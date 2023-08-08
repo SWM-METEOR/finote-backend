@@ -18,6 +18,7 @@ public enum ResponseCode {
     INVALID_INPUT_VALUE(BAD_REQUEST, "400_INVALID_INPUT_VALUE", "입력값이 올바르지 않습니다."),
 
     /** Users error */
+    USER_NOT_FOUND(NOT_FOUND, "404_USER_NOT_FOUND", "존재하지 않는 유저입니다."),
     DUPLICATE_NICKNAME(BAD_REQUEST, "400_DUPLICATE_NICKNAME", "중복된 닉네임입니다."),
     NICKNAME_TOO_LONG(BAD_REQUEST, "400_NICKNAME_TOO_LONG", "닉네임은 100자 이하로 입력해주세요."),
     DUPLICATE_BLOG_NAME(BAD_REQUEST, "400_DUPLICATE_BLOG_NAME", "중복된 블로그명입니다."),

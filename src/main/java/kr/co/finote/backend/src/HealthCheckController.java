@@ -11,7 +11,5 @@ public class HealthCheckController {
 
     @Operation(summary = "Server Health Check")
     @GetMapping("/health-check")
-    public boolean getHealthCheck() {
-        return true;
-    }
+    public void getHealthCheck() {}
 }
