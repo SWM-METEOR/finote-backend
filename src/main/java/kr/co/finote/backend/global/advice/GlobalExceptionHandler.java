@@ -18,7 +18,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(
             MethodArgumentNotValidException e) {
-        log.error("[{}]", e.getMessage());
+        log.error("[MethodArgumentNotValidException : {}]", e.getMessage());
 
         ErrorResponse errorResponse = ErrorResponse.hasDetailError(ResponseCode.INVALID_INPUT_VALUE, e);
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
@@ -28,14 +28,15 @@ public class GlobalExceptionHandler {
     protected ResponseEntity<ErrorResponse> handleCustomException(CustomException e) {
         int value = e.getResponseCode().getStatus().value();
         String message = e.getResponseCode().getMessage();
-        log.error("[{} : {}]", value, message);
+        log.error("[CustomException : {}, {}]", value, message);
         ErrorResponse errorResponse = ErrorResponse.noDetailError(e.getResponseCode());
         return new ResponseEntity<>(errorResponse, e.getResponseCode().getStatus());
     }
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorResponse> handleException(Exception e) {
-        log.error("[{}]", e.getMessage());
+        log.error("[Exception : {}]", e.getMessage());
+        log.error("Stack Trace : ", e);
 
         ErrorResponse errorResponse = ErrorResponse.noDetailError(ResponseCode.INTERNAL_ERROR);
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);

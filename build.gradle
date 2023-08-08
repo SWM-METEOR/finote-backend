@@ -42,11 +42,20 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	runtimeOnly 'org.postgresql:postgresql'
 
+	// swagger
 	implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
 
+	// validation
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+	// logback slack
 	implementation 'com.github.maricn:logback-slack-appender:1.6.1'
+
+	// elasticsearch
+	implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+	implementation 'co.elastic.clients:elasticsearch-java:7.17.3'
+	implementation 'org.elasticsearch.client:elasticsearch-rest-client:7.17.3'
+	implementation 'jakarta.json:jakarta.json-api:2.0.1'
 }
 
 tasks.named('test') {
