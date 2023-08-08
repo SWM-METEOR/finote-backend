@@ -28,8 +28,10 @@ public enum ResponseCode {
     /** article error */
     ARTICLE_NOT_FOUND(NOT_FOUND, "404_ARTICLE_NOT_FOUND", "해당 게시글을 찾을 수 없습니다."),
 
-    /** error occurs when unauthenticated user requests for resource */
-    UNAUTHENTICATED(UNAUTHORIZED, "401_UNAUTHORIZED", "인증되지 않은 사용자입니다.");
+    /** authentication/authorization error */
+    UNAUTHENTICATED(UNAUTHORIZED, "401_UNAUTHORIZED", "인증되지 않은 사용자입니다."),
+    INVALID_ACCESS_TOKEN(UNAUTHORIZED, "401_INVALID_ACCESS_TOKEN", "액세스 토큰이 유효하지 않습니다."),
+    NO_REFRESH_TOKEN(UNAUTHORIZED, "401_NO_REFRESH_TOKEN", "저장된 리프레시 토큰이 없습니다.");
 
     private final HttpStatus status;
     private final String code;

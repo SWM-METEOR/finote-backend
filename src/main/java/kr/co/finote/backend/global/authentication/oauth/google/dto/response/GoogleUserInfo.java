@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class GoogleOauthUserInfoResponse {
+public class GoogleUserInfo {
 
     private String id;
     private String email;
@@ -29,9 +29,9 @@ public class GoogleOauthUserInfoResponse {
     private String picture;
     private String locale;
 
-    public static GoogleOauthUserInfoResponse createGoogleOauthUserInfoResponse(String userInfo)
+    public static GoogleUserInfo createGoogleOauthUserInfoResponse(String userInfo)
             throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(userInfo, GoogleOauthUserInfoResponse.class);
+        return objectMapper.readValue(userInfo, GoogleUserInfo.class);
     }
 }

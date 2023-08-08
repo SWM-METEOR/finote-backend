@@ -1,4 +1,4 @@
-package kr.co.finote.backend.src.article.utils;
+package kr.co.finote.backend.src.article.gpt;
 
 public class ChatGptPromptUtils {
 

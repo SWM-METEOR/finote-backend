@@ -31,23 +31,4 @@ public class GoogleOauth {
     @Value("${spring.security.oauth2.client.registration.google.userinfo-request-uri}")
     private String googleUserInfoUrl;
 
-    public String getOauthRedirectURL() {
-
-        Map<String, Object> params = new HashMap<>();
-        params.put("scope", "profile+email");
-        params.put("access_type", "offline");
-        params.put("response_type", "code");
-        params.put("client_id", googleClientId);
-        params.put("redirect_uri", googleCallbackUrl);
-
-        String parameterString =
-                params.entrySet().stream()
-                        .map(x -> x.getKey() + "=" + x.getValue())
-                        .collect(Collectors.joining("&"));
-
-        String redirectURL = googleBaseUrl + "?" + parameterString;
-        log.info(redirectURL);
-
-        return redirectURL;
-    }
 }

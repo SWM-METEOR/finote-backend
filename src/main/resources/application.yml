@@ -12,6 +12,12 @@ server:
         secure: true
 
 spring:
+  jwt:
+    secret: ${JWT_SECRET_KEY}
+    token:
+      access-expiration-time: ${ACCESS_TOKEN_EXPIRE_TIME}
+      refresh-expiration-time: ${REFRESH_TOKEN_EXPIRE_TIME}
+
   profiles:
     active: local
   mvc:

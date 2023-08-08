@@ -1,4 +1,4 @@
-package kr.co.finote.backend.src.article.utils;
+package kr.co.finote.backend.src.article.gpt;
 
 import java.util.List;
 import java.util.stream.Collectors;
