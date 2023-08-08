@@ -83,7 +83,7 @@ public class LoginService {
             User user = User.newGoogleUser(response, randomNickname, LocalDateTime.now());
             userRepository.save(user);
 
-            return GoogleLoginResponse.newUser(user, jwtTokenProvider);
+            return GoogleLoginResponse.freshUser(user, jwtTokenProvider);
         }
     }
 }

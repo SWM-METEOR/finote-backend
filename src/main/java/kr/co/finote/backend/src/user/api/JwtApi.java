@@ -1,11 +1,6 @@
 package kr.co.finote.backend.src.user.api;
 
-import kr.co.finote.backend.global.code.ResponseCode;
-import kr.co.finote.backend.global.exception.CustomException;
 import kr.co.finote.backend.global.jwt.JwtTokenDto;
-import kr.co.finote.backend.global.jwt.JwtTokenProvider;
-import kr.co.finote.backend.src.user.domain.User;
-import kr.co.finote.backend.src.user.repository.UserRepository;
 import kr.co.finote.backend.src.user.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,5 +19,4 @@ public class JwtApi {
     public JwtTokenDto reIssue(@RequestBody JwtTokenDto tokenDto) {
         return jwtService.reIssue(tokenDto);
     }
-
 }

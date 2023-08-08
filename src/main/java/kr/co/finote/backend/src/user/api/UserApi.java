@@ -3,7 +3,6 @@ package kr.co.finote.backend.src.user.api;
 import io.swagger.v3.oas.annotations.Operation;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-
 import kr.co.finote.backend.global.authentication.PrincipalDetails;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.dto.request.AdditionalInfoRequest;
@@ -17,10 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.Security;
 
 @RestController
 @Slf4j

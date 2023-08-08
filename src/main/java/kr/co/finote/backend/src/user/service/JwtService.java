@@ -21,8 +21,10 @@ public class JwtService {
     public JwtTokenDto reIssue(JwtTokenDto request) {
         String refreshToken = request.getRefreshToken();
 
-        User user = userRepository.findByRefreshTokenAndIsDeleted(refreshToken, false)
-                .orElseThrow(() -> new CustomException(ResponseCode.NO_REFRESH_TOKEN));
+        User user =
+                userRepository
+                        .findByRefreshTokenAndIsDeleted(refreshToken, false)
+                        .orElseThrow(() -> new CustomException(ResponseCode.NO_REFRESH_TOKEN));
 
         if (jwtTokenProvider.validateTokenExpiration(refreshToken)) {
             String token = jwtTokenProvider.createToken(user.getEmail());

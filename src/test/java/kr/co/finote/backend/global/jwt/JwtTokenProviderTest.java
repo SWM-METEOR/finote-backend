@@ -2,7 +2,6 @@ package kr.co.finote.backend.global.jwt;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,8 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class JwtTokenProviderTest {
 
-    @Autowired
-    JwtTokenProvider jwtTokenProvider;
+    @Autowired JwtTokenProvider jwtTokenProvider;
 
     String AccessToken;
 

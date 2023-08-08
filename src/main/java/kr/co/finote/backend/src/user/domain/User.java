@@ -65,9 +65,7 @@ public class User extends BaseEntity {
     }
 
     public static User newGoogleUser(
-            GoogleUserInfo googleUserInfo,
-            String randomNickname,
-            LocalDateTime lastLoginDate) {
+            GoogleUserInfo googleUserInfo, String randomNickname, LocalDateTime lastLoginDate) {
         return User.builder()
                 .username(googleUserInfo.getName())
                 .email(googleUserInfo.getEmail())

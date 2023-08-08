@@ -1,9 +1,7 @@
 package kr.co.finote.backend.src.article.api;
 
 import io.swagger.v3.oas.annotations.Operation;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-
 import kr.co.finote.backend.global.authentication.PrincipalDetails;
 import kr.co.finote.backend.src.article.domain.Article;
 import kr.co.finote.backend.src.article.dto.request.ArticleRequest;
@@ -25,8 +23,7 @@ public class ArticleApi {
 
     @Operation(summary = "블로그 글 작성")
     @PostMapping
-    public PostArticleResponse postArticles(
-            @RequestBody @Valid ArticleRequest request) {
+    public PostArticleResponse postArticles(@RequestBody @Valid ArticleRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
         User loginUser = principal.getUser();

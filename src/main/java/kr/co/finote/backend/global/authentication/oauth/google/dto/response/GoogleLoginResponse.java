@@ -13,7 +13,7 @@ public class GoogleLoginResponse {
     private String accessToken;
     private String refreshToken;
 
-    public static GoogleLoginResponse newUser(User user, JwtTokenProvider jwtTokenProvider) {
+    public static GoogleLoginResponse freshUser(User user, JwtTokenProvider jwtTokenProvider) {
         String token = jwtTokenProvider.createToken(user.getEmail());
         String refreshToken = jwtTokenProvider.createRefreshToken();
 

@@ -24,7 +24,8 @@ public class LoginApi {
 
     @Operation(summary = "구글 로그인 처리", description = "프론트에서 발급받은 Code를 전달해주어야 함.")
     @GetMapping("/auth/google")
-    public GoogleLoginResponse auth(@RequestParam String code, HttpServletRequest servletRequest) throws Exception {
+    public GoogleLoginResponse auth(@RequestParam String code, HttpServletRequest servletRequest)
+            throws Exception {
         GoogleAccessToken googleAccessToken = loginService.getGoogleAccessToken(code);
         log.info("check");
         GoogleUserInfo googleUserInfo = loginService.getGoogleUserInfo(googleAccessToken);

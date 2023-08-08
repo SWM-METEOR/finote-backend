@@ -2,7 +2,6 @@ package kr.co.finote.backend.global.config;
 
 import java.util.Arrays;
 import java.util.List;
-
 import kr.co.finote.backend.global.authentication.CustomAuthenticationEntryPoint;
 import kr.co.finote.backend.global.jwt.JwtAuthenticationFilter;
 import kr.co.finote.backend.global.jwt.JwtTokenProvider;
@@ -32,26 +31,35 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        http.cors().and()
-                .csrf().disable()
-                .httpBasic().disable()
-                .formLogin().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-
+        http.cors()
                 .and()
-                    .authorizeRequests()
-                    .antMatchers("users/**").authenticated()
-
-                    .antMatchers("/articles/**").authenticated()
-                    .antMatchers("/articles/{articleId}").permitAll()
-                    .antMatchers("/articles/ai-search").permitAll()
-                    .anyRequest().permitAll()
-
+                .csrf()
+                .disable()
+                .httpBasic()
+                .disable()
+                .formLogin()
+                .disable()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                    .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                .authorizeRequests()
+                .antMatchers("users/**")
+                .authenticated()
+                .antMatchers("/articles/**")
+                .authenticated()
+                .antMatchers("/articles/{articleId}")
+                .permitAll()
+                .antMatchers("/articles/ai-search")
+                .permitAll()
+                .anyRequest()
+                .permitAll()
                 .and()
-                    .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
-
+                .exceptionHandling()
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                .and()
+                .addFilterBefore(
+                        new JwtAuthenticationFilter(jwtTokenProvider),
+                        UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

@@ -1,8 +1,5 @@
 package kr.co.finote.backend.global.authentication.oauth.google;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,5 +27,4 @@ public class GoogleOauth {
 
     @Value("${spring.security.oauth2.client.registration.google.userinfo-request-uri}")
     private String googleUserInfoUrl;
-
 }
