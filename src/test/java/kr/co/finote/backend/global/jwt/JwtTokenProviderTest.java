@@ -1,18 +1,18 @@
-package kr.co.finote.backend.global.jwt;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-
-@SpringBootTest
-class JwtTokenProviderTest {
-
-    @Autowired JwtTokenProvider jwtTokenProvider;
-
-    String AccessToken;
-
+//package kr.co.finote.backend.global.jwt;
+//
+//import org.junit.jupiter.api.Assertions;
+//import org.junit.jupiter.api.DisplayName;
+//import org.junit.jupiter.api.Test;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.boot.test.context.SpringBootTest;
+//
+//@SpringBootTest
+//class JwtTokenProviderTest {
+//
+//    @Autowired JwtTokenProvider jwtTokenProvider;
+//
+//    String AccessToken;
+//
 //    @DisplayName("액세스 토큰 발급 테스트")
 //    @Test
 //    void createToken() {
@@ -35,4 +35,4 @@ class JwtTokenProviderTest {
 //        String memberEmail = jwtTokenProvider.getMemberEmail(token);
 //        Assertions.assertEquals("sangwonj98@gmail.com", memberEmail);
 //    }
-}
+//}
