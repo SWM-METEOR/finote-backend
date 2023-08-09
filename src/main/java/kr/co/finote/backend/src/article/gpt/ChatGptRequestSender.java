@@ -1,4 +1,4 @@
-package kr.co.finote.backend.src.article.utils;
+package kr.co.finote.backend.src.article.gpt;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,16 +25,16 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 public class ChatGptRequestSender {
 
-    @Value("${chatgpt.api-key}")
+    @Value("${FINOTE_GPT_KEY}")
     private String API_KEY;
 
-    @Value("${chatgpt.endpoint}")
+    @Value("${GPT_ENDPOINT}")
     private String END_POINT;
 
-    @Value("${chatgpt.max-token}")
+    @Value("${GPT_MAX_TOKEN}")
     private Integer MAX_TOKENS;
 
-    @Value("${chatgpt.temperature}")
+    @Value("${GPT_TEMPERATURE}")
     private Float TEMPERATURE;
 
     private final RestTemplate restTemplate;

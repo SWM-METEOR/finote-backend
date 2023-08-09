@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class GoogleAccessTokenRequest {
+public class GoogleAccessToken {
 
     @JsonProperty("access_token")
     private String accessToken;
@@ -28,9 +28,9 @@ public class GoogleAccessTokenRequest {
     @JsonProperty("id_token")
     private String idToken;
 
-    public static GoogleAccessTokenRequest createGoogleAccessTokenRequest(String accessToken)
+    public static GoogleAccessToken createGoogleAccessToken(String accessToken)
             throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(accessToken, GoogleAccessTokenRequest.class);
+        return objectMapper.readValue(accessToken, GoogleAccessToken.class);
     }
 }

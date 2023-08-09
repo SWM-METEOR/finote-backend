@@ -5,11 +5,12 @@ import java.time.LocalDateTime;
 import java.util.*;
 import javax.transaction.Transactional;
 import kr.co.finote.backend.global.authentication.oauth.google.GoogleOauth;
-import kr.co.finote.backend.global.authentication.oauth.google.dto.request.GoogleAccessTokenRequest;
-import kr.co.finote.backend.global.authentication.oauth.google.dto.response.GoogleOauthUserInfoResponse;
+import kr.co.finote.backend.global.authentication.oauth.google.dto.request.GoogleAccessToken;
+import kr.co.finote.backend.global.authentication.oauth.google.dto.response.GoogleLoginResponse;
+import kr.co.finote.backend.global.authentication.oauth.google.dto.response.GoogleUserInfo;
+import kr.co.finote.backend.global.jwt.JwtTokenProvider;
 import kr.co.finote.backend.global.utils.StringUtils;
 import kr.co.finote.backend.src.user.domain.User;
-import kr.co.finote.backend.src.user.dto.response.SaveUserResponse;
 import kr.co.finote.backend.src.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,8 +30,9 @@ public class LoginService {
     private final GoogleOauth googleOauth;
     private final RestTemplate restTemplate;
     private final UserRepository userRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public GoogleAccessTokenRequest getGoogleAccessToken(String code) throws JsonProcessingException {
+    public GoogleAccessToken getGoogleAccessToken(String code) throws JsonProcessingException {
         Map<String, String> params = new HashMap<>();
         params.put("code", code);
         params.put("client_id", googleOauth.getGoogleClientId());
@@ -43,10 +45,10 @@ public class LoginService {
 
         String accessToken = responseEntity.getBody();
 
-        return GoogleAccessTokenRequest.createGoogleAccessTokenRequest(accessToken);
+        return GoogleAccessToken.createGoogleAccessToken(accessToken);
     }
 
-    public GoogleOauthUserInfoResponse getGoogleUserInfo(GoogleAccessTokenRequest request)
+    public GoogleUserInfo getGoogleUserInfo(GoogleAccessToken request)
             throws JsonProcessingException {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + request.getAccessToken());
@@ -58,17 +60,17 @@ public class LoginService {
 
         String userInfo = response.getBody();
 
-        return GoogleOauthUserInfoResponse.createGoogleOauthUserInfoResponse(userInfo);
+        return GoogleUserInfo.createGoogleUserInfo(userInfo);
     }
 
     @Transactional
-    public SaveUserResponse saveUser(GoogleOauthUserInfoResponse response) {
+    public GoogleLoginResponse addOrUpdateUser(GoogleUserInfo response) {
         Optional<User> findUser = userRepository.findByEmailAndIsDeleted(response.getEmail(), false);
 
         if (findUser.isPresent()) {
             User user = findUser.get();
             user.updateLastLoginDate(LocalDateTime.now());
-            return SaveUserResponse.oldUser(user);
+            return GoogleLoginResponse.oldUser(user, jwtTokenProvider);
         } else {
             // 중복 nickname이 없을 때까지 랜덤 nickname 생성
             String randomNickname = StringUtils.makeRandomString();
@@ -81,7 +83,7 @@ public class LoginService {
             User user = User.newGoogleUser(response, randomNickname, LocalDateTime.now());
             userRepository.save(user);
 
-            return SaveUserResponse.newUser(user);
+            return GoogleLoginResponse.freshUser(user, jwtTokenProvider);
         }
     }
 }

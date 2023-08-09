@@ -1,5 +1,8 @@
 package kr.co.finote.backend.global.authentication.auth;
 
+import java.util.Optional;
+import kr.co.finote.backend.global.authentication.PrincipalDetails;
+import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,7 +17,14 @@ public class PrincipalDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+
+        Optional<User> findUser = userRepository.findByEmailAndIsDeleted(email, false);
+
+        if (findUser.isPresent()) {
+            return new PrincipalDetails(findUser.get());
+        }
+
         return null;
     }
 }

@@ -3,6 +3,7 @@ package kr.co.finote.backend.src.user.api;
 import io.swagger.v3.oas.annotations.Operation;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import kr.co.finote.backend.global.authentication.PrincipalDetails;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.dto.request.AdditionalInfoRequest;
 import kr.co.finote.backend.src.user.dto.request.BlogNameDuplicateCheckRequest;
@@ -11,9 +12,10 @@ import kr.co.finote.backend.src.user.dto.request.NicknameDuplicateCheckRequest;
 import kr.co.finote.backend.src.user.dto.response.BlogResponse;
 import kr.co.finote.backend.src.user.dto.response.NicknameResponse;
 import kr.co.finote.backend.src.user.service.UserService;
-import kr.co.finote.backend.src.user.utils.SessionUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -47,15 +49,19 @@ public class UserApi {
     /* Field Getter API */
     @Operation(summary = "닉네임 가져오기")
     @GetMapping("/nickname")
-    public NicknameResponse getNickname(HttpSession httpSession) {
-        User loginUser = (User) httpSession.getAttribute(SessionUtils.LOGIN_USER);
+    public NicknameResponse getNickname() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
+        User loginUser = principal.getUser();
         return NicknameResponse.of(loginUser);
     }
 
     @Operation(summary = "블로그 정보(이름, url) 가져오기")
     @GetMapping("/blog-info")
-    public BlogResponse getBlogInfo(HttpSession httpSession) {
-        User loginUser = (User) httpSession.getAttribute(SessionUtils.LOGIN_USER);
+    public BlogResponse getBlogInfo() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
+        User loginUser = principal.getUser();
         return BlogResponse.of(loginUser);
     }
 
@@ -64,7 +70,9 @@ public class UserApi {
     @PostMapping("/additional-info")
     public void additionalInfo(
             HttpSession httpSession, @RequestBody @Valid AdditionalInfoRequest request) {
-        User loginUser = (User) httpSession.getAttribute(SessionUtils.LOGIN_USER);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
+        User loginUser = principal.getUser();
         userService.editAdditionalInfo(loginUser, request);
     }
 }
