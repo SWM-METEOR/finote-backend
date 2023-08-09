@@ -65,6 +65,7 @@ springdoc:
   api-docs:
     path: /api-docs
 
+
 # ChatGpt
 chatgpt:
   api-key: ${FINOTE_GPT_KEY}
@@ -77,3 +78,4 @@ logging:
   slack:
     webhook-uri: ${SLACK_WEBHOOK_URI}
   config: classpath:logback-slack.xml
+
