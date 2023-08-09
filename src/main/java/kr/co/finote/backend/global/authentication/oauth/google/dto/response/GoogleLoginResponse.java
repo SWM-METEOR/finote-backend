@@ -17,7 +17,7 @@ public class GoogleLoginResponse {
         String token = jwtTokenProvider.createToken(user.getEmail());
         String refreshToken = jwtTokenProvider.createRefreshToken();
 
-        user.setRefreshToken(refreshToken);
+        user.updateRefreshToken(refreshToken);
 
         return GoogleLoginResponse.builder()
                 .newUser(true)
@@ -30,7 +30,7 @@ public class GoogleLoginResponse {
         String token = jwtTokenProvider.createToken(user.getEmail());
         String refreshToken = jwtTokenProvider.createRefreshToken();
 
-        user.setRefreshToken(refreshToken);
+        user.updateRefreshToken(refreshToken);
 
         return GoogleLoginResponse.builder()
                 .newUser(false)

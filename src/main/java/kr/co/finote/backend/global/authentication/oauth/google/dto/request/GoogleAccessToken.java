@@ -28,7 +28,7 @@ public class GoogleAccessToken {
     @JsonProperty("id_token")
     private String idToken;
 
-    public static GoogleAccessToken createGoogleAccessTokenRequest(String accessToken)
+    public static GoogleAccessToken createGoogleAccessToken(String accessToken)
             throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(accessToken, GoogleAccessToken.class);

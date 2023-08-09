@@ -20,13 +20,13 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class JwtTokenProvider {
 
-    @Value("${spring.jwt.secret}")
+    @Value("${JWT_SECRET_KEY}")
     private String secretKey;
 
-    @Value("${spring.jwt.token.access-expiration-time}")
+    @Value("${ACCESS_TOKEN_EXPIRE_TIME}")
     private Long tokenValidTime;
 
-    @Value("${spring.jwt.token.refresh-expiration-time}")
+    @Value("${REFRESH_TOKEN_EXPIRE_TIME}")
     private Long refreshTokenValidTime;
 
     private final UserDetailsService userDetailsService;

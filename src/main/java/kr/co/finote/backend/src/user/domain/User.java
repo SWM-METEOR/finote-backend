@@ -44,10 +44,6 @@ public class User extends BaseEntity {
 
     private String refreshToken;
 
-    public void setRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
-    }
-
     // TODO principalService에 사용(추후에 확인 필요)
     public static User newSocialUser(
             String username,
@@ -88,5 +84,9 @@ public class User extends BaseEntity {
         this.nickname = additionalInfoRequest.getNickname();
         this.blogName = additionalInfoRequest.getBlogName();
         this.blogUrl = additionalInfoRequest.getBlogUrl();
+    }
+
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }

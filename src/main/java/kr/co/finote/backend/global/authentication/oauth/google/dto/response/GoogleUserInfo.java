@@ -29,7 +29,7 @@ public class GoogleUserInfo {
     private String picture;
     private String locale;
 
-    public static GoogleUserInfo createGoogleOauthUserInfoResponse(String userInfo)
+    public static GoogleUserInfo createGoogleUserInfo(String userInfo)
             throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(userInfo, GoogleUserInfo.class);

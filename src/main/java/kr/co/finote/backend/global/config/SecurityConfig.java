@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -44,13 +45,15 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
                 .antMatchers("users/**")
+                .permitAll()
+                .antMatchers("/users/nickname", "/users/blog-info", "/users/additional-info")
                 .authenticated()
                 .antMatchers("/articles/**")
-                .authenticated()
-                .antMatchers("/articles/{articleId}")
                 .permitAll()
                 .antMatchers("/articles/ai-search")
-                .permitAll()
+                .authenticated()
+                .antMatchers(HttpMethod.POST, "/articles")
+                .authenticated()
                 .anyRequest()
                 .permitAll()
                 .and()

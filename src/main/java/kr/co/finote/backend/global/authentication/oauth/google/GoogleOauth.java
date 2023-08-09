@@ -10,21 +10,21 @@ import org.springframework.stereotype.Component;
 @Getter
 public class GoogleOauth {
 
-    @Value("${spring.security.oauth2.client.registration.google.url}")
+    @Value("${GOOGLE_BASE_URL}")
     private String googleBaseUrl;
 
-    @Value("${spring.security.oauth2.client.registration.google.client-id}")
+    @Value("${GOOGLE_CLIENT_ID}")
     private String googleClientId;
 
-    @Value("${spring.security.oauth2.client.registration.google.client-secret}")
+    @Value("${GOOGLE_CLIENT_SECRET}")
     private String googleClientSecret;
 
-    @Value("${spring.security.oauth2.client.registration.google.redirect-uri}")
+    @Value("${GOOGLE_CALLBACK_URL}")
     private String googleCallbackUrl;
 
-    @Value("${spring.security.oauth2.client.registration.google.token-uri}")
+    @Value("${GOOGLE_TOKEN_URL}")
     private String googleTokenUrl;
 
-    @Value("${spring.security.oauth2.client.registration.google.userinfo-request-uri}")
+    @Value("${GOOGLE_USERINFO_URL}")
     private String googleUserInfoUrl;
 }

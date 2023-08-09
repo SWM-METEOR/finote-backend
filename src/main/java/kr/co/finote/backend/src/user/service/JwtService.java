@@ -32,7 +32,7 @@ public class JwtService {
         }
 
         String newRefreshToken = jwtTokenProvider.createRefreshToken();
-        user.setRefreshToken(newRefreshToken);
+        user.updateRefreshToken(newRefreshToken);
         String token = jwtTokenProvider.createToken(user.getEmail());
 
         return new JwtTokenDto(token, newRefreshToken);

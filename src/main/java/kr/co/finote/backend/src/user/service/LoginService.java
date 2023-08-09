@@ -45,7 +45,7 @@ public class LoginService {
 
         String accessToken = responseEntity.getBody();
 
-        return GoogleAccessToken.createGoogleAccessTokenRequest(accessToken);
+        return GoogleAccessToken.createGoogleAccessToken(accessToken);
     }
 
     public GoogleUserInfo getGoogleUserInfo(GoogleAccessToken request)
@@ -60,7 +60,7 @@ public class LoginService {
 
         String userInfo = response.getBody();
 
-        return GoogleUserInfo.createGoogleOauthUserInfoResponse(userInfo);
+        return GoogleUserInfo.createGoogleUserInfo(userInfo);
     }
 
     @Transactional

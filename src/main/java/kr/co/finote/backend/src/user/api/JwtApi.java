@@ -15,7 +15,7 @@ public class JwtApi {
 
     private final JwtService jwtService;
 
-    @PostMapping("/jwt/reIssue")
+    @PostMapping("/jwt/re-issue")
     public JwtTokenDto reIssue(@RequestBody JwtTokenDto tokenDto) {
         return jwtService.reIssue(tokenDto);
     }
