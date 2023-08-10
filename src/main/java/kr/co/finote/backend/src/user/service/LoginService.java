@@ -8,6 +8,9 @@ import kr.co.finote.backend.global.authentication.oauth.google.GoogleOauth;
 import kr.co.finote.backend.global.authentication.oauth.google.dto.request.GoogleAccessToken;
 import kr.co.finote.backend.global.authentication.oauth.google.dto.response.GoogleLoginResponse;
 import kr.co.finote.backend.global.authentication.oauth.google.dto.response.GoogleUserInfo;
+import kr.co.finote.backend.global.code.ResponseCode;
+import kr.co.finote.backend.global.exception.CustomException;
+import kr.co.finote.backend.global.jwt.JwtToken;
 import kr.co.finote.backend.global.jwt.JwtTokenProvider;
 import kr.co.finote.backend.global.utils.StringUtils;
 import kr.co.finote.backend.src.user.domain.User;
@@ -85,5 +88,17 @@ public class LoginService {
 
             return GoogleLoginResponse.freshUser(user, jwtTokenProvider);
         }
+    }
+
+    @Transactional
+    public void logout(JwtToken jwtToken) {
+        String refreshToken = jwtToken.getRefreshToken();
+
+        User user =
+                userRepository
+                        .findByRefreshTokenAndIsDeleted(refreshToken, false)
+                        .orElseThrow(() -> new CustomException(ResponseCode.NO_REFRESH_TOKEN));
+
+        user.updateRefreshToken(null);
     }
 }

@@ -46,7 +46,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers("users/**")
                 .permitAll()
-                .antMatchers("/users/nickname", "/users/blog-info", "/users/additional-info")
+                .antMatchers("/users/nickname", "/users/blog-info", "/users/additional-info", "users/logout")
                 .authenticated()
                 .antMatchers("/articles/**")
                 .permitAll()
