@@ -44,13 +44,9 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("users/**")
-                .permitAll()
                 .antMatchers(
                         "/users/nickname", "/users/blog-info", "/users/additional-info", "/users/logout")
                 .authenticated()
-                .antMatchers("/articles/**")
-                .permitAll()
                 .antMatchers("/articles/ai-search")
                 .authenticated()
                 .antMatchers(HttpMethod.POST, "/articles")
