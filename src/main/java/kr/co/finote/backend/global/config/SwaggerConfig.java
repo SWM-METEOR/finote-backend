@@ -1,5 +1,6 @@
 package kr.co.finote.backend.global.config;
 
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
@@ -27,23 +28,21 @@ public class SwaggerConfig {
                         .title("FiNote API 명세서")
                         .description("FiNote Backend Server의 API 명세서입니다.");
 
-        SecurityScheme securityScheme =
-                new SecurityScheme()
-                        .description("Authorization using JSESSIONID")
-                        .type(SecurityScheme.Type.APIKEY)
-                        .in(SecurityScheme.In.COOKIE)
-                        .name("JSESSIONID");
-
-        SecurityRequirement securityRequirement = new SecurityRequirement().addList("JSESSIONID");
+        String jwtSchemeName = "JWT TOKEN";
+        SecurityRequirement securityRequirement = new SecurityRequirement().addList(jwtSchemeName);
+        Components components = new Components()
+                .addSecuritySchemes(jwtSchemeName, new SecurityScheme()
+                        .name(jwtSchemeName)
+                        .type(SecurityScheme.Type.HTTP) // HTTP 방식
+                        .scheme("bearer")
+                        .bearerFormat("JWT")); // 토큰 형식을 지정하는 임의의 문자(Optional)
 
         Server server = new Server().url(SWAGGER_SERVERS_URL);
 
         return new OpenAPI()
                 .servers(List.of(server))
                 .addSecurityItem(securityRequirement)
-                .components(
-                        new io.swagger.v3.oas.models.Components()
-                                .addSecuritySchemes("JSESSIONID", securityScheme))
+                .components(components)
                 .info(info);
     }
 }
