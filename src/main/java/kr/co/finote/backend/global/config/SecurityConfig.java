@@ -5,6 +5,7 @@ import java.util.List;
 import kr.co.finote.backend.global.authentication.CustomAuthenticationEntryPoint;
 import kr.co.finote.backend.global.jwt.JwtAuthenticationFilter;
 import kr.co.finote.backend.global.jwt.JwtTokenProvider;
+import kr.co.finote.backend.src.user.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -28,6 +29,7 @@ public class SecurityConfig {
     private String[] corsUrls;
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final JwtService jwtService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -58,7 +60,7 @@ public class SecurityConfig {
                 .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 .and()
                 .addFilterBefore(
-                        new JwtAuthenticationFilter(jwtTokenProvider),
+                        new JwtAuthenticationFilter(jwtTokenProvider, jwtService),
                         UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

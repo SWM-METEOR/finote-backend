@@ -1,7 +1,8 @@
 package kr.co.finote.backend.src.user.service;
 
+import java.util.Optional;
 import kr.co.finote.backend.global.code.ResponseCode;
-import kr.co.finote.backend.global.exception.CustomException;
+import kr.co.finote.backend.global.exception.UnAuthorizedException;
 import kr.co.finote.backend.global.jwt.JwtToken;
 import kr.co.finote.backend.global.jwt.JwtTokenProvider;
 import kr.co.finote.backend.src.user.domain.User;
@@ -24,7 +25,7 @@ public class JwtService {
         User user =
                 userRepository
                         .findByRefreshTokenAndIsDeleted(refreshToken, false)
-                        .orElseThrow(() -> new CustomException(ResponseCode.NO_REFRESH_TOKEN));
+                        .orElseThrow(() -> new UnAuthorizedException(ResponseCode.NO_REFRESH_TOKEN));
 
         if (jwtTokenProvider.validateTokenExpiration(refreshToken)) {
             String token = jwtTokenProvider.createToken(user.getEmail());
@@ -36,6 +37,13 @@ public class JwtService {
         }
 
         user.updateRefreshToken(null);
-        throw new CustomException(ResponseCode.EXPIRED_REFRESH_TOKEN);
+        throw new UnAuthorizedException(ResponseCode.EXPIRED_REFRESH_TOKEN);
+    }
+
+    public boolean hasRefreshToken(String token) {
+        String email = jwtTokenProvider.getMemberEmail(token);
+
+        Optional<User> findUser = userRepository.findByEmailAndIsDeleted(email, false);
+        return findUser.filter(user -> user.getRefreshToken() != null).isPresent();
     }
 }

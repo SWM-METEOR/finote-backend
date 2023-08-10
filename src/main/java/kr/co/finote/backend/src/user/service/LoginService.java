@@ -9,7 +9,7 @@ import kr.co.finote.backend.global.authentication.oauth.google.dto.request.Googl
 import kr.co.finote.backend.global.authentication.oauth.google.dto.response.GoogleLoginResponse;
 import kr.co.finote.backend.global.authentication.oauth.google.dto.response.GoogleUserInfo;
 import kr.co.finote.backend.global.code.ResponseCode;
-import kr.co.finote.backend.global.exception.CustomException;
+import kr.co.finote.backend.global.exception.UnAuthorizedException;
 import kr.co.finote.backend.global.jwt.JwtToken;
 import kr.co.finote.backend.global.jwt.JwtTokenProvider;
 import kr.co.finote.backend.global.utils.StringUtils;
@@ -97,7 +97,7 @@ public class LoginService {
         User user =
                 userRepository
                         .findByRefreshTokenAndIsDeleted(refreshToken, false)
-                        .orElseThrow(() -> new CustomException(ResponseCode.NO_REFRESH_TOKEN));
+                        .orElseThrow(() -> new UnAuthorizedException(ResponseCode.NO_REFRESH_TOKEN));
 
         user.updateRefreshToken(null);
     }
