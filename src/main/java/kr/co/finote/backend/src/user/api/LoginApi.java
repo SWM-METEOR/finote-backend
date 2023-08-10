@@ -46,5 +46,4 @@ public class LoginApi {
     public void logout(@RequestBody JwtToken jwtToken) {
         loginService.logout(jwtToken);
     }
-
 }
