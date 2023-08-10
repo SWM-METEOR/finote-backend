@@ -1,6 +1,7 @@
 package kr.co.finote.backend.src.user.api;
 
-import kr.co.finote.backend.global.jwt.JwtTokenDto;
+import io.swagger.v3.oas.annotations.Operation;
+import kr.co.finote.backend.global.jwt.JwtToken;
 import kr.co.finote.backend.src.user.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,8 +16,9 @@ public class JwtApi {
 
     private final JwtService jwtService;
 
+    @Operation(summary = "토큰 재발급", description = "해당 요청에서는 액세스 토큰, 리프레시 토큰이 언제나 재발급 처리")
     @PostMapping("/jwt/re-issue")
-    public JwtTokenDto reIssue(@RequestBody JwtTokenDto tokenDto) {
-        return jwtService.reIssue(tokenDto);
+    public JwtToken reIssue(@RequestBody JwtToken jwtToken) {
+        return jwtService.reIssue(jwtToken);
     }
 }

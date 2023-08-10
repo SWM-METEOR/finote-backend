@@ -5,14 +5,12 @@ import javax.servlet.http.HttpServletRequest;
 import kr.co.finote.backend.global.authentication.oauth.google.dto.request.GoogleAccessToken;
 import kr.co.finote.backend.global.authentication.oauth.google.dto.response.GoogleLoginResponse;
 import kr.co.finote.backend.global.authentication.oauth.google.dto.response.GoogleUserInfo;
+import kr.co.finote.backend.global.jwt.JwtToken;
 import kr.co.finote.backend.src.user.dto.response.GoogleLoginCodeResponse;
 import kr.co.finote.backend.src.user.service.LoginService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,5 +39,11 @@ public class LoginApi {
     public GoogleLoginCodeResponse callback(@RequestParam String code) {
         log.info("code : {}", code);
         return GoogleLoginCodeResponse.createGoogleLoginCodeResponse(code);
+    }
+
+    @Operation(summary = "로그아웃", description = "토큰 만료기간과 상관 없이 액세스, 리프레시 토큰 모두 초기화")
+    @PostMapping("/logout")
+    public void logout(@RequestBody JwtToken jwtToken) {
+        loginService.logout(jwtToken);
     }
 }
