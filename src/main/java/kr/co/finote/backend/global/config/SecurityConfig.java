@@ -47,7 +47,7 @@ public class SecurityConfig {
                 .antMatchers("users/**")
                 .permitAll()
                 .antMatchers(
-                        "/users/nickname", "/users/blog-info", "/users/additional-info", "users/logout")
+                        "/users/nickname", "/users/blog-info", "/users/additional-info", "/users/logout")
                 .authenticated()
                 .antMatchers("/articles/**")
                 .permitAll()
