@@ -30,12 +30,15 @@ public class SwaggerConfig {
 
         String jwtSchemeName = "JWT TOKEN";
         SecurityRequirement securityRequirement = new SecurityRequirement().addList(jwtSchemeName);
-        Components components = new Components()
-                .addSecuritySchemes(jwtSchemeName, new SecurityScheme()
-                        .name(jwtSchemeName)
-                        .type(SecurityScheme.Type.HTTP) // HTTP 방식
-                        .scheme("bearer")
-                        .bearerFormat("JWT")); // 토큰 형식을 지정하는 임의의 문자(Optional)
+        Components components =
+                new Components()
+                        .addSecuritySchemes(
+                                jwtSchemeName,
+                                new SecurityScheme()
+                                        .name(jwtSchemeName)
+                                        .type(SecurityScheme.Type.HTTP) // HTTP 방식
+                                        .scheme("bearer")
+                                        .bearerFormat("JWT")); // 토큰 형식을 지정하는 임의의 문자(Optional)
 
         Server server = new Server().url(SWAGGER_SERVERS_URL);
 
