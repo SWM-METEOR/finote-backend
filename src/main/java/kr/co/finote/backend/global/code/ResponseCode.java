@@ -32,8 +32,7 @@ public enum ResponseCode {
     /** authentication/authorization error */
     UNAUTHENTICATED(UNAUTHORIZED, "401_UNAUTHORIZED", "인증되지 않은 사용자입니다."),
     INVALID_ACCESS_TOKEN(UNAUTHORIZED, "401_INVALID_ACCESS_TOKEN", "액세스 토큰이 유효하지 않습니다."),
-    NO_REFRESH_TOKEN(UNAUTHORIZED, "401_NO_REFRESH_TOKEN", "저장된 리프레시 토큰이 없습니다."),
-    EXPIRED_REFRESH_TOKEN(UNAUTHORIZED, "401_EXPIRE_REFRESH_TOKEN", "만료된 리프레시 토큰입니다.");
+    INVALID_REFRESH_TOKEN(UNAUTHORIZED, "401_INVALID_REFRESH_TOKEN", "리프레시 토큰이 유효하지 않습니다.");
 
     private final HttpStatus status;
     private final String code;
