@@ -25,7 +25,7 @@ public class JwtService {
         User user =
                 userRepository
                         .findByRefreshTokenAndIsDeleted(refreshToken, false)
-                        .orElseThrow(() -> new UnAuthorizedException(ResponseCode.NO_REFRESH_TOKEN));
+                        .orElseThrow(() -> new UnAuthorizedException(ResponseCode.INVALID_REFRESH_TOKEN));
 
         if (jwtTokenProvider.validateTokenExpiration(refreshToken)) {
             String token = jwtTokenProvider.createToken(user.getEmail());
@@ -37,7 +37,7 @@ public class JwtService {
         }
 
         user.updateRefreshToken(null);
-        throw new UnAuthorizedException(ResponseCode.EXPIRED_REFRESH_TOKEN);
+        throw new UnAuthorizedException(ResponseCode.INVALID_REFRESH_TOKEN);
     }
 
     public boolean hasRefreshToken(String token) {

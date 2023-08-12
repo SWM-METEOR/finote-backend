@@ -97,7 +97,7 @@ public class LoginService {
         User user =
                 userRepository
                         .findByRefreshTokenAndIsDeleted(refreshToken, false)
-                        .orElseThrow(() -> new UnAuthorizedException(ResponseCode.NO_REFRESH_TOKEN));
+                        .orElseThrow(() -> new UnAuthorizedException(ResponseCode.INVALID_REFRESH_TOKEN));
 
         user.updateRefreshToken(null);
     }
