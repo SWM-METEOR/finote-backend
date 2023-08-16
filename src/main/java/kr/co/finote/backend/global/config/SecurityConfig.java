@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -27,6 +26,12 @@ public class SecurityConfig {
 
     @Value("${CORS_URLS}")
     private String[] corsUrls;
+
+    @Value("${USERS_URLS}")
+    private String[] userUrls;
+
+    @Value("${ARTICLES_URLS}")
+    private String[] articleUrls;
 
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtService jwtService;
@@ -46,16 +51,9 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(
-                        "/users/nickname",
-                        "/users/blog-info",
-                        "/users/additional-info",
-                        "/users/logout",
-                        "/users/articles/all")
+                .antMatchers(userUrls)
                 .authenticated()
-                .antMatchers("/articles/ai-search")
-                .authenticated()
-                .antMatchers(HttpMethod.POST, "/articles")
+                .antMatchers(articleUrls)
                 .authenticated()
                 .anyRequest()
                 .permitAll()

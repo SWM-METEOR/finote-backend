@@ -7,6 +7,8 @@ import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.dto.request.*;
 import kr.co.finote.backend.src.user.dto.response.BlogResponse;
 import kr.co.finote.backend.src.user.dto.response.NicknameResponse;
+import kr.co.finote.backend.src.user.dto.response.UserArticlesResponse;
+import kr.co.finote.backend.src.user.login.Login;
 import kr.co.finote.backend.src.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,19 +47,13 @@ public class UserApi {
     /* Field Getter API */
     @Operation(summary = "닉네임 가져오기")
     @GetMapping("/nickname")
-    public NicknameResponse getNickname() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
-        User loginUser = principal.getUser();
+    public NicknameResponse getNickname(@Login User loginUser) {
         return NicknameResponse.of(loginUser);
     }
 
     @Operation(summary = "블로그 정보(이름, url) 가져오기")
     @GetMapping("/blog-info")
-    public BlogResponse getBlogInfo() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
-        User loginUser = principal.getUser();
+    public BlogResponse getBlogInfo(@Login User loginUser) {
         return BlogResponse.of(loginUser);
     }
 
@@ -73,11 +69,10 @@ public class UserApi {
 
     @Operation(summary = "유저가 작성한 모든 글 가져오기")
     @GetMapping("/articles/all")
-    public UserArticlesRequest articlesAll(
-            @RequestParam int page, @RequestParam(defaultValue = "10", required = false) int size) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
-        User loginUser = principal.getUser();
+    public UserArticlesResponse articlesAll(
+            @Login User loginUser,
+            @RequestParam int page,
+            @RequestParam(defaultValue = "10", required = false) int size) {
 
         return userService.findArticlesAll(loginUser, page, size);
     }

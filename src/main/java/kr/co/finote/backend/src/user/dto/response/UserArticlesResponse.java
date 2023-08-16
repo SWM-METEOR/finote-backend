@@ -1,4 +1,4 @@
-package kr.co.finote.backend.src.user.dto.request;
+package kr.co.finote.backend.src.user.dto.response;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,14 +9,14 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class UserArticlesRequest {
+public class UserArticlesResponse {
     private int page;
     private int size;
 
     private List<ArticlePreviewRequest> articleList = new ArrayList<>();
 
-    public static UserArticlesRequest of(int page, int size, List<Article> articles) {
+    public static UserArticlesResponse of(int page, int size, List<Article> articles) {
         List<ArticlePreviewRequest> articleList = ArticlePreviewRequest.getList(articles);
-        return new UserArticlesRequest(page, size, articleList);
+        return new UserArticlesResponse(page, size, articleList);
     }
 }
