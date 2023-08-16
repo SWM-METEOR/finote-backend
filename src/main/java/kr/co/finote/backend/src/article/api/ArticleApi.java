@@ -2,13 +2,13 @@ package kr.co.finote.backend.src.article.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import javax.validation.Valid;
+import kr.co.finote.backend.global.annotation.Login;
 import kr.co.finote.backend.src.article.domain.Article;
 import kr.co.finote.backend.src.article.dto.request.ArticleRequest;
 import kr.co.finote.backend.src.article.dto.response.ArticleResponse;
 import kr.co.finote.backend.src.article.dto.response.PostArticleResponse;
 import kr.co.finote.backend.src.article.service.ArticleService;
 import kr.co.finote.backend.src.user.domain.User;
-import kr.co.finote.backend.src.user.login.Login;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

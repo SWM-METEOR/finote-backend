@@ -2,13 +2,13 @@ package kr.co.finote.backend.src.user.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import javax.validation.Valid;
+import kr.co.finote.backend.global.annotation.Login;
 import kr.co.finote.backend.global.authentication.PrincipalDetails;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.dto.request.*;
 import kr.co.finote.backend.src.user.dto.response.BlogResponse;
 import kr.co.finote.backend.src.user.dto.response.NicknameResponse;
 import kr.co.finote.backend.src.user.dto.response.UserArticlesResponse;
-import kr.co.finote.backend.src.user.login.Login;
 import kr.co.finote.backend.src.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package kr.co.finote.backend.src.user.login;
+package kr.co.finote.backend.global.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

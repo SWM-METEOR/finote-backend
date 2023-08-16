@@ -1,5 +1,6 @@
-package kr.co.finote.backend.src.user.login;
+package kr.co.finote.backend.global.argumentresolver;
 
+import kr.co.finote.backend.global.annotation.Login;
 import kr.co.finote.backend.global.authentication.PrincipalDetails;
 import kr.co.finote.backend.src.user.domain.User;
 import org.springframework.core.MethodParameter;

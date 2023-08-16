@@ -1,7 +1,7 @@
 package kr.co.finote.backend.global.config;
 
 import java.util.List;
-import kr.co.finote.backend.src.user.login.LoginUserArgumentResolver;
+import kr.co.finote.backend.global.argumentresolver.LoginUserArgumentResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
