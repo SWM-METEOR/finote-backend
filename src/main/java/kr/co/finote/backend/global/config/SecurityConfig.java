@@ -47,7 +47,11 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
                 .antMatchers(
-                        "/users/nickname", "/users/blog-info", "/users/additional-info", "/users/logout")
+                        "/users/nickname",
+                        "/users/blog-info",
+                        "/users/additional-info",
+                        "/users/logout",
+                        "/users/articles/all")
                 .authenticated()
                 .antMatchers("/articles/ai-search")
                 .authenticated()

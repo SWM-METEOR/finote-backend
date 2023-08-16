@@ -1,14 +1,10 @@
 package kr.co.finote.backend.src.user.api;
 
 import io.swagger.v3.oas.annotations.Operation;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import kr.co.finote.backend.global.authentication.PrincipalDetails;
 import kr.co.finote.backend.src.user.domain.User;
-import kr.co.finote.backend.src.user.dto.request.AdditionalInfoRequest;
-import kr.co.finote.backend.src.user.dto.request.BlogNameDuplicateCheckRequest;
-import kr.co.finote.backend.src.user.dto.request.BlogUrlDuplicateCheckRequest;
-import kr.co.finote.backend.src.user.dto.request.NicknameDuplicateCheckRequest;
+import kr.co.finote.backend.src.user.dto.request.*;
 import kr.co.finote.backend.src.user.dto.response.BlogResponse;
 import kr.co.finote.backend.src.user.dto.response.NicknameResponse;
 import kr.co.finote.backend.src.user.service.UserService;
@@ -68,11 +64,21 @@ public class UserApi {
     /* API related to additional-info */
     @Operation(summary = "추가 정보 입력")
     @PostMapping("/additional-info")
-    public void additionalInfo(
-            HttpSession httpSession, @RequestBody @Valid AdditionalInfoRequest request) {
+    public void additionalInfo(@RequestBody @Valid AdditionalInfoRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
         User loginUser = principal.getUser();
         userService.editAdditionalInfo(loginUser, request);
+    }
+
+    @Operation(summary = "유저가 작성한 모든 글 가져오기")
+    @GetMapping("/articles/all")
+    public UserArticlesRequest articlesAll(
+            @RequestParam int page, @RequestParam(defaultValue = "10", required = false) int size) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
+        User loginUser = principal.getUser();
+
+        return userService.findArticlesAll(loginUser, page, size);
     }
 }
