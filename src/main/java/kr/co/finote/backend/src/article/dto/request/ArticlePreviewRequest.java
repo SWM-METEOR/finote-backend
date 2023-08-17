@@ -26,7 +26,7 @@ public class ArticlePreviewRequest {
                 .title(article.getTitle())
                 .body(article.getBody())
                 .totalLike(article.getTotalLike())
-                .comment(article.getComment())
+                .comment(article.getReply())
                 .authorNickname(article.getUser().getNickname())
                 .date(article.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
                 .build();
