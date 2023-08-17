@@ -26,7 +26,7 @@ public class Article extends BaseEntity {
     private String body;
 
     private int totalLike;
-    private int comment;
+    private int reply;
 
     public static Article createArticle(ArticleRequest articleRequest, User user) {
         return Article.builder()
