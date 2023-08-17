@@ -23,6 +23,7 @@ public class Article extends BaseEntity {
 
     private String title;
 
+    @Column(columnDefinition = "TEXT")
     private String body;
 
     private int totalLike;
