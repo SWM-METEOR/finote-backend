@@ -16,10 +16,13 @@ import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.dto.response.UserArticlesResponse;
 import lombok.RequiredArgsConstructor;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.QueryStringQueryBuilder;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
-import org.springframework.data.elasticsearch.core.query.Query;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -47,8 +50,9 @@ public class ArticleService {
                 .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
     }
 
-    public UserArticlesResponse getDragRelatedArticle(dragArticleRequest request) {
-        SearchHits<ArticleDocument> byTitle = searchByBody(request.getDragText());
+    public UserArticlesResponse getDragRelatedArticle(
+            int page, int size, dragArticleRequest request) {
+        SearchHits<ArticleDocument> byTitle = search(page, size, request.getDragText());
 
         List<SearchHit<ArticleDocument>> searchHits =
                 byTitle.getSearchHits().stream()
@@ -67,16 +71,18 @@ public class ArticleService {
         List<ArticleDocument> documents =
                 searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
 
-        return UserArticlesResponse.of(documents);
+        return UserArticlesResponse.fromDocuments(page, size, documents);
     }
 
-    public SearchHits<ArticleDocument> searchByTitle(String title) {
-        return restTemplate.search(
-                (Query) QueryBuilders.matchQuery("title", title), ArticleDocument.class);
-    }
+    public SearchHits<ArticleDocument> search(int page, int size, String dragText) {
+        int newPage = page - 1;
+        Pageable pageable = PageRequest.of(newPage, size);
 
-    public SearchHits<ArticleDocument> searchByBody(String body) {
-        return restTemplate.search(
-                (Query) QueryBuilders.matchQuery("body", body), ArticleDocument.class);
+        QueryStringQueryBuilder builder = QueryBuilders.queryStringQuery(dragText);
+
+        NativeSearchQuery searchQuery = new NativeSearchQuery(builder);
+        searchQuery.setPageable(pageable);
+
+        return restTemplate.search(searchQuery, ArticleDocument.class);
     }
 }

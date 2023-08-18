@@ -41,7 +41,10 @@ public class ArticleApi {
     @Operation(summary = "스마트 드래그 - 관련 아티클 기능")
     @PostMapping("/drag-related")
     // TODO : 테스트 후 무한 스크롤 대응 방법 고민 (ElasticSearchRepository에서)
-    public UserArticlesResponse dragRelatedArticle(@RequestBody dragArticleRequest request) {
-        return articleService.getDragRelatedArticle(request);
+    public UserArticlesResponse dragRelatedArticle(
+            @RequestBody dragArticleRequest request,
+            @RequestParam int page,
+            @RequestParam(required = false, defaultValue = "10") int size) {
+        return articleService.getDragRelatedArticle(page, size, request);
     }
 }

@@ -16,12 +16,13 @@ public class UserArticlesResponse {
 
     private List<ArticlePreviewRequest> articleList = new ArrayList<>();
 
-    public static UserArticlesResponse of(int page, int size, List<Article> articles) {
+    public static UserArticlesResponse fromArticles(int page, int size, List<Article> articles) {
         List<ArticlePreviewRequest> articleList = ArticlePreviewRequest.FromArticle(articles);
         return new UserArticlesResponse(page, size, articleList);
     }
 
-    public static UserArticlesResponse of(List<ArticleDocument> documents) {
+    public static UserArticlesResponse fromDocuments(
+            int page, int size, List<ArticleDocument> documents) {
         List<ArticlePreviewRequest> articleList = ArticlePreviewRequest.FromArticleDocument(documents);
         // TODO : 무한 스크롤 구현시 page, size 값 변수로 변경
         return new UserArticlesResponse(1, 10, articleList);

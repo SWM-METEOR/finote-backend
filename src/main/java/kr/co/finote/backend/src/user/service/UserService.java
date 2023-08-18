@@ -77,6 +77,6 @@ public class UserService {
         Page<Article> result = articleRepository.findByUserAndIsDeleted(user, false, pageable);
         List<Article> content = result.getContent();
 
-        return UserArticlesResponse.of(pageNum, size, content);
+        return UserArticlesResponse.fromArticles(pageNum, size, content);
     }
 }
