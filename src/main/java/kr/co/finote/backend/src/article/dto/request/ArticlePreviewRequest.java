@@ -41,7 +41,7 @@ public class ArticlePreviewRequest {
                 .totalLike(document.getTotalLike())
                 .reply(document.getReply())
                 .authorNickname(document.getAuthorNickName())
-                .date(document.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
+                .date(document.getCreatedDate())
                 .build();
     }
 

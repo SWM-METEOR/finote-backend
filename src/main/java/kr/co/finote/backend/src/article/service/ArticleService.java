@@ -1,6 +1,6 @@
 package kr.co.finote.backend.src.article.service;
 
-import java.util.Comparator;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
@@ -53,22 +53,14 @@ public class ArticleService {
         List<SearchHit<ArticleDocument>> searchHits =
                 byTitle.getSearchHits().stream()
                         .sorted(
-                                new Comparator<>() {
-                                    @Override
-                                    public int compare(SearchHit<ArticleDocument> o1, SearchHit<ArticleDocument> o2) {
-                                        if (o1.getScore() != o2.getScore()) {
-                                            return Float.compare(o2.getScore(), o1.getScore());
-                                        }
-                                        Article article1 =
-                                                articleRepository
-                                                        .findByIdAndIsDeleted(o1.getContent().getArticleId(), false)
-                                                        .get();
-                                        Article article2 =
-                                                articleRepository
-                                                        .findByIdAndIsDeleted(o2.getContent().getArticleId(), false)
-                                                        .get();
-                                        return article2.getCreatedDate().compareTo(article1.getCreatedDate());
+                                (o1, o2) -> {
+                                    if (o1.getScore() != o2.getScore()) {
+                                        return Float.compare(o2.getScore(), o1.getScore());
                                     }
+                                    LocalDate date1 = LocalDate.parse(o1.getContent().getCreatedDate());
+                                    LocalDate date2 = LocalDate.parse(o2.getContent().getCreatedDate());
+
+                                    return date2.compareTo(date1);
                                 })
                         .collect(Collectors.toList());
 

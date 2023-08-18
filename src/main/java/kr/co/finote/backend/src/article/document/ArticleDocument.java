@@ -1,6 +1,7 @@
 package kr.co.finote.backend.src.article.document;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javax.persistence.Id;
 import kr.co.finote.backend.src.article.dto.request.ArticleRequest;
 import kr.co.finote.backend.src.user.domain.User;
@@ -31,7 +32,7 @@ public class ArticleDocument {
     private int reply;
 
     private String authorNickName;
-    private LocalDateTime createdDate;
+    private String createdDate;
 
     public static ArticleDocument createDocument(Long articleId, ArticleRequest request, User user) {
         return ArticleDocument.builder()
@@ -41,8 +42,7 @@ public class ArticleDocument {
                 .totalLike(0)
                 .reply(0)
                 .authorNickName(user.getNickname())
-                // TODO : 이후에 조금 더 정확한 시간으로 (Article Entity가 DB에 기록된 시간과 동일하게)
-                .createdDate(LocalDateTime.now())
+                .createdDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
                 .build();
     }
 }
