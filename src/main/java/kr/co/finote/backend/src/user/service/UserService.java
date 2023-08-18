@@ -2,7 +2,8 @@ package kr.co.finote.backend.src.user.service;
 
 import java.util.List;
 import kr.co.finote.backend.global.code.ResponseCode;
-import kr.co.finote.backend.global.exception.CustomException;
+import kr.co.finote.backend.global.exception.InvalidInputException;
+import kr.co.finote.backend.global.exception.UnAuthorizedException;
 import kr.co.finote.backend.src.article.domain.Article;
 import kr.co.finote.backend.src.article.repository.ArticleRepository;
 import kr.co.finote.backend.src.user.domain.User;
@@ -32,27 +33,27 @@ public class UserService {
     public void validateNickname(String nickname) {
         boolean existsByNickname = userRepository.existsByNicknameAndIsDeleted(nickname, false);
         if (existsByNickname) {
-            throw new CustomException(ResponseCode.DUPLICATE_NICKNAME);
+            throw new InvalidInputException(ResponseCode.DUPLICATE_NICKNAME);
         } else if (nickname.length() > NICK_NAME_MAX_LENGTH) {
-            throw new CustomException(ResponseCode.NICKNAME_TOO_LONG);
+            throw new InvalidInputException(ResponseCode.NICKNAME_TOO_LONG);
         } // 그 외 금지문자 포함 등의 error 처리 예정
     }
 
     public void validateBlogName(String blogName) {
         boolean existsByBlogName = userRepository.existsByBlogNameAndIsDeleted(blogName, false);
         if (existsByBlogName) {
-            throw new CustomException(ResponseCode.DUPLICATE_BLOG_NAME);
+            throw new InvalidInputException(ResponseCode.DUPLICATE_BLOG_NAME);
         } else if (blogName.length() > BLOG_NAME_MAX_LENGTH) {
-            throw new CustomException(ResponseCode.BLOG_NAME_TOO_LONG);
+            throw new InvalidInputException(ResponseCode.BLOG_NAME_TOO_LONG);
         } // 그 외 금지문자 포함 등의 error 처리 예정
     }
 
     public void validateBlogUrl(String blogUrl) {
         boolean existsByBlogUrl = userRepository.existsByBlogUrlAndIsDeleted(blogUrl, false);
         if (existsByBlogUrl) {
-            throw new CustomException(ResponseCode.DUPLICATE_BLOG_URL);
+            throw new InvalidInputException(ResponseCode.DUPLICATE_BLOG_URL);
         } else if (blogUrl.length() > BLOG_URL_MAX_LENGTH) {
-            throw new CustomException(ResponseCode.BLOG_URL_TOO_LONG);
+            throw new InvalidInputException(ResponseCode.BLOG_URL_TOO_LONG);
         } // 그 외 금지문자 포함 등의 error 처리 예정
     }
 
@@ -65,7 +66,7 @@ public class UserService {
         User findUser =
                 userRepository
                         .findByIdAndIsDeleted(user.getId(), false)
-                        .orElseThrow(() -> new CustomException(ResponseCode.UNAUTHENTICATED));
+                        .orElseThrow(() -> new UnAuthorizedException(ResponseCode.UNAUTHENTICATED));
 
         findUser.updateAdditionalInfo(request);
     }

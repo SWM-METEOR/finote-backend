@@ -1,5 +1,6 @@
 package kr.co.finote.backend.src.article.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import javax.validation.Valid;
 import kr.co.finote.backend.global.annotation.Login;
@@ -24,7 +25,8 @@ public class ArticleApi {
     @Operation(summary = "블로그 글 작성")
     @PostMapping
     public PostArticleResponse postArticles(
-            @Login User loginUser, @RequestBody @Valid ArticleRequest request) {
+            @Login User loginUser, @RequestBody @Valid ArticleRequest request)
+            throws JsonProcessingException {
 
         Long articleId = articleService.save(request, loginUser);
         articleService.saveDocument(articleId, request, loginUser);
@@ -38,13 +40,17 @@ public class ArticleApi {
         return ArticleResponse.of(article);
     }
 
+
+    // TODO : 테스트 후 무한 스크롤 대응 방법 고민 (ElasticSearchRepository에서)
     @Operation(summary = "스마트 드래그 - 관련 아티클 기능")
     @PostMapping("/drag-related")
-    // TODO : 테스트 후 무한 스크롤 대응 방법 고민 (ElasticSearchRepository에서)
     public UserArticlesResponse dragRelatedArticle(
             @RequestBody dragArticleRequest request,
             @RequestParam int page,
             @RequestParam(required = false, defaultValue = "10") int size) {
         return articleService.getDragRelatedArticle(page, size, request);
     }
+
+    // TODO 블로그 글 삭제 시 article_keyword 데이터도 같이 삭제(soft delete)
+
 }
