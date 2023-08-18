@@ -1,17 +1,13 @@
 package kr.co.finote.backend.src.article.service;
 
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import kr.co.finote.backend.global.code.ResponseCode;
 import kr.co.finote.backend.global.exception.NotFoundException;
@@ -20,33 +16,27 @@ import kr.co.finote.backend.src.article.domain.Article;
 import kr.co.finote.backend.src.article.domain.ArticleKeyword;
 import kr.co.finote.backend.src.article.domain.Keyword;
 import kr.co.finote.backend.src.article.dto.request.ArticleRequest;
-
-import kr.co.finote.backend.src.article.dto.request.dragArticleRequest;
-import kr.co.finote.backend.src.article.repository.ArticleEsRepository;
-
 import kr.co.finote.backend.src.article.dto.request.KeywordDataRequest;
+import kr.co.finote.backend.src.article.dto.request.dragArticleRequest;
 import kr.co.finote.backend.src.article.dto.response.KeywordDataResponse;
+import kr.co.finote.backend.src.article.repository.ArticleEsRepository;
 import kr.co.finote.backend.src.article.repository.ArticleKeywordRepository;
-
 import kr.co.finote.backend.src.article.repository.ArticleRepository;
 import kr.co.finote.backend.src.article.repository.KeywordRepository;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.dto.response.UserArticlesResponse;
 import lombok.RequiredArgsConstructor;
-
+import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.QueryStringQueryBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
-
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
-
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -55,12 +45,11 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 public class ArticleService {
 
-
     private final ArticleRepository articleRepository;
-    private final ElasticsearchRestTemplate restTemplate;
     private final ArticleEsRepository articleEsRepository;
     private final KeywordRepository keywordRepository;
     private final ArticleKeywordRepository articleKeywordRepository;
+    private final ElasticsearchRestTemplate restTemplate;
 
     @Value("${KEYWORD_EXTRACTOR_URL}")
     private String keywordExtractorUrl;
@@ -110,6 +99,7 @@ public class ArticleService {
         searchQuery.setPageable(pageable);
 
         return restTemplate.search(searchQuery, ArticleDocument.class);
+    }
 
     @Transactional
     public Long save(ArticleRequest articleRequest, User loginUser) throws JsonProcessingException {

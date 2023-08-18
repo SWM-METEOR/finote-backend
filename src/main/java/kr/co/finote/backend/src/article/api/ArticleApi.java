@@ -40,7 +40,6 @@ public class ArticleApi {
         return ArticleResponse.of(article);
     }
 
-
     // TODO : 테스트 후 무한 스크롤 대응 방법 고민 (ElasticSearchRepository에서)
     @Operation(summary = "스마트 드래그 - 관련 아티클 기능")
     @PostMapping("/drag-related")
