@@ -24,7 +24,6 @@ public class UserArticlesResponse {
     public static UserArticlesResponse fromDocuments(
             int page, int size, List<ArticleDocument> documents) {
         List<ArticlePreviewRequest> articleList = ArticlePreviewRequest.FromArticleDocument(documents);
-        // TODO : 무한 스크롤 구현시 page, size 값 변수로 변경
-        return new UserArticlesResponse(1, 10, articleList);
+        return new UserArticlesResponse(page, size, articleList);
     }
 }
