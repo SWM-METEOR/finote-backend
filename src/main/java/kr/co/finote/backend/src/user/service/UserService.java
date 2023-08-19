@@ -5,10 +5,10 @@ import kr.co.finote.backend.global.code.ResponseCode;
 import kr.co.finote.backend.global.exception.InvalidInputException;
 import kr.co.finote.backend.global.exception.UnAuthorizedException;
 import kr.co.finote.backend.src.article.domain.Article;
+import kr.co.finote.backend.src.article.dto.response.ArticlePreviewResponse;
 import kr.co.finote.backend.src.article.repository.ArticleRepository;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.dto.request.AdditionalInfoRequest;
-import kr.co.finote.backend.src.user.dto.response.UserArticlesResponse;
 import kr.co.finote.backend.src.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -71,13 +71,13 @@ public class UserService {
         findUser.updateAdditionalInfo(request);
     }
 
-    public UserArticlesResponse findArticlesAll(User user, int page, int size) {
+    public ArticlePreviewResponse findArticlesAll(User user, int page, int size) {
         int pageNum = page - 1;
         Pageable pageable = PageRequest.of(pageNum, size, Sort.by("createdDate").descending());
 
         Page<Article> result = articleRepository.findByUserAndIsDeleted(user, false, pageable);
         List<Article> content = result.getContent();
 
-        return UserArticlesResponse.of(pageNum, size, content);
+        return ArticlePreviewResponse.of(pageNum, size, content);
     }
 }
