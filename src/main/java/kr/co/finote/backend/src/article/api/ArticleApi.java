@@ -6,12 +6,12 @@ import javax.validation.Valid;
 import kr.co.finote.backend.global.annotation.Login;
 import kr.co.finote.backend.src.article.domain.Article;
 import kr.co.finote.backend.src.article.dto.request.ArticleRequest;
-import kr.co.finote.backend.src.article.dto.request.dragArticleRequest;
+import kr.co.finote.backend.src.article.dto.request.DragArticleRequest;
+import kr.co.finote.backend.src.article.dto.response.ArticlePreviewResponse;
 import kr.co.finote.backend.src.article.dto.response.ArticleResponse;
 import kr.co.finote.backend.src.article.dto.response.PostArticleResponse;
 import kr.co.finote.backend.src.article.service.ArticleService;
 import kr.co.finote.backend.src.user.domain.User;
-import kr.co.finote.backend.src.user.dto.response.UserArticlesResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,11 +40,11 @@ public class ArticleApi {
         return ArticleResponse.of(article);
     }
 
-    // TODO : 테스트 후 무한 스크롤 대응 방법 고민 (ElasticSearchRepository에서)
     @Operation(summary = "스마트 드래그 - 관련 아티클 기능")
     @PostMapping("/drag-related")
-    public UserArticlesResponse dragRelatedArticle(
-            @RequestBody dragArticleRequest request,
+    // TODO : 테스트 후 무한 스크롤 대응 방법 고민 (ElasticSearchRepository에서)
+    public ArticlePreviewResponse dragRelatedArticle(
+            @RequestBody DragArticleRequest request,
             @RequestParam int page,
             @RequestParam(required = false, defaultValue = "10") int size) {
         return articleService.getDragRelatedArticle(page, size, request);

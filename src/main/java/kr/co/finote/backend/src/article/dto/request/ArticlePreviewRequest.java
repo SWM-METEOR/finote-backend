@@ -45,20 +45,25 @@ public class ArticlePreviewRequest {
                 .build();
     }
 
-    public static List<ArticlePreviewRequest> FromArticle(List<Article> list) {
+    public static List<ArticlePreviewRequest> of(List<?> list) {
         List<ArticlePreviewRequest> requests = new ArrayList<>();
-        for (Article article : list) {
-            requests.add(ArticlePreviewRequest.of(article));
+        for (Object object : list) {
+            if (object instanceof Article) {
+                requests.add(ArticlePreviewRequest.of((Article) object));
+            } else {
+                requests.add(ArticlePreviewRequest.of((ArticleDocument) object));
+            }
         }
 
         return requests;
     }
 
-    public static List<ArticlePreviewRequest> FromArticleDocument(List<ArticleDocument> documents) {
-        List<ArticlePreviewRequest> requests = new ArrayList<>();
-        for (ArticleDocument document : documents) {
-            requests.add(ArticlePreviewRequest.of(document));
-        }
-        return requests;
-    }
+    //    public static List<ArticlePreviewRequest> FromArticleDocument(List<ArticleDocument>
+    // documents) {
+    //        List<ArticlePreviewRequest> requests = new ArrayList<>();
+    //        for (ArticleDocument document : documents) {
+    //            requests.add(ArticlePreviewRequest.of(document));
+    //        }
+    //        return requests;
+    //    }
 }

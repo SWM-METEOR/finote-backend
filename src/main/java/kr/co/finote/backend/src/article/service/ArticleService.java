@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -16,15 +18,14 @@ import kr.co.finote.backend.src.article.domain.Article;
 import kr.co.finote.backend.src.article.domain.ArticleKeyword;
 import kr.co.finote.backend.src.article.domain.Keyword;
 import kr.co.finote.backend.src.article.dto.request.ArticleRequest;
-import kr.co.finote.backend.src.article.dto.request.KeywordDataRequest;
-import kr.co.finote.backend.src.article.dto.request.dragArticleRequest;
-import kr.co.finote.backend.src.article.dto.response.KeywordDataResponse;
+
+import kr.co.finote.backend.src.article.dto.request.DragArticleRequest;
+import kr.co.finote.backend.src.article.dto.response.ArticlePreviewResponse;
 import kr.co.finote.backend.src.article.repository.ArticleEsRepository;
 import kr.co.finote.backend.src.article.repository.ArticleKeywordRepository;
 import kr.co.finote.backend.src.article.repository.ArticleRepository;
 import kr.co.finote.backend.src.article.repository.KeywordRepository;
 import kr.co.finote.backend.src.user.domain.User;
-import kr.co.finote.backend.src.user.dto.response.UserArticlesResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -65,28 +66,31 @@ public class ArticleService {
                 .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
     }
 
-    public UserArticlesResponse getDragRelatedArticle(
-            int page, int size, dragArticleRequest request) {
+    public ArticlePreviewResponse getDragRelatedArticle(
+            int page, int size, DragArticleRequest request) {
         SearchHits<ArticleDocument> byTitle = search(page, size, request.getDragText());
 
         List<SearchHit<ArticleDocument>> searchHits =
                 byTitle.getSearchHits().stream()
-                        .sorted(
-                                (o1, o2) -> {
-                                    if (o1.getScore() != o2.getScore()) {
-                                        return Float.compare(o2.getScore(), o1.getScore());
-                                    }
-                                    LocalDate date1 = LocalDate.parse(o1.getContent().getCreatedDate());
-                                    LocalDate date2 = LocalDate.parse(o2.getContent().getCreatedDate());
-
-                                    return date2.compareTo(date1);
-                                })
+                        .sorted(getRelatedArticleComparator())
                         .collect(Collectors.toList());
 
         List<ArticleDocument> documents =
                 searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
 
-        return UserArticlesResponse.fromDocuments(page, size, documents);
+        return ArticlePreviewResponse.of(page, size, documents);
+    }
+
+    private Comparator<SearchHit<ArticleDocument>> getRelatedArticleComparator() {
+        return (o1, o2) -> {
+            if (o1.getScore() != o2.getScore()) {
+                return Float.compare(o2.getScore(), o1.getScore());
+            }
+            LocalDate date1 = LocalDate.parse(o1.getContent().getCreatedDate());
+            LocalDate date2 = LocalDate.parse(o2.getContent().getCreatedDate());
+
+            return date2.compareTo(date1);
+        };
     }
 
     public SearchHits<ArticleDocument> search(int page, int size, String dragText) {
