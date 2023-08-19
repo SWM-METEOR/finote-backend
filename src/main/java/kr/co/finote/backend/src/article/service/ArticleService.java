@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -18,7 +17,6 @@ import kr.co.finote.backend.src.article.domain.Article;
 import kr.co.finote.backend.src.article.domain.ArticleKeyword;
 import kr.co.finote.backend.src.article.domain.Keyword;
 import kr.co.finote.backend.src.article.dto.request.ArticleRequest;
-
 import kr.co.finote.backend.src.article.dto.request.DragArticleRequest;
 import kr.co.finote.backend.src.article.dto.request.KeywordDataRequest;
 import kr.co.finote.backend.src.article.dto.response.ArticlePreviewResponse;
