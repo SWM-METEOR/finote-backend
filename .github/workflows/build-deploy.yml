@@ -8,7 +8,7 @@ name: Build and Deploy Spring Boot to Prod EC2
 
 on:
   push:
-    branches: [ "dev" ]
+    branches: [ "main" ]
 
 permissions:
   contents: read
