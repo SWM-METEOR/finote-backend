@@ -37,6 +37,6 @@ out/
 .vscode/
 
 application.properties
-.github/
-appspec.yml
-scripts/
+#.github/
+#appspec.yml
+#scripts/
