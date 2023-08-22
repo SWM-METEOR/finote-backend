@@ -61,6 +61,10 @@ dependencies {
 	implementation 'co.elastic.clients:elasticsearch-java:7.17.3'
 	implementation 'org.elasticsearch.client:elasticsearch-rest-client:7.17.3'
 	implementation 'jakarta.json:jakarta.json-api:2.0.1'
+
+	// markdown to text
+	implementation 'com.vladsch.flexmark:flexmark-all:0.64.8'
+	implementation 'org.jsoup:jsoup:1.16.1'
 }
 
 tasks.named('test') {

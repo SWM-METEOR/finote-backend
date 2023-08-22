@@ -1,10 +1,12 @@
 package kr.co.finote.backend.src.user.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import kr.co.finote.backend.global.code.ResponseCode;
 import kr.co.finote.backend.global.exception.InvalidInputException;
 import kr.co.finote.backend.global.exception.UnAuthorizedException;
 import kr.co.finote.backend.src.article.domain.Article;
+import kr.co.finote.backend.src.article.dto.response.ArticlePreviewListResponse;
 import kr.co.finote.backend.src.article.dto.response.ArticlePreviewResponse;
 import kr.co.finote.backend.src.article.repository.ArticleRepository;
 import kr.co.finote.backend.src.user.domain.User;
@@ -71,13 +73,18 @@ public class UserService {
         findUser.updateAdditionalInfo(request);
     }
 
-    public ArticlePreviewResponse findArticlesAll(User user, int page, int size) {
+    public ArticlePreviewListResponse findArticlesAll(User user, int page, int size) {
         int pageNum = page - 1;
         Pageable pageable = PageRequest.of(pageNum, size, Sort.by("createdDate").descending());
 
         Page<Article> result = articleRepository.findByUserAndIsDeleted(user, false, pageable);
-        List<Article> content = result.getContent();
+        List<Article> contents = result.getContent();
 
-        return ArticlePreviewResponse.of(pageNum, size, content);
+        List<ArticlePreviewResponse> articleList = new ArrayList<>();
+        for (Article content : contents) {
+            articleList.add(ArticlePreviewResponse.of(content));
+        }
+
+        return ArticlePreviewListResponse.of(pageNum, size, articleList);
     }
 }
