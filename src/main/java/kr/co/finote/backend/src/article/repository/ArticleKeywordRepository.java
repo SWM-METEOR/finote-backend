@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ArticleKeywordRepository extends JpaRepository<ArticleKeyword, Long> {
 
-    List<ArticleKeyword> findAllByArticle(Article article);
+    List<ArticleKeyword> findAllByArticleAndIsDeleted(Article article, Boolean isDeleted);
 }

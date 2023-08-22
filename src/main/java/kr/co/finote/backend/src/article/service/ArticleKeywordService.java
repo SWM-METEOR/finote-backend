@@ -28,7 +28,8 @@ public class ArticleKeywordService {
     }
 
     public List<ArticleKeyword> findTop3ArticleKeywordList(Article article) {
-        List<ArticleKeyword> articleKeywordList = articleKeywordRepository.findAllByArticle(article);
+        List<ArticleKeyword> articleKeywordList =
+                articleKeywordRepository.findAllByArticleAndIsDeleted(article, false);
         if (articleKeywordList.size() > KEYWORD_MAX_COUNT) return articleKeywordList.subList(0, 3);
         else return articleKeywordList;
     }

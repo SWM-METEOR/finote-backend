@@ -38,6 +38,7 @@ import org.springframework.stereotype.Service;
 public class ArticleService {
 
     private static final int PREVIEW_TEXT_MAX_LENGTH = 3;
+    private static final int RELATED_ARTICLE_MAX_COUNT = 6;
 
     // article 관련 레포지토리만 의존
     private final ArticleRepository articleRepository;
@@ -120,7 +121,10 @@ public class ArticleService {
                             .collect(Collectors.toList());
 
             List<ArticleDocument> documents =
-                    searchHits.stream().map(SearchHit::getContent).limit(10).collect(Collectors.toList());
+                    searchHits.stream()
+                            .map(SearchHit::getContent)
+                            .limit(RELATED_ARTICLE_MAX_COUNT)
+                            .collect(Collectors.toList());
 
             // document list -> response dto list 변환
             List<ArticlePreviewResponse> articlePreviewResponseList = new ArrayList<>();

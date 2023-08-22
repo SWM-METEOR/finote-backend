@@ -27,6 +27,7 @@ public class Article extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String body;
 
+    @ColumnDefault("0")
     private int totalLike;
 
     @ColumnDefault("0")
