@@ -65,7 +65,7 @@ public class ArticleService {
 
         List<SearchHit<ArticleDocument>> searchHits =
                 byTitle.getSearchHits().stream()
-                        .sorted(elasticService.Scorecomparator())
+                        .sorted(elasticService.scorecomparator())
                         .collect(Collectors.toList());
 
         List<ArticleDocument> documents =
@@ -116,7 +116,7 @@ public class ArticleService {
             SearchHits<ArticleDocument> byKeyword = elasticService.search(keyword);
             List<SearchHit<ArticleDocument>> searchHits =
                     byKeyword.getSearchHits().stream()
-                            .sorted(elasticService.Scorecomparator())
+                            .sorted(elasticService.scorecomparator())
                             .collect(Collectors.toList());
 
             List<ArticleDocument> documents =

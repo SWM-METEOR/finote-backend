@@ -20,7 +20,7 @@ public class ElasticService {
 
     private final ElasticsearchRestTemplate restTemplate;
 
-    public Comparator<SearchHit<ArticleDocument>> Scorecomparator() {
+    public Comparator<SearchHit<ArticleDocument>> scorecomparator() {
         return (o1, o2) -> {
             if (o1.getScore() != o2.getScore()) {
                 return Float.compare(o2.getScore(), o1.getScore());
