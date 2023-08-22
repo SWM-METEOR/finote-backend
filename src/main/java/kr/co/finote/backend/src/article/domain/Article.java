@@ -5,6 +5,7 @@ import kr.co.finote.backend.global.entity.BaseEntity;
 import kr.co.finote.backend.src.article.dto.request.ArticleRequest;
 import kr.co.finote.backend.src.user.domain.User;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
@@ -27,6 +28,8 @@ public class Article extends BaseEntity {
     private String body;
 
     private int totalLike;
+
+    @ColumnDefault("0")
     private int reply;
 
     public static Article createArticle(ArticleRequest articleRequest, User user) {

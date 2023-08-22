@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import javax.validation.Valid;
 import kr.co.finote.backend.global.annotation.Login;
 import kr.co.finote.backend.global.authentication.PrincipalDetails;
-import kr.co.finote.backend.src.article.dto.response.ArticlePreviewResponse;
+import kr.co.finote.backend.src.article.dto.response.ArticlePreviewListResponse;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.dto.request.*;
 import kr.co.finote.backend.src.user.dto.response.BlogResponse;
@@ -69,7 +69,7 @@ public class UserApi {
 
     @Operation(summary = "유저가 작성한 모든 글 가져오기")
     @GetMapping("/articles/all")
-    public ArticlePreviewResponse articlesAll(
+    public ArticlePreviewListResponse articlesAll(
             @Login User loginUser,
             @RequestParam int page,
             @RequestParam(defaultValue = "10", required = false) int size) {

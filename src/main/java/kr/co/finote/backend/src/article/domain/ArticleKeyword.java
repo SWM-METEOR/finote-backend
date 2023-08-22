@@ -4,12 +4,14 @@ import javax.persistence.*;
 import kr.co.finote.backend.global.entity.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter
 public class ArticleKeyword extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +26,10 @@ public class ArticleKeyword extends BaseEntity {
     @JoinColumn(name = "keyword_id", nullable = false)
     private Keyword keyword;
 
-    public static ArticleKeyword createArticleKeyword(Article article, Keyword keyword) {
-        return ArticleKeyword.builder().article(article).keyword(keyword).build();
+    private Double score;
+
+    public static ArticleKeyword createArticleKeyword(
+            Article article, Keyword keyword, Double score) {
+        return ArticleKeyword.builder().article(article).keyword(keyword).score(score).build();
     }
 }
