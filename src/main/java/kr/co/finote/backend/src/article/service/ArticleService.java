@@ -131,6 +131,7 @@ public class ArticleService {
 
     public ArticlePreviewListResponse trendArticles(int page, int size) {
         int pageNum = page - 1;
+        // TODO : 이후 좋아요 순, 조회순 등으로 정렬 기준 구현하여 제공하기
         Pageable pageable = PageRequest.of(pageNum, size, Sort.by("createdDate").descending());
 
         Page<Article> result = articleRepository.findAllByIsDeleted(false, pageable);
