@@ -87,4 +87,9 @@ public class UserService {
         return ArticlePreviewListResponse.of(pageNum, size, articlePreviewResponseList);
     }
 
+    public User findById(String userId) {
+        return userRepository
+                .findByIdAndIsDeleted(userId, false)
+                .orElseThrow(() -> new NotFoundException(ResponseCode.USER_NOT_FOUND));
+    }
 }
