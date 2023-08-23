@@ -60,4 +60,12 @@ public class ArticleApi {
 
     // TODO 블로그 글 삭제 시 article_keyword 데이터도 같이 삭제(soft delete)
 
+    @Operation(summary = "유저의 작성 글 모두 가져오기", description = "무한 스크롤 10개씩 요청 받아 대응")
+    @GetMapping("/{nickname}/all")
+    public ArticlePreviewListResponse articlesAll(@PathVariable String nickname,
+                                                  @RequestParam int page,
+                                                  @RequestParam(required = false, defaultValue = "10") int size) {
+        return articleService.articlesAll(nickname, page, size);
+    }
+
 }

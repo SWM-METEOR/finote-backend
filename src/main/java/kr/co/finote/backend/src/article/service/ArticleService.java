@@ -21,6 +21,7 @@ import kr.co.finote.backend.src.article.repository.ArticleEsRepository;
 import kr.co.finote.backend.src.article.repository.ArticleRepository;
 import kr.co.finote.backend.src.article.utils.ArticlePreviewUtils;
 import kr.co.finote.backend.src.user.domain.User;
+import kr.co.finote.backend.src.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -46,6 +47,7 @@ public class ArticleService {
     private final KeywordService keywordService;
     private final ArticleKeywordService articleKeywordService;
     private final ElasticService elasticService;
+    private final UserService userService;
 
     public void saveDocument(Long articleId, ArticleRequest articleRequest, User loginUser) {
         ArticleDocument document = ArticleDocument.createDocument(articleId, articleRequest, loginUser);
@@ -139,6 +141,19 @@ public class ArticleService {
 
         List<ArticlePreviewResponse> articlePreviewResponseList =
                 ArticlePreviewUtils.ToArticlesPreivewResponses(contents);
+
+        return ArticlePreviewListResponse.of(page, size, articlePreviewResponseList);
+    }
+
+    public ArticlePreviewListResponse articlesAll(String nickname, int page, int size) {
+        int pageNum = page -1;
+        PageRequest pageable = PageRequest.of(pageNum, size, Sort.by("createdDate").descending());
+
+        User findUser = userService.findByNickname(nickname);
+        Page<Article> result = articleRepository.findByUserAndIsDeleted(findUser, false, pageable);
+
+        List<Article> contents = result.getContent();
+        List<ArticlePreviewResponse> articlePreviewResponseList = ArticlePreviewUtils.ToArticlesPreivewResponses(contents);
 
         return ArticlePreviewListResponse.of(page, size, articlePreviewResponseList);
     }

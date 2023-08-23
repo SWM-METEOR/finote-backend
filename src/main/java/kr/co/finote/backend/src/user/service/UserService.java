@@ -74,22 +74,15 @@ public class UserService {
         findUser.updateAdditionalInfo(request);
     }
 
-    public ArticlePreviewListResponse findArticlesAll(User user, int page, int size) {
-        int pageNum = page - 1;
-        Pageable pageable = PageRequest.of(pageNum, size, Sort.by("createdDate").descending());
-
-        Page<Article> result = articleRepository.findByUserAndIsDeleted(user, false, pageable);
-        List<Article> contents = result.getContent();
-
-        List<ArticlePreviewResponse> articlePreviewResponseList =
-                ArticlePreviewUtils.ToArticlesPreivewResponses(contents);
-
-        return ArticlePreviewListResponse.of(pageNum, size, articlePreviewResponseList);
-    }
-
     public User findById(String userId) {
         return userRepository
                 .findByIdAndIsDeleted(userId, false)
+                .orElseThrow(() -> new NotFoundException(ResponseCode.USER_NOT_FOUND));
+    }
+
+    public User findByNickname(String nickname) {
+        return userRepository
+                .findByNicknameAndIsDeleted(nickname, false)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.USER_NOT_FOUND));
     }
 }

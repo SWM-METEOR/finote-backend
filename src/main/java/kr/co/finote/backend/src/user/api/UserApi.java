@@ -67,13 +67,4 @@ public class UserApi {
         userService.editAdditionalInfo(loginUser, request);
     }
 
-    @Operation(summary = "유저가 작성한 모든 글 가져오기")
-    @GetMapping("/articles/all")
-    public ArticlePreviewListResponse articlesAll(
-            @Login User loginUser,
-            @RequestParam int page,
-            @RequestParam(defaultValue = "10", required = false) int size) {
-
-        return userService.findArticlesAll(loginUser, page, size);
-    }
 }
