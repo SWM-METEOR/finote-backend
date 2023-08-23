@@ -3,6 +3,7 @@ package kr.co.finote.backend.src.user.service;
 import java.util.List;
 import kr.co.finote.backend.global.code.ResponseCode;
 import kr.co.finote.backend.global.exception.InvalidInputException;
+import kr.co.finote.backend.global.exception.NotFoundException;
 import kr.co.finote.backend.global.exception.UnAuthorizedException;
 import kr.co.finote.backend.src.article.domain.Article;
 import kr.co.finote.backend.src.article.dto.response.ArticlePreviewListResponse;
@@ -84,5 +85,10 @@ public class UserService {
                 ArticlePreviewUtils.ToArticlesPreivewResponses(contents);
 
         return ArticlePreviewListResponse.of(pageNum, size, articlePreviewResponseList);
+    }
+
+    public User findById(String userId) {
+        return userRepository.findByIdAndIsDeleted(userId, false)
+                .orElseThrow(() -> new NotFoundException(ResponseCode.USER_NOT_FOUND));
     }
 }
