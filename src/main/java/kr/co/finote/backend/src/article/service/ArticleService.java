@@ -1,10 +1,6 @@
 package kr.co.finote.backend.src.article.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.vladsch.flexmark.html.HtmlRenderer;
-import com.vladsch.flexmark.parser.Parser;
-import com.vladsch.flexmark.util.ast.Node;
-import com.vladsch.flexmark.util.data.MutableDataSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,11 +19,14 @@ import kr.co.finote.backend.src.article.dto.response.KeywordDataResponse;
 import kr.co.finote.backend.src.article.dto.response.RelatedArticleResponse;
 import kr.co.finote.backend.src.article.repository.ArticleEsRepository;
 import kr.co.finote.backend.src.article.repository.ArticleRepository;
+import kr.co.finote.backend.src.article.utils.ArticlePreviewUtils;
 import kr.co.finote.backend.src.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.stereotype.Service;
@@ -37,7 +36,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class ArticleService {
 
-    private static final int PREVIEW_TEXT_MAX_LENGTH = 3;
     private static final int RELATED_ARTICLE_MAX_COUNT = 6;
 
     // article 관련 레포지토리만 의존
@@ -52,6 +50,22 @@ public class ArticleService {
     public void saveDocument(Long articleId, ArticleRequest articleRequest, User loginUser) {
         ArticleDocument document = ArticleDocument.createDocument(articleId, articleRequest, loginUser);
         articleEsRepository.save(document);
+    }
+
+    @Transactional
+    public Long save(ArticleRequest articleRequest, User loginUser) throws JsonProcessingException {
+        Article article = Article.createArticle(articleRequest, loginUser);
+        Article saveArticle = articleRepository.save(article); // 새로운 아티클 저장
+
+        KeywordDataResponse[] keywordDataResponses =
+                keywordService.extractKeywords(saveArticle.getBody()); // 키워드 추출
+        if (keywordDataResponses != null) {
+            List<KeywordScore> keywordScoreList =
+                    keywordService.saveNewKeywords(keywordDataResponses); // 새로들어온 키워드 저장 및 키워드와 스코어 반환
+            articleKeywordService.saveArticleKeywordList(
+                    saveArticle, keywordScoreList); // 키워드와 아티클 연관관계 저장
+        }
+        return saveArticle.getId();
     }
 
     public Article findById(Long articleId) {
@@ -72,31 +86,10 @@ public class ArticleService {
         List<ArticleDocument> documents =
                 searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
 
-        List<ArticlePreviewResponse> articlePreviewResponseList = new ArrayList<>();
-        for (ArticleDocument document : documents) {
-            String previewBody = markdownToPreviewText(document.getBody());
-            ArticlePreviewResponse articlePreviewResponse =
-                    ArticlePreviewResponse.of(document, previewBody);
-            articlePreviewResponseList.add(articlePreviewResponse);
-        }
+        List<ArticlePreviewResponse> articlePreviewResponseList =
+                ArticlePreviewUtils.ToArticlesPreivewResponses(documents);
 
         return ArticlePreviewListResponse.of(page, size, articlePreviewResponseList);
-    }
-
-    @Transactional
-    public Long save(ArticleRequest articleRequest, User loginUser) throws JsonProcessingException {
-        Article article = Article.createArticle(articleRequest, loginUser);
-        Article saveArticle = articleRepository.save(article); // 새로운 아티클 저장
-
-        KeywordDataResponse[] keywordDataResponses =
-                keywordService.extractKeywords(saveArticle.getBody()); // 키워드 추출
-        if (keywordDataResponses != null) {
-            List<KeywordScore> keywordScoreList =
-                    keywordService.saveNewKeywords(keywordDataResponses); // 새로들어온 키워드 저장 및 키워드와 스코어 반환
-            articleKeywordService.saveArticleKeywordList(
-                    saveArticle, keywordScoreList); // 키워드와 아티클 연관관계 저장
-        }
-        return saveArticle.getId();
     }
 
     public List<RelatedArticleResponse> getRelatedArticle(Long articleId) {
@@ -127,13 +120,8 @@ public class ArticleService {
                             .collect(Collectors.toList());
 
             // document list -> response dto list 변환
-            List<ArticlePreviewResponse> articlePreviewResponseList = new ArrayList<>();
-            for (ArticleDocument document : documents) {
-                String previewBody = markdownToPreviewText(document.getBody());
-                ArticlePreviewResponse articlePreviewResponse =
-                        ArticlePreviewResponse.of(document, previewBody);
-                articlePreviewResponseList.add(articlePreviewResponse);
-            }
+            List<ArticlePreviewResponse> articlePreviewResponseList =
+                    ArticlePreviewUtils.ToArticlesPreivewResponses(documents);
 
             relatedArticleList.add(
                     RelatedArticleResponse.createRelatedArticleResponse(keyword, articlePreviewResponseList));
@@ -141,22 +129,16 @@ public class ArticleService {
         return relatedArticleList;
     }
 
-    private String markdownToPreviewText(String originBody) {
-        // markdown to html
-        MutableDataSet options = new MutableDataSet();
+    public ArticlePreviewListResponse trendArticles(int page, int size) {
+        int pageNum = page - 1;
+        Pageable pageable = PageRequest.of(pageNum, size, Sort.by("createdDate").descending());
 
-        Parser parser = Parser.builder(options).build();
-        HtmlRenderer renderer = HtmlRenderer.builder(options).build();
+        Page<Article> result = articleRepository.findAllByIsDeleted(false, pageable);
+        List<Article> contents = result.getContent();
 
-        Node document = parser.parse(originBody);
-        String html = renderer.render(document);
+        List<ArticlePreviewResponse> articlePreviewResponseList =
+                ArticlePreviewUtils.ToArticlesPreivewResponses(contents);
 
-        // html to text
-        Document doc = Jsoup.parse(html);
-
-        // preview text limit length 200
-        if (doc.text().length() > PREVIEW_TEXT_MAX_LENGTH)
-            return doc.text().substring(0, PREVIEW_TEXT_MAX_LENGTH);
-        else return doc.text();
+        return ArticlePreviewListResponse.of(page, size, articlePreviewResponseList);
     }
 }

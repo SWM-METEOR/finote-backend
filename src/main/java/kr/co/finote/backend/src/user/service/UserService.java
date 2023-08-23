@@ -1,6 +1,5 @@
 package kr.co.finote.backend.src.user.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import kr.co.finote.backend.global.code.ResponseCode;
 import kr.co.finote.backend.global.exception.InvalidInputException;
@@ -9,6 +8,7 @@ import kr.co.finote.backend.src.article.domain.Article;
 import kr.co.finote.backend.src.article.dto.response.ArticlePreviewListResponse;
 import kr.co.finote.backend.src.article.dto.response.ArticlePreviewResponse;
 import kr.co.finote.backend.src.article.repository.ArticleRepository;
+import kr.co.finote.backend.src.article.utils.ArticlePreviewUtils;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.dto.request.AdditionalInfoRequest;
 import kr.co.finote.backend.src.user.repository.UserRepository;
@@ -80,11 +80,9 @@ public class UserService {
         Page<Article> result = articleRepository.findByUserAndIsDeleted(user, false, pageable);
         List<Article> contents = result.getContent();
 
-        List<ArticlePreviewResponse> articleList = new ArrayList<>();
-        for (Article content : contents) {
-            articleList.add(ArticlePreviewResponse.of(content));
-        }
+        List<ArticlePreviewResponse> articlePreviewResponseList =
+                ArticlePreviewUtils.ToArticlesPreivewResponses(contents);
 
-        return ArticlePreviewListResponse.of(pageNum, size, articleList);
+        return ArticlePreviewListResponse.of(pageNum, size, articlePreviewResponseList);
     }
 }
