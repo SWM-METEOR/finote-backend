@@ -146,14 +146,15 @@ public class ArticleService {
     }
 
     public ArticlePreviewListResponse articlesAll(String nickname, int page, int size) {
-        int pageNum = page -1;
+        int pageNum = page - 1;
         PageRequest pageable = PageRequest.of(pageNum, size, Sort.by("createdDate").descending());
 
         User findUser = userService.findByNickname(nickname);
         Page<Article> result = articleRepository.findByUserAndIsDeleted(findUser, false, pageable);
 
         List<Article> contents = result.getContent();
-        List<ArticlePreviewResponse> articlePreviewResponseList = ArticlePreviewUtils.ToArticlesPreivewResponses(contents);
+        List<ArticlePreviewResponse> articlePreviewResponseList =
+                ArticlePreviewUtils.ToArticlesPreivewResponses(contents);
 
         return ArticlePreviewListResponse.of(page, size, articlePreviewResponseList);
     }

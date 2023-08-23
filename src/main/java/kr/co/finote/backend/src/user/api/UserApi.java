@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import javax.validation.Valid;
 import kr.co.finote.backend.global.annotation.Login;
 import kr.co.finote.backend.global.authentication.PrincipalDetails;
-import kr.co.finote.backend.src.article.dto.response.ArticlePreviewListResponse;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.dto.request.*;
 import kr.co.finote.backend.src.user.dto.response.BlogResponse;
@@ -66,5 +65,4 @@ public class UserApi {
         User loginUser = principal.getUser();
         userService.editAdditionalInfo(loginUser, request);
     }
-
 }

@@ -1,24 +1,15 @@
 package kr.co.finote.backend.src.user.service;
 
-import java.util.List;
 import kr.co.finote.backend.global.code.ResponseCode;
 import kr.co.finote.backend.global.exception.InvalidInputException;
 import kr.co.finote.backend.global.exception.NotFoundException;
 import kr.co.finote.backend.global.exception.UnAuthorizedException;
-import kr.co.finote.backend.src.article.domain.Article;
-import kr.co.finote.backend.src.article.dto.response.ArticlePreviewListResponse;
-import kr.co.finote.backend.src.article.dto.response.ArticlePreviewResponse;
 import kr.co.finote.backend.src.article.repository.ArticleRepository;
-import kr.co.finote.backend.src.article.utils.ArticlePreviewUtils;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.dto.request.AdditionalInfoRequest;
 import kr.co.finote.backend.src.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

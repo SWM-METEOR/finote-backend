@@ -62,10 +62,10 @@ public class ArticleApi {
 
     @Operation(summary = "유저의 작성 글 모두 가져오기", description = "무한 스크롤 10개씩 요청 받아 대응")
     @GetMapping("/{nickname}/all")
-    public ArticlePreviewListResponse articlesAll(@PathVariable String nickname,
-                                                  @RequestParam int page,
-                                                  @RequestParam(required = false, defaultValue = "10") int size) {
+    public ArticlePreviewListResponse articlesAll(
+            @PathVariable String nickname,
+            @RequestParam int page,
+            @RequestParam(required = false, defaultValue = "10") int size) {
         return articleService.articlesAll(nickname, page, size);
     }
-
 }
