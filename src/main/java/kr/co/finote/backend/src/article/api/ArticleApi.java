@@ -14,15 +14,18 @@ import kr.co.finote.backend.src.article.dto.response.PostArticleResponse;
 import kr.co.finote.backend.src.article.dto.response.RelatedArticleResponse;
 import kr.co.finote.backend.src.article.service.ArticleService;
 import kr.co.finote.backend.src.user.domain.User;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/articles")
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ArticleApi {
 
-    private final ArticleService articleService;
+    ArticleService articleService;
 
     @Operation(summary = "블로그 글 작성")
     @PostMapping

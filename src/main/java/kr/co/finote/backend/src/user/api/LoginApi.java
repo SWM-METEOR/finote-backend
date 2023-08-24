@@ -8,7 +8,9 @@ import kr.co.finote.backend.global.authentication.oauth.google.dto.response.Goog
 import kr.co.finote.backend.global.jwt.JwtToken;
 import kr.co.finote.backend.src.user.dto.response.GoogleLoginCodeResponse;
 import kr.co.finote.backend.src.user.service.LoginService;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,9 +18,10 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/users")
 @Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class LoginApi {
 
-    private final LoginService loginService;
+    LoginService loginService;
 
     @Operation(summary = "구글 로그인 처리", description = "프론트에서 발급받은 Code를 전달해주어야 함.")
     @GetMapping("/auth/google")
