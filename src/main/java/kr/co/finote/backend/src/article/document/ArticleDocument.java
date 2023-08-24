@@ -34,6 +34,8 @@ public class ArticleDocument {
     private String authorNickName;
     private String createdDate;
 
+    private String thumbnail;
+
     public static ArticleDocument createDocument(Long articleId, ArticleRequest request, User user) {
         return ArticleDocument.builder()
                 .articleId(articleId)

@@ -17,6 +17,7 @@ public class ArticlePreviewResponse {
     private int reply;
     private String authorNickname;
     private String date;
+    private String thumbnail;
 
     public static ArticlePreviewResponse of(Article article, String previewBody) {
         ArticlePreviewResponse articlePreviewResponse =
@@ -27,6 +28,7 @@ public class ArticlePreviewResponse {
                         .reply(article.getReply())
                         .authorNickname(article.getUser().getNickname())
                         .date(article.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
+                        .thumbnail(article.getThumbnail())
                         .build();
         articlePreviewResponse.updateBody(previewBody);
         return articlePreviewResponse;
@@ -41,6 +43,7 @@ public class ArticlePreviewResponse {
                         .reply(document.getReply())
                         .authorNickname(document.getAuthorNickName())
                         .date(document.getCreatedDate())
+                        .thumbnail(document.getThumbnail())
                         .build();
         articlePreviewResponse.updateBody(previewBody);
         return articlePreviewResponse;
