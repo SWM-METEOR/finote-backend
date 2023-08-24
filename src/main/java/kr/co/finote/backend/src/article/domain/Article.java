@@ -33,6 +33,8 @@ public class Article extends BaseEntity {
     @ColumnDefault("0")
     private int reply;
 
+    private String thumbnail;
+
     public static Article createArticle(ArticleRequest articleRequest, User user) {
         return Article.builder()
                 .title(articleRequest.getTitle())
