@@ -33,6 +33,9 @@ public class SecurityConfig {
     @Value("${ARTICLES_URLS}")
     private String[] articleUrls;
 
+    @Value("${COMMON_URLS}")
+    private String[] commonUrls;
+
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtService jwtService;
 
@@ -54,6 +57,8 @@ public class SecurityConfig {
                 .antMatchers(userUrls)
                 .authenticated()
                 .antMatchers(articleUrls)
+                .authenticated()
+                .antMatchers(commonUrls)
                 .authenticated()
                 .anyRequest()
                 .permitAll()

@@ -18,16 +18,18 @@ public class ArticlePreviewResponse {
     private String authorNickname;
     private String date;
 
-    public static ArticlePreviewResponse of(Article article) {
-        return ArticlePreviewResponse.builder()
-                .id(article.getId())
-                .title(article.getTitle())
-                .body(article.getBody())
-                .totalLike(article.getTotalLike())
-                .reply(article.getReply())
-                .authorNickname(article.getUser().getNickname())
-                .date(article.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
-                .build();
+    public static ArticlePreviewResponse of(Article article, String previewBody) {
+        ArticlePreviewResponse articlePreviewResponse =
+                ArticlePreviewResponse.builder()
+                        .id(article.getId())
+                        .title(article.getTitle())
+                        .totalLike(article.getTotalLike())
+                        .reply(article.getReply())
+                        .authorNickname(article.getUser().getNickname())
+                        .date(article.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
+                        .build();
+        articlePreviewResponse.updateBody(previewBody);
+        return articlePreviewResponse;
     }
 
     public static ArticlePreviewResponse of(ArticleDocument document, String previewBody) {

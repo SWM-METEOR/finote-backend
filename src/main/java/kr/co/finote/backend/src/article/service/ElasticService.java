@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ElasticService {
 
-    private final ElasticsearchRestTemplate restTemplate;
+    private final ElasticsearchRestTemplate elasticSearchrestTemplate;
 
     public Comparator<SearchHit<ArticleDocument>> scorecomparator() {
         return (o1, o2) -> {
@@ -39,13 +39,13 @@ public class ElasticService {
         NativeSearchQuery searchQuery = getNativeSearchQuery(searchText);
         searchQuery.setPageable(pageable);
 
-        return restTemplate.search(searchQuery, ArticleDocument.class);
+        return elasticSearchrestTemplate.search(searchQuery, ArticleDocument.class);
     }
 
     // 페이징 없는 search
     public SearchHits<ArticleDocument> search(String searchText) {
         NativeSearchQuery searchQuery = getNativeSearchQuery(searchText);
-        return restTemplate.search(searchQuery, ArticleDocument.class);
+        return elasticSearchrestTemplate.search(searchQuery, ArticleDocument.class);
     }
 
     public NativeSearchQuery getNativeSearchQuery(String searchText) {

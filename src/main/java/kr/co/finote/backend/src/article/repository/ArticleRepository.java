@@ -14,4 +14,6 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     Optional<Article> findByIdAndIsDeleted(Long id, Boolean isDeleted);
 
     Page<Article> findByUserAndIsDeleted(User user, Boolean isDeleted, Pageable pageable);
+
+    Page<Article> findAllByIsDeleted(Boolean isDeleted, Pageable pageable);
 }

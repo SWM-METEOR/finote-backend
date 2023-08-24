@@ -1,23 +1,15 @@
 package kr.co.finote.backend.src.user.service;
 
-import java.util.ArrayList;
-import java.util.List;
 import kr.co.finote.backend.global.code.ResponseCode;
 import kr.co.finote.backend.global.exception.InvalidInputException;
+import kr.co.finote.backend.global.exception.NotFoundException;
 import kr.co.finote.backend.global.exception.UnAuthorizedException;
-import kr.co.finote.backend.src.article.domain.Article;
-import kr.co.finote.backend.src.article.dto.response.ArticlePreviewListResponse;
-import kr.co.finote.backend.src.article.dto.response.ArticlePreviewResponse;
 import kr.co.finote.backend.src.article.repository.ArticleRepository;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.dto.request.AdditionalInfoRequest;
 import kr.co.finote.backend.src.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,18 +65,15 @@ public class UserService {
         findUser.updateAdditionalInfo(request);
     }
 
-    public ArticlePreviewListResponse findArticlesAll(User user, int page, int size) {
-        int pageNum = page - 1;
-        Pageable pageable = PageRequest.of(pageNum, size, Sort.by("createdDate").descending());
+    public User findById(String userId) {
+        return userRepository
+                .findByIdAndIsDeleted(userId, false)
+                .orElseThrow(() -> new NotFoundException(ResponseCode.USER_NOT_FOUND));
+    }
 
-        Page<Article> result = articleRepository.findByUserAndIsDeleted(user, false, pageable);
-        List<Article> contents = result.getContent();
-
-        List<ArticlePreviewResponse> articleList = new ArrayList<>();
-        for (Article content : contents) {
-            articleList.add(ArticlePreviewResponse.of(content));
-        }
-
-        return ArticlePreviewListResponse.of(pageNum, size, articleList);
+    public User findByNickname(String nickname) {
+        return userRepository
+                .findByNicknameAndIsDeleted(nickname, false)
+                .orElseThrow(() -> new NotFoundException(ResponseCode.USER_NOT_FOUND));
     }
 }
