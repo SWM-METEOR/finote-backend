@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import kr.co.finote.backend.global.code.ResponseCode;
 import kr.co.finote.backend.global.exception.NotFoundException;
+import kr.co.finote.backend.global.utils.StringUtils;
 import kr.co.finote.backend.src.article.document.ArticleDocument;
 import kr.co.finote.backend.src.article.domain.Article;
 import kr.co.finote.backend.src.article.domain.ArticleKeyword;
@@ -19,7 +20,6 @@ import kr.co.finote.backend.src.article.dto.response.KeywordDataResponse;
 import kr.co.finote.backend.src.article.dto.response.RelatedArticleResponse;
 import kr.co.finote.backend.src.article.repository.ArticleEsRepository;
 import kr.co.finote.backend.src.article.repository.ArticleRepository;
-import kr.co.finote.backend.src.article.utils.ArticlePreviewUtils;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -88,8 +88,7 @@ public class ArticleService {
         List<ArticleDocument> documents =
                 searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
 
-        List<ArticlePreviewResponse> articlePreviewResponseList =
-                ArticlePreviewUtils.ToArticlesPreivewResponses(documents);
+        List<ArticlePreviewResponse> articlePreviewResponseList = ToArticlesPreivewResponses(documents);
 
         return ArticlePreviewListResponse.of(page, size, articlePreviewResponseList);
     }
@@ -123,7 +122,7 @@ public class ArticleService {
 
             // document list -> response dto list 변환
             List<ArticlePreviewResponse> articlePreviewResponseList =
-                    ArticlePreviewUtils.ToArticlesPreivewResponses(documents);
+                    ToArticlesPreivewResponses(documents);
 
             relatedArticleList.add(
                     RelatedArticleResponse.createRelatedArticleResponse(keyword, articlePreviewResponseList));
@@ -139,8 +138,7 @@ public class ArticleService {
         Page<Article> result = articleRepository.findAllByIsDeleted(false, pageable);
         List<Article> contents = result.getContent();
 
-        List<ArticlePreviewResponse> articlePreviewResponseList =
-                ArticlePreviewUtils.ToArticlesPreivewResponses(contents);
+        List<ArticlePreviewResponse> articlePreviewResponseList = ToArticlesPreivewResponses(contents);
 
         return ArticlePreviewListResponse.of(page, size, articlePreviewResponseList);
     }
@@ -153,9 +151,26 @@ public class ArticleService {
         Page<Article> result = articleRepository.findByUserAndIsDeleted(findUser, false, pageable);
 
         List<Article> contents = result.getContent();
-        List<ArticlePreviewResponse> articlePreviewResponseList =
-                ArticlePreviewUtils.ToArticlesPreivewResponses(contents);
+        List<ArticlePreviewResponse> articlePreviewResponseList = ToArticlesPreivewResponses(contents);
 
         return ArticlePreviewListResponse.of(page, size, articlePreviewResponseList);
+    }
+
+    private List<ArticlePreviewResponse> ToArticlesPreivewResponses(List<?> list) {
+
+        List<ArticlePreviewResponse> articlePreviewResponseList = new ArrayList<>();
+        for (Object object : list) {
+            if (object instanceof Article) {
+                Article article = (Article) object;
+                String previewBody = StringUtils.markdownToPreviewText(article.getBody());
+                articlePreviewResponseList.add(ArticlePreviewResponse.of(article, previewBody));
+            } else if (object instanceof ArticleDocument) {
+                ArticleDocument document = (ArticleDocument) object;
+                String previewBody = StringUtils.markdownToPreviewText(document.getBody());
+                articlePreviewResponseList.add(ArticlePreviewResponse.of(document, previewBody));
+            }
+        }
+
+        return articlePreviewResponseList;
     }
 }
