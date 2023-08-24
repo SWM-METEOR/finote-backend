@@ -1,6 +1,7 @@
 package kr.co.finote.backend.src.article.service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import kr.co.finote.backend.src.article.document.ArticleDocument;
 import lombok.RequiredArgsConstructor;
@@ -25,9 +26,9 @@ public class ElasticService {
             if (o1.getScore() != o2.getScore()) {
                 return Float.compare(o2.getScore(), o1.getScore());
             }
-            LocalDate date1 = LocalDate.parse(o1.getContent().getCreatedDate());
-            LocalDate date2 = LocalDate.parse(o2.getContent().getCreatedDate());
-
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+            LocalDate date1 = LocalDate.parse(o1.getContent().getCreatedDate(), formatter);
+            LocalDate date2 = LocalDate.parse(o2.getContent().getCreatedDate(), formatter);
             return date2.compareTo(date1);
         };
     }
