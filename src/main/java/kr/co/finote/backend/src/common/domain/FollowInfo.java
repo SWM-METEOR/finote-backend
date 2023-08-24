@@ -31,7 +31,7 @@ public class FollowInfo extends BaseEntity {
         return FollowInfo.builder().fromUser(fromUser).toUser(toUser).build();
     }
 
-    public void updateIsDeleted(boolean state) {
-        this.isDeleted = state;
+    public void updateIsDeleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
     }
 }

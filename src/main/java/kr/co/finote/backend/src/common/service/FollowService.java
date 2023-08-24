@@ -24,6 +24,10 @@ public class FollowService {
 
     @Transactional
     public FollowResultResponse follow(User fromUser, String toUserNickname) {
+        if (fromUser.getNickname().equals(toUserNickname)) {
+            throw new InvalidInputException(ResponseCode.SELF_FOLLOWING);
+        }
+
         User toUser = userService.findByNickname(toUserNickname);
 
         Optional<FollowInfo> result = followInfoRepository.findByFromUserAndToUser(fromUser, toUser);
@@ -38,6 +42,10 @@ public class FollowService {
 
     @Transactional
     public FollowResultResponse unfollow(User fromUser, String toUserNickname) {
+        if (fromUser.getNickname().equals(toUserNickname)) {
+            throw new InvalidInputException(ResponseCode.SELF_FOLLOWING);
+        }
+
         User toUser = userService.findByNickname(toUserNickname);
 
         Optional<FollowInfo> result = followInfoRepository.findByFromUserAndToUser(fromUser, toUser);
