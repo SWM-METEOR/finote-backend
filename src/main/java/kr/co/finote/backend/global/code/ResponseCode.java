@@ -32,7 +32,12 @@ public enum ResponseCode {
     /** authentication/authorization error */
     UNAUTHENTICATED(UNAUTHORIZED, "401_UNAUTHORIZED", "인증되지 않은 사용자입니다."),
     INVALID_ACCESS_TOKEN(UNAUTHORIZED, "401_INVALID_ACCESS_TOKEN", "액세스 토큰이 유효하지 않습니다."),
-    INVALID_REFRESH_TOKEN(UNAUTHORIZED, "401_INVALID_REFRESH_TOKEN", "리프레시 토큰이 유효하지 않습니다.");
+    INVALID_REFRESH_TOKEN(UNAUTHORIZED, "401_INVALID_REFRESH_TOKEN", "리프레시 토큰이 유효하지 않습니다."),
+
+    /* follow error */
+    ALREADY_FOLLOWING(BAD_REQUEST, "400_ARLEADY_FOLLWING", "이미 팔로잉 한 유저입니다."),
+    NOT_FOLLOWING(BAD_REQUEST, "400_NOT_FOLLOWING", "팔로우하지 않은 유저입니다."),
+    SELF_FOLLOWING(BAD_REQUEST, "400_SELF_FOLLOWIG", "자기 자신을 팔로우/언팔로우 할 수 없습니다.");
 
     private final HttpStatus status;
     private final String code;
