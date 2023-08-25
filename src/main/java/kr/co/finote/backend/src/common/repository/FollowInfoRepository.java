@@ -13,9 +13,11 @@ import org.springframework.stereotype.Repository;
 public interface FollowInfoRepository extends JpaRepository<FollowInfo, Long> {
     Optional<FollowInfo> findByFromUserAndToUser(User fromUser, User toUser);
 
-    @Query("select fi from FollowInfo fi join fetch fi.toUser WHERE fi.fromUser = :fromUser")
+    @Query(
+            "select fi from FollowInfo fi join fetch fi.toUser WHERE fi.fromUser = :fromUser AND fi.isDeleted = false ")
     List<FollowInfo> findAllWithFromUser(@Param("fromUser") User fromUser);
 
-    @Query("select fi from FollowInfo fi join fetch fi.fromUser WHERE fi.toUser = :toUser")
+    @Query(
+            "select fi from FollowInfo fi join fetch fi.fromUser WHERE fi.toUser = :toUser AND fi.isDeleted = false")
     List<FollowInfo> findAllWithToUser(@Param("toUser") User toUser);
 }

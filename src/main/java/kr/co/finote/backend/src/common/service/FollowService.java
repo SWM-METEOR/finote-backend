@@ -37,7 +37,12 @@ public class FollowService {
         Optional<FollowInfo> result = followInfoRepository.findByFromUserAndToUser(fromUser, toUser);
 
         if (result.isPresent()) {
-            throw new InvalidInputException(ResponseCode.ALREADY_FOLLOWING);
+            FollowInfo followInfo = result.get();
+            if (!followInfo.getIsDeleted())
+                throw new InvalidInputException(ResponseCode.ALREADY_FOLLOWING);
+
+            followInfo.updateIsDeleted(false);
+            return FollowResultResponse.of(true);
         }
 
         followInfoRepository.save(FollowInfo.of(fromUser, toUser));
