@@ -61,6 +61,8 @@ public class FollowService {
 
         if (result.isPresent()) {
             FollowInfo followInfo = result.get();
+            if (followInfo.getIsDeleted()) throw new InvalidInputException(ResponseCode.NOT_FOLLOWING);
+
             followInfo.updateIsDeleted(true);
             return FollowResultResponse.of(true);
         }
