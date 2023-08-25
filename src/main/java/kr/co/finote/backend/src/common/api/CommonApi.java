@@ -4,7 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import kr.co.finote.backend.global.annotation.Login;
 import kr.co.finote.backend.src.article.dto.response.ArticlePreviewListResponse;
 import kr.co.finote.backend.src.article.service.ArticleService;
-import kr.co.finote.backend.src.common.dto.FollowResultResponse;
+import kr.co.finote.backend.src.common.dto.response.FollowResultResponse;
+import kr.co.finote.backend.src.common.dto.response.FollowUserListResponse;
 import kr.co.finote.backend.src.common.service.FollowService;
 import kr.co.finote.backend.src.user.domain.User;
 import lombok.AccessLevel;
@@ -40,5 +41,17 @@ public class CommonApi {
     public ArticlePreviewListResponse trendArticles(
             @RequestParam int page, @RequestParam(required = false, defaultValue = "30") int size) {
         return articleService.trendArticles(page, size);
+    }
+
+    @Operation(summary = "유저 팔로잉 목록", description = "닉네임에 해당하는 유저의 팔로잉 목록 조회")
+    @GetMapping("/followings/{nickname}")
+    public FollowUserListResponse followings(@PathVariable String nickname) {
+        return followService.followings(nickname);
+    }
+
+    @Operation(summary = "유저 팔로워 목록", description = "닉네임에 해당하는 유저의 팔로워 목록 조회")
+    @GetMapping("/followers/{nickname}")
+    public FollowUserListResponse followers(@PathVariable String nickname) {
+        return followService.followers(nickname);
     }
 }

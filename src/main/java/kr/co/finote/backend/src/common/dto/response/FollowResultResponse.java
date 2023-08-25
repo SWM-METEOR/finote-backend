@@ -1,4 +1,4 @@
-package kr.co.finote.backend.src.common.dto;
+package kr.co.finote.backend.src.common.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

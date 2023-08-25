@@ -9,7 +9,9 @@ import kr.co.finote.backend.src.user.dto.request.*;
 import kr.co.finote.backend.src.user.dto.response.BlogResponse;
 import kr.co.finote.backend.src.user.dto.response.NicknameResponse;
 import kr.co.finote.backend.src.user.service.UserService;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,9 +21,10 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/users")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserApi {
 
-    private final UserService userService;
+    UserService userService;
 
     /* Field Validation API */
     @Operation(summary = "닉네임 중복 검사")
