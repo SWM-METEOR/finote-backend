@@ -5,13 +5,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import javax.validation.Valid;
 import kr.co.finote.backend.global.annotation.Login;
-import kr.co.finote.backend.src.article.domain.Article;
+import kr.co.finote.backend.src.article.dto.request.AiSearchRequest;
 import kr.co.finote.backend.src.article.dto.request.ArticleRequest;
 import kr.co.finote.backend.src.article.dto.request.DragArticleRequest;
-import kr.co.finote.backend.src.article.dto.response.ArticlePreviewListResponse;
-import kr.co.finote.backend.src.article.dto.response.ArticleResponse;
-import kr.co.finote.backend.src.article.dto.response.PostArticleResponse;
-import kr.co.finote.backend.src.article.dto.response.RelatedArticleResponse;
+import kr.co.finote.backend.src.article.dto.response.*;
+import kr.co.finote.backend.src.article.service.AiSearchService;
 import kr.co.finote.backend.src.article.service.ArticleService;
 import kr.co.finote.backend.src.user.domain.User;
 import lombok.AccessLevel;
@@ -26,23 +24,33 @@ import org.springframework.web.bind.annotation.*;
 public class ArticleApi {
 
     ArticleService articleService;
+    AiSearchService aiSearchService;
 
     @Operation(summary = "블로그 글 작성")
     @PostMapping
     public PostArticleResponse postArticles(
             @Login User loginUser, @RequestBody @Valid ArticleRequest request)
             throws JsonProcessingException {
-
-        Long articleId = articleService.save(request, loginUser);
-        articleService.saveDocument(articleId, request, loginUser);
-        return PostArticleResponse.createPostArticleResponse(articleId);
+        return articleService.save(request, loginUser);
     }
 
-    @Operation(summary = "블로그 글 조회")
+    @Operation(summary = "블로그 id로 글 조회")
     @GetMapping("/{articleId}")
     public ArticleResponse getArticle(@PathVariable Long articleId) {
-        Article article = articleService.findById(articleId);
-        return ArticleResponse.of(article);
+        return articleService.findById(articleId);
+    }
+
+    @Operation(summary = "블로그 작성자 닉네임, 글 제목으로 조회")
+    @GetMapping("/{nickname}/{title}")
+    public ArticleResponse getArticleByNicknameAndTitle(
+            @PathVariable String nickname, @PathVariable String title) {
+        return articleService.findByNicknameAndTitle(nickname, title);
+    }
+
+    @Operation(summary = "스마트 드래그 - AI 검색")
+    @PostMapping("/ai-search")
+    public AiSearchResponse AiSearch(@RequestBody @Valid AiSearchRequest request) {
+        return aiSearchService.getResponse(request);
     }
 
     @Operation(summary = "스마트 드래그 - 관련 아티클 기능")

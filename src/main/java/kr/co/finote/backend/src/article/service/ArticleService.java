@@ -6,18 +6,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import kr.co.finote.backend.global.code.ResponseCode;
+import kr.co.finote.backend.global.exception.InvalidInputException;
 import kr.co.finote.backend.global.exception.NotFoundException;
 import kr.co.finote.backend.global.utils.StringUtils;
 import kr.co.finote.backend.src.article.document.ArticleDocument;
 import kr.co.finote.backend.src.article.domain.Article;
 import kr.co.finote.backend.src.article.domain.ArticleKeyword;
-import kr.co.finote.backend.src.article.dto.KeywordScore;
 import kr.co.finote.backend.src.article.dto.request.ArticleRequest;
 import kr.co.finote.backend.src.article.dto.request.DragArticleRequest;
-import kr.co.finote.backend.src.article.dto.response.ArticlePreviewListResponse;
-import kr.co.finote.backend.src.article.dto.response.ArticlePreviewResponse;
-import kr.co.finote.backend.src.article.dto.response.KeywordDataResponse;
-import kr.co.finote.backend.src.article.dto.response.RelatedArticleResponse;
+import kr.co.finote.backend.src.article.dto.response.*;
 import kr.co.finote.backend.src.article.repository.ArticleEsRepository;
 import kr.co.finote.backend.src.article.repository.ArticleRepository;
 import kr.co.finote.backend.src.user.domain.User;
@@ -49,31 +46,36 @@ public class ArticleService {
     private final ElasticService elasticService;
     private final UserService userService;
 
-    public void saveDocument(Long articleId, ArticleRequest articleRequest, User loginUser) {
-        ArticleDocument document = ArticleDocument.createDocument(articleId, articleRequest, loginUser);
-        articleEsRepository.save(document);
-    }
-
     @Transactional
-    public Long save(ArticleRequest articleRequest, User loginUser) throws JsonProcessingException {
-        Article article = Article.createArticle(articleRequest, loginUser);
-        Article saveArticle = articleRepository.save(article); // 새로운 아티클 저장
+    public PostArticleResponse save(ArticleRequest articleRequest, User loginUser)
+            throws JsonProcessingException {
+        isDuplicateTitle(articleRequest, loginUser); // 동일 title에 대한 중복 체크
 
-        KeywordDataResponse[] keywordDataResponses =
-                keywordService.extractKeywords(saveArticle.getBody()); // 키워드 추출
-        if (keywordDataResponses != null) {
-            List<KeywordScore> keywordScoreList =
-                    keywordService.saveNewKeywords(keywordDataResponses); // 새로들어온 키워드 저장 및 키워드와 스코어 반환
-            articleKeywordService.saveArticleKeywordList(
-                    saveArticle, keywordScoreList); // 키워드와 아티클 연관관계 저장
-        }
-        return saveArticle.getId();
+        Article article = Article.createArticle(articleRequest, loginUser);
+        Article saveArticle = articleRepository.save(article); // 새로운 아티클 RDB 저장
+        ArticleDocument document =
+                ArticleDocument.createDocument(saveArticle.getId(), articleRequest, loginUser);
+        articleEsRepository.save(document); // 새로운 아티클 ES 저장
+
+        keywordService.extractAndSaveKeywords(saveArticle); // 키워드 추출 및 저장
+        return PostArticleResponse.createPostArticleResponse(saveArticle.getId());
     }
 
-    public Article findById(Long articleId) {
-        return articleRepository
-                .findByIdAndIsDeleted(articleId, false)
-                .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
+    private void isDuplicateTitle(ArticleRequest articleRequest, User loginUser) {
+        articleRepository
+                .findByUserAndTitleAndIsDeleted(loginUser, articleRequest.getTitle(), false)
+                .ifPresent(
+                        article -> {
+                            throw new InvalidInputException(ResponseCode.ARTICLE_ALREADY_EXIST);
+                        });
+    }
+
+    public ArticleResponse findById(Long articleId) {
+        Article article =
+                articleRepository
+                        .findByIdAndIsDeleted(articleId, false)
+                        .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
+        return ArticleResponse.of(article);
     }
 
     public ArticlePreviewListResponse getDragRelatedArticle(
@@ -88,7 +90,7 @@ public class ArticleService {
         List<ArticleDocument> documents =
                 searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
 
-        List<ArticlePreviewResponse> articlePreviewResponseList = ToArticlesPreivewResponses(documents);
+        List<ArticlePreviewResponse> articlePreviewResponseList = ToArticlesPreviewResponses(documents);
 
         return ArticlePreviewListResponse.of(page, size, articlePreviewResponseList);
     }
@@ -122,7 +124,7 @@ public class ArticleService {
 
             // document list -> response dto list 변환
             List<ArticlePreviewResponse> articlePreviewResponseList =
-                    ToArticlesPreivewResponses(documents);
+                    ToArticlesPreviewResponses(documents);
 
             relatedArticleList.add(
                     RelatedArticleResponse.createRelatedArticleResponse(keyword, articlePreviewResponseList));
@@ -138,7 +140,7 @@ public class ArticleService {
         Page<Article> result = articleRepository.findAllByIsDeleted(false, pageable);
         List<Article> contents = result.getContent();
 
-        List<ArticlePreviewResponse> articlePreviewResponseList = ToArticlesPreivewResponses(contents);
+        List<ArticlePreviewResponse> articlePreviewResponseList = ToArticlesPreviewResponses(contents);
 
         return ArticlePreviewListResponse.of(page, size, articlePreviewResponseList);
     }
@@ -151,12 +153,12 @@ public class ArticleService {
         Page<Article> result = articleRepository.findByUserAndIsDeleted(findUser, false, pageable);
 
         List<Article> contents = result.getContent();
-        List<ArticlePreviewResponse> articlePreviewResponseList = ToArticlesPreivewResponses(contents);
+        List<ArticlePreviewResponse> articlePreviewResponseList = ToArticlesPreviewResponses(contents);
 
         return ArticlePreviewListResponse.of(page, size, articlePreviewResponseList);
     }
 
-    private List<ArticlePreviewResponse> ToArticlesPreivewResponses(List<?> list) {
+    private List<ArticlePreviewResponse> ToArticlesPreviewResponses(List<?> list) {
 
         List<ArticlePreviewResponse> articlePreviewResponseList = new ArrayList<>();
         for (Object object : list) {
@@ -172,5 +174,14 @@ public class ArticleService {
         }
 
         return articlePreviewResponseList;
+    }
+
+    public ArticleResponse findByNicknameAndTitle(String nickname, String title) {
+        User findUser = userService.findByNickname(nickname); // 유저가 존재하는지 확인
+        Article article =
+                articleRepository
+                        .findByUserAndTitleAndIsDeleted(findUser, title, false)
+                        .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
+        return ArticleResponse.of(article);
     }
 }
