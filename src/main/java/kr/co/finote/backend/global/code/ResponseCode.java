@@ -28,6 +28,7 @@ public enum ResponseCode {
 
     /** article error */
     ARTICLE_NOT_FOUND(NOT_FOUND, "404_ARTICLE_NOT_FOUND", "해당 게시글을 찾을 수 없습니다."),
+    ARTICLE_ALREADY_EXIST(BAD_REQUEST, "400_ARTICLE_ALREADY_EXIST", "같은 제목의 게시글이 이미 존재합니다."),
 
     /** authentication/authorization error */
     UNAUTHENTICATED(UNAUTHORIZED, "401_UNAUTHORIZED", "인증되지 않은 사용자입니다."),

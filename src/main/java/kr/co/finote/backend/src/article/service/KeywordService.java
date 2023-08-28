@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import kr.co.finote.backend.src.article.domain.Article;
 import kr.co.finote.backend.src.article.domain.Keyword;
 import kr.co.finote.backend.src.article.dto.KeywordScore;
 import kr.co.finote.backend.src.article.dto.request.KeywordDataRequest;
@@ -23,8 +24,20 @@ public class KeywordService {
 
     private final KeywordRepository keywordRepository;
 
+    private final ArticleKeywordService articleKeywordService;
+
     @Value("${KEYWORD_EXTRACTOR_URL}")
     private String keywordExtractorUrl;
+
+    public void extractAndSaveKeywords(Article saveArticle) throws JsonProcessingException {
+        KeywordDataResponse[] keywordDataResponses = extractKeywords(saveArticle.getBody()); // 키워드 추출
+        if (keywordDataResponses != null) {
+            List<KeywordScore> keywordScoreList =
+                    saveNewKeywords(keywordDataResponses); // 새로들어온 키워드 저장 및 키워드와 스코어 반환
+            articleKeywordService.saveArticleKeywordList(
+                    saveArticle, keywordScoreList); // 키워드와 아티클 연관관계 저장
+        }
+    }
 
     public List<KeywordScore> saveNewKeywords(KeywordDataResponse... keywordDataResponseList) {
         List<KeywordScore> keywordScoreList = new ArrayList<>();
