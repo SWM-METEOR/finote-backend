@@ -1,5 +1,6 @@
 package kr.co.finote.backend.src.article.dto.response;
 
+import kr.co.finote.backend.src.article.domain.Article;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -8,8 +9,11 @@ import lombok.Getter;
 public class PostArticleResponse {
 
     private Long articleId;
+    private String nickname;
+    private String title;
 
-    public static PostArticleResponse createPostArticleResponse(Long articleId) {
-        return new PostArticleResponse(articleId);
+    public static PostArticleResponse of(Article article) {
+        return new PostArticleResponse(
+                article.getId(), article.getUser().getNickname(), article.getTitle());
     }
 }

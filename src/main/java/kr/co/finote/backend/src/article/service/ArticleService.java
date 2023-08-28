@@ -58,7 +58,7 @@ public class ArticleService {
         articleEsRepository.save(document); // 새로운 아티클 ES 저장
 
         keywordService.extractAndSaveKeywords(saveArticle); // 키워드 추출 및 저장
-        return PostArticleResponse.createPostArticleResponse(saveArticle.getId());
+        return PostArticleResponse.of(saveArticle);
     }
 
     private void isDuplicateTitle(ArticleRequest articleRequest, User loginUser) {
