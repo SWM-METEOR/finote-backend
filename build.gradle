@@ -65,6 +65,9 @@ dependencies {
 	// markdown to text
 	implementation 'com.vladsch.flexmark:flexmark-all:0.64.8'
 	implementation 'org.jsoup:jsoup:1.16.1'
+
+	// Redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
 tasks.named('test') {

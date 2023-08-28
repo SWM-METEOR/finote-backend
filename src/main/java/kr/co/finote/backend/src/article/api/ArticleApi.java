@@ -79,4 +79,10 @@ public class ArticleApi {
             @RequestParam(required = false, defaultValue = "10") int size) {
         return articleService.articlesAll(nickname, page, size);
     }
+
+    // TODO : 우선 Redis 동작 확인용임. 추후 로직 수정 예정
+    @PostMapping("/like/{article-id}")
+    public LikeResponse like(@PathVariable("article-id") Long articleId) {
+        return articleService.like(articleId);
+    }
 }

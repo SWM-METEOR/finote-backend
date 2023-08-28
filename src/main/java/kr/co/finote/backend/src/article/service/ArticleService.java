@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import kr.co.finote.backend.global.code.ResponseCode;
+import kr.co.finote.backend.global.exception.CustomException;
 import kr.co.finote.backend.global.exception.InvalidInputException;
 import kr.co.finote.backend.global.exception.NotFoundException;
 import kr.co.finote.backend.global.utils.StringUtils;
@@ -21,6 +22,7 @@ import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -183,5 +185,17 @@ public class ArticleService {
                         .findByUserAndTitleAndIsDeleted(findUser, title, false)
                         .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
         return ArticleResponse.of(article);
+    }
+
+    // TODO : 역시 Redis 적용 위한 임시 버전
+    @Cacheable(key = "#articleId", value = "ArticleLike")
+    public LikeResponse like(Long articleId) {
+        log.info("articleId={}", articleId);
+        Article findArticle =
+                articleRepository
+                        .findByIdAndIsDeleted(articleId, false)
+                        .orElseThrow(() -> new CustomException(ResponseCode.ARTICLE_NOT_FOUND));
+
+        return LikeResponse.of(findArticle);
     }
 }
