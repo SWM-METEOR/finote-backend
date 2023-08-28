@@ -44,22 +44,6 @@ public class User extends BaseEntity {
 
     private String refreshToken;
 
-    // TODO principalService에 사용(추후에 확인 필요)
-    public static User newSocialUser(
-            String username,
-            String email,
-            String provider,
-            String providerId,
-            LocalDateTime lastLoginDate) {
-        return User.builder()
-                .username(username)
-                .email(email)
-                .provider(provider)
-                .providerId(providerId)
-                .lastLoginDate(lastLoginDate)
-                .build();
-    }
-
     public static User newGoogleUser(
             GoogleUserInfo googleUserInfo, String randomNickname, LocalDateTime lastLoginDate) {
         return User.builder()

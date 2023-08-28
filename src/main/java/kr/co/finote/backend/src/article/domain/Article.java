@@ -22,9 +22,12 @@ public class Article extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(nullable = false)
+    @ColumnDefault("")
     private String title;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", nullable = false)
+    @ColumnDefault("")
     private String body;
 
     @ColumnDefault("0")
@@ -33,6 +36,8 @@ public class Article extends BaseEntity {
     @ColumnDefault("0")
     private int reply;
 
+    @ColumnDefault("")
+    @Column(nullable = false)
     private String thumbnail;
 
     public static Article createArticle(ArticleRequest articleRequest, User user) {
