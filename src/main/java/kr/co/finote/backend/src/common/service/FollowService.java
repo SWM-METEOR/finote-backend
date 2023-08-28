@@ -74,7 +74,7 @@ public class FollowService {
         User fromUser = userService.findByNickname(nickname);
 
         List<FollowInfo> followings = followInfoRepository.findAllWithFromUser(fromUser);
-        List<FollowUserResponse> followUserResponses = ToFollowerUserResponseList(followings);
+        List<FollowUserResponse> followUserResponses = FollwingUserList(followings);
 
         return FollowUserListResponse.of(followUserResponses);
     }
@@ -83,12 +83,18 @@ public class FollowService {
         User toUser = userService.findByNickname(nickname);
 
         List<FollowInfo> followers = followInfoRepository.findAllWithToUser(toUser);
-        List<FollowUserResponse> followUserResponses = ToFollowerUserResponseList(followers);
+        List<FollowUserResponse> followUserResponses = FollowerUserList(followers);
 
         return FollowUserListResponse.of(followUserResponses);
     }
 
-    private List<FollowUserResponse> ToFollowerUserResponseList(List<FollowInfo> followInfos) {
+    private List<FollowUserResponse> FollowerUserList(List<FollowInfo> followInfos) {
+        return followInfos.stream()
+                .map(followInfo -> FollowUserResponse.of(followInfo.getFromUser()))
+                .collect(Collectors.toList());
+    }
+
+    private List<FollowUserResponse> FollwingUserList(List<FollowInfo> followInfos) {
         return followInfos.stream()
                 .map(followInfo -> FollowUserResponse.of(followInfo.getToUser()))
                 .collect(Collectors.toList());
