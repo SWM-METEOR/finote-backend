@@ -80,9 +80,10 @@ public class ArticleApi {
         return articleService.articlesAll(nickname, page, size);
     }
 
-    // TODO : 우선 Redis 동작 확인용임. 추후 로직 수정 예정
+    @Operation(summary = "유저의 블로그 글 좋아요", description = "이미 좋아요 되어있다면 좋아요 수 증가하지 않음")
     @PostMapping("/like/{article-id}")
-    public LikeResponse like(@PathVariable("article-id") Long articleId) {
-        return articleService.like(articleId);
+    public LikeResponse postLike(@Login User loginUser, @PathVariable("article-id") Long articleId) {
+
+        return articleService.postLike(loginUser, articleId);
     }
 }

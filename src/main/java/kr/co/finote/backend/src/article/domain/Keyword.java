@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
@@ -19,6 +20,7 @@ public class Keyword extends BaseEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @ColumnDefault("")
     private String value;
 
     public static Keyword createKeyword(String keyword) {

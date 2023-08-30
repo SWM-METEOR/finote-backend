@@ -3,7 +3,6 @@ package kr.co.finote.backend.src.user.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.time.LocalDateTime;
 import java.util.*;
-import javax.transaction.Transactional;
 import kr.co.finote.backend.global.authentication.oauth.google.GoogleOauth;
 import kr.co.finote.backend.global.authentication.oauth.google.dto.request.GoogleAccessToken;
 import kr.co.finote.backend.global.authentication.oauth.google.dto.response.GoogleLoginResponse;
@@ -22,6 +21,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 

@@ -21,7 +21,7 @@ public class RedisCacheConfig {
     @Primary
     public CacheManager articleLikeManager(RedisConnectionFactory redisConnectionFactory) {
         RedisCacheConfiguration redisCacheConfiguration =
-                generateCacheConfiguration().entryTtl(Duration.ofHours(3));
+                generateCacheConfiguration().entryTtl(Duration.ofDays(3));
 
         return RedisCacheManager.RedisCacheManagerBuilder.fromConnectionFactory(redisConnectionFactory)
                 .cacheDefaults(redisCacheConfiguration)
