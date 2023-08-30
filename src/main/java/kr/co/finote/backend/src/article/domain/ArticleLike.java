@@ -30,7 +30,7 @@ public class ArticleLike extends BaseEntity {
         this.isDeleted = isDeleted;
     }
 
-    public static ArticleLike of(User user, Article article) {
+    public static ArticleLike createArticleLike(User user, Article article) {
         return ArticleLike.builder().user(user).article(article).build();
     }
 }

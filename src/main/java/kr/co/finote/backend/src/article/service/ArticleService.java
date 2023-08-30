@@ -215,7 +215,7 @@ public class ArticleService {
         }
 
         article.updateLikeCount(1);
-        articleLikeRepository.save(ArticleLike.of(user, article));
+        articleLikeRepository.save(ArticleLike.createArticleLike(user, article));
 
         return LikeResponse.of(article);
     }
