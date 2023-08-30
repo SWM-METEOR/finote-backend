@@ -47,4 +47,8 @@ public class Article extends BaseEntity {
                 .user(user) // TODO thumbnail 저장 코드 추가
                 .build();
     }
+
+    public void updateLikeCount(int num) {
+        this.totalLike += num;
+    }
 }

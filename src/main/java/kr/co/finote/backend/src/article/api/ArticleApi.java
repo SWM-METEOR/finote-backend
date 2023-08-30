@@ -79,4 +79,11 @@ public class ArticleApi {
             @RequestParam(required = false, defaultValue = "10") int size) {
         return articleService.articlesAll(nickname, page, size);
     }
+
+    @Operation(summary = "유저의 블로그 글 좋아요", description = "이미 좋아요 되어있다면 좋아요 수 증가하지 않음")
+    @PostMapping("/like/{article-id}")
+    public LikeResponse postLike(@Login User loginUser, @PathVariable("article-id") Long articleId) {
+
+        return articleService.postLike(loginUser, articleId);
+    }
 }

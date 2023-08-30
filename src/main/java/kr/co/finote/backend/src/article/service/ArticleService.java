@@ -3,24 +3,29 @@ package kr.co.finote.backend.src.article.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.transaction.Transactional;
 import kr.co.finote.backend.global.code.ResponseCode;
+import kr.co.finote.backend.global.exception.CustomException;
 import kr.co.finote.backend.global.exception.InvalidInputException;
 import kr.co.finote.backend.global.exception.NotFoundException;
 import kr.co.finote.backend.global.utils.StringUtils;
 import kr.co.finote.backend.src.article.document.ArticleDocument;
 import kr.co.finote.backend.src.article.domain.Article;
 import kr.co.finote.backend.src.article.domain.ArticleKeyword;
+import kr.co.finote.backend.src.article.domain.ArticleLike;
 import kr.co.finote.backend.src.article.dto.request.ArticleRequest;
 import kr.co.finote.backend.src.article.dto.request.DragArticleRequest;
 import kr.co.finote.backend.src.article.dto.response.*;
 import kr.co.finote.backend.src.article.repository.ArticleEsRepository;
+import kr.co.finote.backend.src.article.repository.ArticleLikeRepository;
 import kr.co.finote.backend.src.article.repository.ArticleRepository;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +33,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +45,7 @@ public class ArticleService {
     // article 관련 레포지토리만 의존
     private final ArticleRepository articleRepository;
     private final ArticleEsRepository articleEsRepository;
+    private final ArticleLikeRepository articleLikeRepository;
 
     // 나머지는 다른 도메인 서비스에 의존
     private final KeywordService keywordService;
@@ -183,5 +190,44 @@ public class ArticleService {
                         .findByUserAndTitleAndIsDeleted(findUser, title, false)
                         .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
         return ArticleResponse.of(article);
+    }
+
+    @CacheEvict(key = "#articleId", value = "articleLikeLog")
+    @Transactional
+    public LikeResponse postLike(User user, Long articleId) {
+        Article article =
+                articleRepository
+                        .findByIdAndIsDeleted(articleId, false)
+                        .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
+
+        Optional<ArticleLike> findByLog = findLikelog(user, articleId);
+
+        if (findByLog.isPresent()) {
+            ArticleLike articleLike = findByLog.get();
+            if (articleLike.getIsDeleted()) {
+                article.updateLikeCount(1);
+                articleLike.updateIsDeleted(false);
+            } else {
+                article.updateLikeCount(-1);
+                articleLike.updateIsDeleted(true);
+            }
+            return LikeResponse.of(article);
+        }
+
+        article.updateLikeCount(1);
+        articleLikeRepository.save(ArticleLike.createArticleLike(user, article));
+
+        return LikeResponse.of(article);
+    }
+
+    @Cacheable(key = "#articleId", value = "articleLikeLog", cacheManager = "articleLikeManager")
+    @Transactional(readOnly = true)
+    public Optional<ArticleLike> findLikelog(User user, Long articleId) {
+        Article findArticle =
+                articleRepository
+                        .findByIdAndIsDeleted(articleId, false)
+                        .orElseThrow(() -> new CustomException(ResponseCode.ARTICLE_NOT_FOUND));
+
+        return articleLikeRepository.findByUserAndArticle(user, findArticle);
     }
 }
