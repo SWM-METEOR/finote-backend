@@ -257,5 +257,10 @@ public class ArticleService {
         }
 
         article.deleteArticle();
+
+        // 좋아요 내역 완전 삭제
+        articleLikeRepository.deleteAllByArticle(article);
+        // 키워드 내역 soft delete
+        articleKeywordService.deleteArticleKeyword(article);
     }
 }

@@ -8,6 +8,7 @@ import kr.co.finote.backend.src.article.dto.KeywordScore;
 import kr.co.finote.backend.src.article.repository.ArticleKeywordRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,5 +33,14 @@ public class ArticleKeywordService {
                 articleKeywordRepository.findAllByArticleAndIsDeleted(article, false);
         if (articleKeywordList.size() > KEYWORD_MAX_COUNT) return articleKeywordList.subList(0, 3);
         else return articleKeywordList;
+    }
+
+    @Transactional
+    public void deleteArticleKeyword(Article article) {
+        List<ArticleKeyword> articleKeywordList =
+                articleKeywordRepository.findAllByArticleAndIsDeleted(article, false);
+        for (ArticleKeyword articleKeyword : articleKeywordList) {
+            articleKeyword.deleteArticleKeyword();
+        }
     }
 }

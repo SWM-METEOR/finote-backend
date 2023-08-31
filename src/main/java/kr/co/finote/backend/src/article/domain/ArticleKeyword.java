@@ -32,4 +32,8 @@ public class ArticleKeyword extends BaseEntity {
             Article article, Keyword keyword, Double score) {
         return ArticleKeyword.builder().article(article).keyword(keyword).score(score).build();
     }
+
+    public void deleteArticleKeyword() {
+        this.isDeleted = true;
+    }
 }

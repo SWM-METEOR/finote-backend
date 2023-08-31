@@ -101,7 +101,6 @@ public class ArticleApi {
     @PostMapping("/like/{article-id}")
     public LikeResponse postLike(
             @Login User loginUser, @PathVariable(ARTICLE_ID_PATH_VARIABLE) Long articleId) {
-
         return articleService.postLike(loginUser, articleId);
     }
 }
