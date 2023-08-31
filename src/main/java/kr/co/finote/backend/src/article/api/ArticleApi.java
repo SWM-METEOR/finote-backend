@@ -47,6 +47,15 @@ public class ArticleApi {
         return articleService.findByNicknameAndTitle(nickname, title);
     }
 
+    @Operation(summary = "블로그 글 수정")
+    @PostMapping("/edit/{article-id}")
+    public void editArticle(
+            @Login User loginUser,
+            @PathVariable("article-id") Long articleId,
+            @RequestBody @Valid ArticleRequest request) {
+        articleService.editArticle(loginUser, articleId, request);
+    }
+
     @Operation(summary = "스마트 드래그 - AI 검색")
     @PostMapping("/ai-search")
     public AiSearchResponse AiSearch(@RequestBody @Valid AiSearchRequest request) {

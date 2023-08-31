@@ -30,6 +30,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.stereotype.Service;
@@ -52,6 +53,8 @@ public class ArticleService {
     private final ArticleKeywordService articleKeywordService;
     private final ElasticService elasticService;
     private final UserService userService;
+
+    private final ElasticsearchRestTemplate elasticsearchRestTemplate;
 
     @Transactional
     public PostArticleResponse save(ArticleRequest articleRequest, User loginUser)
@@ -200,7 +203,7 @@ public class ArticleService {
                         .findByIdAndIsDeleted(articleId, false)
                         .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
 
-        Optional<ArticleLike> findByLog = findLikelog(user, articleId);
+        Optional<ArticleLike> findByLog = findLikeLog(user, articleId);
 
         if (findByLog.isPresent()) {
             ArticleLike articleLike = findByLog.get();
@@ -222,12 +225,26 @@ public class ArticleService {
 
     @Cacheable(key = "#articleId", value = "articleLikeLog", cacheManager = "articleLikeManager")
     @Transactional(readOnly = true)
-    public Optional<ArticleLike> findLikelog(User user, Long articleId) {
+    public Optional<ArticleLike> findLikeLog(User user, Long articleId) {
         Article findArticle =
                 articleRepository
                         .findByIdAndIsDeleted(articleId, false)
                         .orElseThrow(() -> new CustomException(ResponseCode.ARTICLE_NOT_FOUND));
 
         return articleLikeRepository.findByUserAndArticle(user, findArticle);
+    }
+
+    @Transactional
+    public void editArticle(User loginUser, Long articleId, ArticleRequest request) {
+        Article article =
+                articleRepository
+                        .findByIdAndIsDeleted(articleId, false)
+                        .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
+
+        if (!article.getUser().getEmail().equals((loginUser.getEmail()))) {
+            throw new InvalidInputException(ResponseCode.ARTICLE_NOT_WRITER);
+        }
+
+        article.editArticle(request);
     }
 }

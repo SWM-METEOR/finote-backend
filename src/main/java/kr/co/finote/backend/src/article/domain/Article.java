@@ -51,4 +51,9 @@ public class Article extends BaseEntity {
     public void updateLikeCount(int num) {
         this.totalLike += num;
     }
+
+    public void editArticle(ArticleRequest articleRequest) {
+        this.title = articleRequest.getTitle();
+        this.body = articleRequest.getBody();
+    }
 }
