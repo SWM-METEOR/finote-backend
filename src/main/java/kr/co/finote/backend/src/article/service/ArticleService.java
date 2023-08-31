@@ -30,7 +30,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.stereotype.Service;
@@ -53,8 +52,6 @@ public class ArticleService {
     private final ArticleKeywordService articleKeywordService;
     private final ElasticService elasticService;
     private final UserService userService;
-
-    private final ElasticsearchRestTemplate elasticsearchRestTemplate;
 
     @Transactional
     public PostArticleResponse save(ArticleRequest articleRequest, User loginUser)

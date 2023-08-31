@@ -25,6 +25,7 @@ public class ArticleApi {
 
     ArticleService articleService;
     AiSearchService aiSearchService;
+    static final String ARTICLE_ID_PATH_VARIABLE = "article-id";
 
     @Operation(summary = "블로그 글 작성")
     @PostMapping
@@ -51,14 +52,15 @@ public class ArticleApi {
     @PostMapping("/edit/{article-id}")
     public void editArticle(
             @Login User loginUser,
-            @PathVariable("article-id") Long articleId,
+            @PathVariable(ARTICLE_ID_PATH_VARIABLE) Long articleId,
             @RequestBody @Valid ArticleRequest request) {
         articleService.editArticle(loginUser, articleId, request);
     }
 
     @Operation(summary = "블로그 글 삭제")
     @PostMapping("/delete/{article-id}")
-    public void deleteArticle(@Login User loginUser, @PathVariable("article-id") Long articleId) {
+    public void deleteArticle(
+            @Login User loginUser, @PathVariable(ARTICLE_ID_PATH_VARIABLE) Long articleId) {
         articleService.deleteArticle(loginUser, articleId);
     }
 
@@ -80,7 +82,7 @@ public class ArticleApi {
     @Operation(summary = "글 전체와 연관된 키워드별 추천글")
     @GetMapping("/related/{article-id}")
     public List<RelatedArticleResponse> getRelatedArticle(
-            @PathVariable("article-id") Long articleId) {
+            @PathVariable(ARTICLE_ID_PATH_VARIABLE) Long articleId) {
         return articleService.getRelatedArticle(articleId);
     }
 
@@ -97,7 +99,8 @@ public class ArticleApi {
 
     @Operation(summary = "유저의 블로그 글 좋아요", description = "이미 좋아요 되어있다면 좋아요 수 증가하지 않음")
     @PostMapping("/like/{article-id}")
-    public LikeResponse postLike(@Login User loginUser, @PathVariable("article-id") Long articleId) {
+    public LikeResponse postLike(
+            @Login User loginUser, @PathVariable(ARTICLE_ID_PATH_VARIABLE) Long articleId) {
 
         return articleService.postLike(loginUser, articleId);
     }
