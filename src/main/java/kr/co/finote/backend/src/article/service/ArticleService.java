@@ -102,11 +102,12 @@ public class ArticleService {
         return ArticlePreviewListResponse.of(page, size, articlePreviewResponseList);
     }
 
-    public List<RelatedArticleResponse> getRelatedArticle(Long articleId) {
+    public List<RelatedArticleResponse> getRelatedArticle(String nickname, String title) {
+        User user = userService.findByNickname(nickname);
         List<RelatedArticleResponse> relatedArticleList = new ArrayList<>();
         Article article =
                 articleRepository
-                        .findByIdAndIsDeleted(articleId, false)
+                        .findByUserAndTitleAndIsDeleted(user, title, false)
                         .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
 
         // article이 가지고 있는 상위 3개의 Keyword
@@ -257,5 +258,10 @@ public class ArticleService {
         }
 
         article.deleteArticle();
+
+        // 좋아요 내역 완전 삭제
+        articleLikeRepository.deleteAllByArticle(article);
+        // 키워드 내역 soft delete
+        articleKeywordService.deleteArticleKeyword(article);
     }
 }

@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ArticleLikeRepository extends JpaRepository<ArticleLike, Long> {
     Optional<ArticleLike> findByUserAndArticle(User user, Article article);
+
+    void deleteAllByArticle(Article article);
 }
