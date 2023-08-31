@@ -50,6 +50,7 @@ public class Article extends BaseEntity {
 
     public void updateLikeCount(int num) {
         this.totalLike += num;
+        totalLike = Math.max(0, totalLike);
     }
 
     public void editArticle(ArticleRequest articleRequest) {
