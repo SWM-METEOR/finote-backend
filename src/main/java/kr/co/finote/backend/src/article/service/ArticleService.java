@@ -247,4 +247,18 @@ public class ArticleService {
 
         article.editArticle(request);
     }
+
+    @Transactional
+    public void deleteArticle(User loginUser, Long articleId) {
+        Article article =
+                articleRepository
+                        .findByIdAndIsDeleted(articleId, false)
+                        .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
+
+        if (!article.getUser().getEmail().equals((loginUser.getEmail()))) {
+            throw new InvalidInputException(ResponseCode.ARTICLE_NOT_WRITER);
+        }
+
+        article.deleteArticle();
+    }
 }

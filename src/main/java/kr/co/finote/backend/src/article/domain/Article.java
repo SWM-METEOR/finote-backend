@@ -56,4 +56,8 @@ public class Article extends BaseEntity {
         this.title = articleRequest.getTitle();
         this.body = articleRequest.getBody();
     }
+
+    public void deleteArticle() {
+        this.isDeleted = true;
+    }
 }

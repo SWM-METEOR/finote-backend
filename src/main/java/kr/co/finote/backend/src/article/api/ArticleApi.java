@@ -56,6 +56,12 @@ public class ArticleApi {
         articleService.editArticle(loginUser, articleId, request);
     }
 
+    @Operation(summary = "블로그 글 삭제")
+    @PostMapping("/delete/{article-id}")
+    public void deleteArticle(@Login User loginUser, @PathVariable("article-id") Long articleId) {
+        articleService.deleteArticle(loginUser, articleId);
+    }
+
     @Operation(summary = "스마트 드래그 - AI 검색")
     @PostMapping("/ai-search")
     public AiSearchResponse AiSearch(@RequestBody @Valid AiSearchRequest request) {
