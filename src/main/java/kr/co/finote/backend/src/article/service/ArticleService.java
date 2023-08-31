@@ -200,7 +200,7 @@ public class ArticleService {
                         .findByIdAndIsDeleted(articleId, false)
                         .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
 
-        Optional<ArticleLike> findByLog = findLikelog(user, articleId);
+        Optional<ArticleLike> findByLog = findLikeLog(user, articleId);
 
         if (findByLog.isPresent()) {
             ArticleLike articleLike = findByLog.get();
@@ -222,12 +222,40 @@ public class ArticleService {
 
     @Cacheable(key = "#articleId", value = "articleLikeLog", cacheManager = "articleLikeManager")
     @Transactional(readOnly = true)
-    public Optional<ArticleLike> findLikelog(User user, Long articleId) {
+    public Optional<ArticleLike> findLikeLog(User user, Long articleId) {
         Article findArticle =
                 articleRepository
                         .findByIdAndIsDeleted(articleId, false)
                         .orElseThrow(() -> new CustomException(ResponseCode.ARTICLE_NOT_FOUND));
 
         return articleLikeRepository.findByUserAndArticle(user, findArticle);
+    }
+
+    @Transactional
+    public void editArticle(User loginUser, Long articleId, ArticleRequest request) {
+        Article article =
+                articleRepository
+                        .findByIdAndIsDeleted(articleId, false)
+                        .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
+
+        if (!article.getUser().getEmail().equals((loginUser.getEmail()))) {
+            throw new InvalidInputException(ResponseCode.ARTICLE_NOT_WRITER);
+        }
+
+        article.editArticle(request);
+    }
+
+    @Transactional
+    public void deleteArticle(User loginUser, Long articleId) {
+        Article article =
+                articleRepository
+                        .findByIdAndIsDeleted(articleId, false)
+                        .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
+
+        if (!article.getUser().getEmail().equals((loginUser.getEmail()))) {
+            throw new InvalidInputException(ResponseCode.ARTICLE_NOT_WRITER);
+        }
+
+        article.deleteArticle();
     }
 }

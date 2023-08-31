@@ -22,6 +22,8 @@ public class ElasticSearchConfig extends ElasticsearchConfiguration {
         return ClientConfiguration.builder()
                 .connectedTo(elasticSearchHost)
                 .withDefaultHeaders(headers())
+                .withSocketTimeout(10000) // 간헐적으로 timeout 에러 발생
+                .withConnectTimeout(20000)
                 .build();
     }
 
