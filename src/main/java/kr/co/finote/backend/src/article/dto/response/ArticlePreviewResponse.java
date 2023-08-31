@@ -43,7 +43,7 @@ public class ArticlePreviewResponse {
                         .reply(document.getReply())
                         .authorNickname(document.getAuthorNickName())
                         .date(document.getCreatedDate())
-                        .thumbnail(document.getThumbnail())
+                        .thumbnail(document.getThumbnail() == null ? "" : document.getThumbnail())
                         .build();
         articlePreviewResponse.updateBody(previewBody);
         return articlePreviewResponse;
