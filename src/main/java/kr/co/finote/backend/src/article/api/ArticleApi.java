@@ -80,10 +80,10 @@ public class ArticleApi {
     }
 
     @Operation(summary = "글 전체와 연관된 키워드별 추천글")
-    @GetMapping("/related/{article-id}")
+    @GetMapping("/related/{nickname}/{title}")
     public List<RelatedArticleResponse> getRelatedArticle(
-            @PathVariable(ARTICLE_ID_PATH_VARIABLE) Long articleId) {
-        return articleService.getRelatedArticle(articleId);
+            @PathVariable String nickname, @PathVariable String title) {
+        return articleService.getRelatedArticle(nickname, title);
     }
 
     // TODO 블로그 글 삭제 시 article_keyword 데이터도 같이 삭제(soft delete)
