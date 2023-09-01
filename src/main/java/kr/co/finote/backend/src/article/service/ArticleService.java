@@ -92,6 +92,22 @@ public class ArticleService {
         return ArticleResponse.of(article, isLiked);
     }
 
+    @Transactional
+    public ArticleResponse findByNicknameAndTitle(User likedUser, String nickname, String title) {
+        User findUser = userService.findByNickname(nickname); // 유저가 존재하는지 확인
+        Article article =
+                articleRepository
+                        .findByUserAndTitleAndIsDeleted(findUser, title, false)
+                        .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
+        boolean isLiked = false;
+        if (likedUser != null) {
+            ArticleLikeCache articleLikeCache = cacheService.findLikelog(likedUser, article);
+            isLiked = articleLikeCache != null && !articleLikeCache.getIsDeleted();
+        }
+
+        return ArticleResponse.of(article, isLiked);
+    }
+
     public ArticlePreviewListResponse getDragRelatedArticle(
             int page, int size, DragArticleRequest request) {
         SearchHits<ArticleDocument> byTitle = elasticService.search(page, size, request.getDragText());
@@ -189,22 +205,6 @@ public class ArticleService {
         }
 
         return articlePreviewResponseList;
-    }
-
-    @Transactional
-    public ArticleResponse findByNicknameAndTitle(User likedUser, String nickname, String title) {
-        User findUser = userService.findByNickname(nickname); // 유저가 존재하는지 확인
-        Article article =
-                articleRepository
-                        .findByUserAndTitleAndIsDeleted(findUser, title, false)
-                        .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
-        boolean isLiked = false;
-        if (likedUser != null) {
-            ArticleLikeCache articleLikeCache = cacheService.findLikelog(likedUser, article);
-            isLiked = articleLikeCache != null && !articleLikeCache.getIsDeleted();
-        }
-
-        return ArticleResponse.of(article, isLiked);
     }
 
     @CacheEvict(key = "#user.id + '-' + #articleId", value = "ArticleLikeLog")
