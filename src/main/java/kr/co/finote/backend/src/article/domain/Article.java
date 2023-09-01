@@ -44,6 +44,7 @@ public class Article extends BaseEntity {
         return Article.builder()
                 .title(articleRequest.getTitle())
                 .body(articleRequest.getBody())
+                .thumbnail("")
                 .user(user) // TODO thumbnail 저장 코드 추가
                 .build();
     }

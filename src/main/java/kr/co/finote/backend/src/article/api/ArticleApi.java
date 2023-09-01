@@ -31,7 +31,7 @@ public class ArticleApi {
     static final String ARTICLE_ID_PATH_VARIABLE = "article-id";
 
     @Operation(summary = "블로그 글 작성")
-    @PostMapping
+    @PostMapping("/write")
     public PostArticleResponse postArticles(
             @Login User loginUser, @RequestBody @Valid ArticleRequest request)
             throws JsonProcessingException {
