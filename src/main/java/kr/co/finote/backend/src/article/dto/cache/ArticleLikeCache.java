@@ -12,14 +12,14 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ArticleLikeCache {
 
-    private String user_id;
-    private Long article_id;
+    private String userId;
+    private Long articleId;
     private Boolean isDeleted;
 
     public static ArticleLikeCache of(ArticleLike articleLike) {
         return ArticleLikeCache.builder()
-                .user_id(articleLike.getUser().getId())
-                .article_id(articleLike.getArticle().getId())
+                .userId(articleLike.getUser().getId())
+                .articleId(articleLike.getArticle().getId())
                 .isDeleted(articleLike.getIsDeleted())
                 .build();
     }
