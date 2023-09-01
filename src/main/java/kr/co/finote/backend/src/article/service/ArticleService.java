@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import kr.co.finote.backend.global.code.ResponseCode;
-import kr.co.finote.backend.global.exception.CustomException;
 import kr.co.finote.backend.global.exception.InvalidInputException;
 import kr.co.finote.backend.global.exception.NotFoundException;
 import kr.co.finote.backend.global.utils.StringUtils;
@@ -14,6 +13,7 @@ import kr.co.finote.backend.src.article.document.ArticleDocument;
 import kr.co.finote.backend.src.article.domain.Article;
 import kr.co.finote.backend.src.article.domain.ArticleKeyword;
 import kr.co.finote.backend.src.article.domain.ArticleLike;
+import kr.co.finote.backend.src.article.dto.cache.ArticleLikeCache;
 import kr.co.finote.backend.src.article.dto.request.ArticleRequest;
 import kr.co.finote.backend.src.article.dto.request.DragArticleRequest;
 import kr.co.finote.backend.src.article.dto.response.*;
@@ -25,7 +25,6 @@ import kr.co.finote.backend.src.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -52,6 +51,7 @@ public class ArticleService {
     private final ArticleKeywordService articleKeywordService;
     private final ElasticService elasticService;
     private final UserService userService;
+    private final CacheService cacheService;
 
     @Transactional
     public PostArticleResponse save(ArticleRequest articleRequest, User loginUser)
@@ -77,12 +77,35 @@ public class ArticleService {
                         });
     }
 
-    public ArticleResponse findById(Long articleId) {
+    @Transactional
+    public ArticleResponse findById(User likedUser, Long articleId) {
         Article article =
                 articleRepository
                         .findByIdAndIsDeleted(articleId, false)
                         .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
-        return ArticleResponse.of(article);
+        boolean isLiked = false;
+        if (likedUser != null) {
+            ArticleLikeCache articleLikeCache = cacheService.findLikelog(likedUser, article);
+            isLiked = articleLikeCache != null && !articleLikeCache.getIsDeleted();
+        }
+
+        return ArticleResponse.of(article, isLiked);
+    }
+
+    @Transactional
+    public ArticleResponse findByNicknameAndTitle(User likedUser, String nickname, String title) {
+        User findUser = userService.findByNickname(nickname); // 유저가 존재하는지 확인
+        Article article =
+                articleRepository
+                        .findByUserAndTitleAndIsDeleted(findUser, title, false)
+                        .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
+        boolean isLiked = false;
+        if (likedUser != null) {
+            ArticleLikeCache articleLikeCache = cacheService.findLikelog(likedUser, article);
+            isLiked = articleLikeCache != null && !articleLikeCache.getIsDeleted();
+        }
+
+        return ArticleResponse.of(article, isLiked);
     }
 
     public ArticlePreviewListResponse getDragRelatedArticle(
@@ -184,16 +207,7 @@ public class ArticleService {
         return articlePreviewResponseList;
     }
 
-    public ArticleResponse findByNicknameAndTitle(String nickname, String title) {
-        User findUser = userService.findByNickname(nickname); // 유저가 존재하는지 확인
-        Article article =
-                articleRepository
-                        .findByUserAndTitleAndIsDeleted(findUser, title, false)
-                        .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
-        return ArticleResponse.of(article);
-    }
-
-    @CacheEvict(key = "#articleId", value = "articleLikeLog")
+    @CacheEvict(key = "#user.id + '-' + #articleId", value = "ArticleLikeLog")
     @Transactional
     public LikeResponse postLike(User user, Long articleId) {
         Article article =
@@ -201,16 +215,18 @@ public class ArticleService {
                         .findByIdAndIsDeleted(articleId, false)
                         .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
 
-        Optional<ArticleLike> findByLog = findLikeLog(user, articleId);
+        ArticleLikeCache articleLikeCache = cacheService.findLikelog(user, article);
 
-        if (findByLog.isPresent()) {
-            ArticleLike articleLike = findByLog.get();
-            if (articleLike.getIsDeleted()) {
+        Optional<ArticleLike> byUserAndArticle =
+                articleLikeRepository.findByUserAndArticle(user, article);
+
+        if (articleLikeCache != null) {
+            if (articleLikeCache.getIsDeleted()) {
                 article.updateLikeCount(1);
-                articleLike.updateIsDeleted(false);
+                byUserAndArticle.get().updateIsDeleted(false);
             } else {
                 article.updateLikeCount(-1);
-                articleLike.updateIsDeleted(true);
+                byUserAndArticle.get().updateIsDeleted(true);
             }
             return LikeResponse.of(article);
         }
@@ -219,17 +235,6 @@ public class ArticleService {
         articleLikeRepository.save(ArticleLike.createArticleLike(user, article));
 
         return LikeResponse.of(article);
-    }
-
-    @Cacheable(key = "#articleId", value = "articleLikeLog", cacheManager = "articleLikeManager")
-    @Transactional(readOnly = true)
-    public Optional<ArticleLike> findLikeLog(User user, Long articleId) {
-        Article findArticle =
-                articleRepository
-                        .findByIdAndIsDeleted(articleId, false)
-                        .orElseThrow(() -> new CustomException(ResponseCode.ARTICLE_NOT_FOUND));
-
-        return articleLikeRepository.findByUserAndArticle(user, findArticle);
     }
 
     @Transactional

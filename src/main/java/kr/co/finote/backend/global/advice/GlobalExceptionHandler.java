@@ -36,6 +36,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorResponse> handleException(Exception e) {
         log.error("[Exception - {}]", e.getMessage());
+        log.error("[Exception - {}]", e.toString());
 
         ErrorResponse errorResponse = ErrorResponse.noDetailError(ResponseCode.INTERNAL_ERROR);
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
