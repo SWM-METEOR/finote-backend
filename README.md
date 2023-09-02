@@ -6,7 +6,8 @@
 `프로젝트 진행 중 겪었던 트러블과 해결하는 과정을 정리한 문서입니다`
 > https://soma-meteor.notion.site/BE-a468c3ed290f48c88d9334cc4e15dd03?pvs=4
 
-![image](https://github.com/YuriKwon/web08-ChoBab/assets/55318618/23cc16c0-cafb-41f0-a1b5-3cdadd48dfc0)
+<img src="https://github.com/SWM-METEOR/finote-backend/assets/108649711/110d87f8-1e41-4143-8598-9a4eb7de62c1"  width="200" height="60"/>
+
 ---
 <p>블로그 글을 읽을 때의 <strong>새로운 경험</strong>,</p>
 <p>블로그를 읽는 중에 생기는 궁금한 점들을 외부에 검색하지 말고, <b>블로그 글 안에서 바로 검색</b>하며 학습해보세요!
@@ -44,13 +45,7 @@
 <br>
 
 ## 시스템 아키텍처
-<img width="620" alt="finote_시스템아키텍처" src="https://github.com/YuriKwon/web08-ChoBab/assets/55318618/6f57bdc1-89a5-4a7f-9dcd-38191e0a5216">
-<br>
-
-## :camera: How to run: 실행방법
-- 추가 예정
-  - 환경변수
-  - 빌드 및 실행 과정
+<img width="620" alt="finote_시스템아키텍처" src="https://github.com/SWM-METEOR/finote-backend/assets/108649711/83fe01cd-8482-4b67-ac4b-cf5889e13d89">
 <br>
 
 ## :busts_in_silhouette: METEOR팀 구성원
