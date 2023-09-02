@@ -30,6 +30,7 @@ public class GoogleUserInfo {
     private String locale;
 
     private String hd;
+    private String link;
 
     public static GoogleUserInfo createGoogleUserInfo(String userInfo)
             throws JsonProcessingException {
