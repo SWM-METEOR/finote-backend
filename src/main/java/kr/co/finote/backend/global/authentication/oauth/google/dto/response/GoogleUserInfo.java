@@ -29,6 +29,8 @@ public class GoogleUserInfo {
     private String picture;
     private String locale;
 
+    private String hd;
+
     public static GoogleUserInfo createGoogleUserInfo(String userInfo)
             throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
