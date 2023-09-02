@@ -238,7 +238,7 @@ public class ArticleService {
     }
 
     @Transactional
-    public void editArticle(User loginUser, Long articleId, ArticleRequest request) {
+    public PostArticleResponse editArticle(User loginUser, Long articleId, ArticleRequest request) {
         Article article =
                 articleRepository
                         .findByIdAndIsDeleted(articleId, false)
@@ -249,6 +249,7 @@ public class ArticleService {
         }
 
         article.editArticle(request);
+        return PostArticleResponse.of(article);
     }
 
     @Transactional

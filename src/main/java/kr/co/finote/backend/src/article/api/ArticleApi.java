@@ -53,11 +53,11 @@ public class ArticleApi {
 
     @Operation(summary = "블로그 글 수정")
     @PostMapping("/edit/{article-id}")
-    public void editArticle(
+    public PostArticleResponse editArticle(
             @Login User loginUser,
             @PathVariable(ARTICLE_ID_PATH_VARIABLE) Long articleId,
             @RequestBody @Valid ArticleRequest request) {
-        articleService.editArticle(loginUser, articleId, request);
+        return articleService.editArticle(loginUser, articleId, request);
     }
 
     @Operation(summary = "블로그 글 삭제")
