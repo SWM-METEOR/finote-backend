@@ -18,7 +18,6 @@ import kr.co.finote.backend.src.article.dto.request.ArticleRequest;
 import kr.co.finote.backend.src.article.dto.request.DragArticleRequest;
 import kr.co.finote.backend.src.article.dto.response.*;
 import kr.co.finote.backend.src.article.repository.ArticleEsRepository;
-import kr.co.finote.backend.src.article.repository.ArticleLikeRepository;
 import kr.co.finote.backend.src.article.repository.ArticleRepository;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.service.UserService;
@@ -44,7 +43,6 @@ public class ArticleService {
     // article 관련 레포지토리만 의존
     private final ArticleRepository articleRepository;
     private final ArticleEsRepository articleEsRepository;
-    private final ArticleLikeRepository articleLikeRepository;
 
     // 나머지는 다른 도메인 서비스에 의존
     private final KeywordService keywordService;
@@ -52,6 +50,7 @@ public class ArticleService {
     private final ElasticService elasticService;
     private final UserService userService;
     private final CacheService cacheService;
+    private final ArticleLikeService articleLikeService;
 
     @Transactional
     public PostArticleResponse save(ArticleRequest articleRequest, User loginUser)
@@ -217,8 +216,7 @@ public class ArticleService {
 
         ArticleLikeCache articleLikeCache = cacheService.findLikelog(user, article);
 
-        Optional<ArticleLike> byUserAndArticle =
-                articleLikeRepository.findByUserAndArticle(user, article);
+        Optional<ArticleLike> byUserAndArticle = articleLikeService.findByUser(user, article);
 
         if (articleLikeCache != null) {
             if (articleLikeCache.getIsDeleted()) {
@@ -232,7 +230,7 @@ public class ArticleService {
         }
 
         article.updateLikeCount(1);
-        articleLikeRepository.save(ArticleLike.createArticleLike(user, article));
+        articleLikeService.save(user, article);
 
         return LikeResponse.of(article);
     }
@@ -266,7 +264,7 @@ public class ArticleService {
         article.deleteArticle();
 
         // 좋아요 내역 완전 삭제
-        articleLikeRepository.deleteAllByArticle(article);
+        articleLikeService.deleteAllByArticle(article);
         // 키워드 내역 soft delete
         articleKeywordService.deleteArticleKeyword(article);
     }

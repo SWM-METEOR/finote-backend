@@ -4,7 +4,6 @@ import kr.co.finote.backend.global.code.ResponseCode;
 import kr.co.finote.backend.global.exception.InvalidInputException;
 import kr.co.finote.backend.global.exception.NotFoundException;
 import kr.co.finote.backend.global.exception.UnAuthorizedException;
-import kr.co.finote.backend.src.article.repository.ArticleRepository;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.dto.request.AdditionalInfoRequest;
 import kr.co.finote.backend.src.user.repository.UserRepository;
@@ -22,7 +21,6 @@ public class UserService {
     public static final int BLOG_NAME_MAX_LENGTH = 100;
     public static final int BLOG_URL_MAX_LENGTH = 100;
     private final UserRepository userRepository;
-    private final ArticleRepository articleRepository;
 
     public void validateNickname(String nickname) {
         boolean existsByNickname = userRepository.existsByNicknameAndIsDeleted(nickname, false);

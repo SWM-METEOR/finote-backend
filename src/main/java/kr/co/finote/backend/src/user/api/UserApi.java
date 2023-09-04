@@ -4,9 +4,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import javax.validation.Valid;
 import kr.co.finote.backend.global.annotation.Login;
 import kr.co.finote.backend.global.authentication.PrincipalDetails;
+import kr.co.finote.backend.src.article.service.ArticleLikeService;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.dto.request.*;
 import kr.co.finote.backend.src.user.dto.response.BlogResponse;
+import kr.co.finote.backend.src.user.dto.response.LikeCountResponse;
 import kr.co.finote.backend.src.user.dto.response.NicknameResponse;
 import kr.co.finote.backend.src.user.service.UserService;
 import lombok.AccessLevel;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserApi {
 
     UserService userService;
+    ArticleLikeService articleLikeService;
 
     /* Field Validation API */
     @Operation(summary = "닉네임 중복 검사")
@@ -67,5 +70,11 @@ public class UserApi {
         PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
         User loginUser = principal.getUser();
         userService.editAdditionalInfo(loginUser, request);
+    }
+
+    @Operation(summary = "내가 좋아요 한 글의 갯수")
+    @GetMapping("/articles/like/count")
+    public LikeCountResponse getLikeCount(@Login User loginUser) {
+        return articleLikeService.getLikeCount(loginUser);
     }
 }
