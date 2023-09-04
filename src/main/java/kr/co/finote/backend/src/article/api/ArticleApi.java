@@ -49,7 +49,7 @@ public class ArticleApi {
     @GetMapping("/{nickname}/{title}")
     public ArticleResponse getArticleByNicknameAndTitle(
             @Liked User likedUser, @PathVariable String nickname, @PathVariable String title) {
-        return articleService.lookUpByNicknameAndTitle(likedUser, nickname, title);
+        return articleService.lookupByNicknameAndTitle(likedUser, nickname, title);
     }
 
     @Operation(summary = "블로그 글 수정")

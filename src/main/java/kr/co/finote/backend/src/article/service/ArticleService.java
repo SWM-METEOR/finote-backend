@@ -92,7 +92,7 @@ public class ArticleService {
     }
 
     @Transactional
-    public ArticleResponse lookUpByNicknameAndTitle(User likedUser, String nickname, String title) {
+    public ArticleResponse lookupByNicknameAndTitle(User likedUser, String nickname, String title) {
         Article article = findByNicknameAndTitle(nickname, title);
 
         boolean isLiked = false;
