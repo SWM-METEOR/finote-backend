@@ -1,5 +1,6 @@
 package kr.co.finote.backend.global.advice;
 
+import java.util.Arrays;
 import kr.co.finote.backend.global.code.ResponseCode;
 import kr.co.finote.backend.global.exception.CustomException;
 import kr.co.finote.backend.global.response.ErrorResponse;
@@ -35,9 +36,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorResponse> handleException(Exception e) {
-        log.error("[Exception - {}]", e.getMessage());
-        log.error("[Exception - {}]", e.toString());
-
+        log.error("[Exception Message - {}]", e.getMessage());
+        log.error("[Exception String - {}]", e.toString());
+        StackTraceElement[] stackTrace = e.getStackTrace();
+        log.error("[Exception StackTrace - {}]", Arrays.toString(stackTrace));
         ErrorResponse errorResponse = ErrorResponse.noDetailError(ResponseCode.INTERNAL_ERROR);
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }

@@ -12,4 +12,6 @@ public interface ArticleLikeRepository extends JpaRepository<ArticleLike, Long> 
     Optional<ArticleLike> findByUserAndArticle(User user, Article article);
 
     void deleteAllByArticle(Article article);
+
+    int countByUserAndIsDeleted(User user, boolean isDeleted);
 }
