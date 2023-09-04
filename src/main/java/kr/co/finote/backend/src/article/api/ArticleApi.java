@@ -16,6 +16,7 @@ import kr.co.finote.backend.src.user.domain.User;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -100,10 +101,11 @@ public class ArticleApi {
         return articleService.articlesAll(nickname, page, size);
     }
 
-    @Operation(summary = "유저의 블로그 글 좋아요", description = "이미 좋아요 되어있다면 좋아요 수 증가하지 않음")
-    @PostMapping("/like/{article-id}")
-    public LikeResponse postLike(
-            @Login User loginUser, @PathVariable(ARTICLE_ID_PATH_VARIABLE) Long articleId) {
-        return articleService.postLike(loginUser, articleId);
+    @Operation(summary = "닉네임/제목 기반 유저의 블로그 글 좋아요", description = "이미 좋아요 되어있다면 좋아요 수 증가하지 않음")
+    @PostMapping("/like/{nickname}/{title}")
+    public LikeResponse postLikeByNicknameTitle(@Login User loginUser,
+                                                @PathVariable String nickname,
+                                                @PathVariable String title) {
+        return articleService.postLikeByNicknameTitle(loginUser, nickname, title);
     }
 }

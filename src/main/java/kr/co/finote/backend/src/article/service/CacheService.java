@@ -20,7 +20,7 @@ public class CacheService {
     private final ArticleLikeRepository articleLikeRepository;
 
     @Cacheable(
-            key = "#user.id + '-' + #article.id",
+            key = "#user.id + '-' + #user.nickname + '-' + #article.title",
             value = "ArticleLikeLog",
             cacheManager = "articleLikeManager")
     @Transactional
