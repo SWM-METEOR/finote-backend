@@ -208,7 +208,7 @@ public class ArticleService {
 
     @CacheEvict(key = "#user.id + '-' + #nickname + '-' + #title", value = "ArticleLikeLog")
     @Transactional
-    public LikeResponse postLikeByNicknameTitle(User user, String nickname, String title) {
+    public LikeResponse postLikeByNicknameAndTitle(User user, String nickname, String title) {
         User findUser = userService.findByNickname(nickname); // 유저가 존재하는지 확인
         Article article =
                 articleRepository

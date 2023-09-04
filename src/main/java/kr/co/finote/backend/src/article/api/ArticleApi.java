@@ -102,8 +102,8 @@ public class ArticleApi {
 
     @Operation(summary = "닉네임/제목 기반 유저의 블로그 글 좋아요", description = "이미 좋아요 되어있다면 좋아요 수 증가하지 않음")
     @PostMapping("/like/{nickname}/{title}")
-    public LikeResponse postLikeByNicknameTitle(
+    public LikeResponse postLikeByNicknameAndTitle(
             @Login User loginUser, @PathVariable String nickname, @PathVariable String title) {
-        return articleService.postLikeByNicknameTitle(loginUser, nickname, title);
+        return articleService.postLikeByNicknameAndTitle(loginUser, nickname, title);
     }
 }
