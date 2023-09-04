@@ -6,6 +6,7 @@ import java.util.List;
 import javax.validation.Valid;
 import kr.co.finote.backend.global.annotation.Liked;
 import kr.co.finote.backend.global.annotation.Login;
+import kr.co.finote.backend.src.article.domain.Article;
 import kr.co.finote.backend.src.article.dto.request.AiSearchRequest;
 import kr.co.finote.backend.src.article.dto.request.ArticleRequest;
 import kr.co.finote.backend.src.article.dto.request.DragArticleRequest;
@@ -41,14 +42,14 @@ public class ArticleApi {
     @Operation(summary = "블로그 id로 글 조회")
     @GetMapping("/{articleId}")
     public ArticleResponse getArticle(@Liked User likedUser, @PathVariable Long articleId) {
-        return articleService.findById(likedUser, articleId);
+        return articleService.lookupById(likedUser, articleId);
     }
 
     @Operation(summary = "블로그 작성자 닉네임, 글 제목으로 조회")
     @GetMapping("/{nickname}/{title}")
     public ArticleResponse getArticleByNicknameAndTitle(
             @Liked User likedUser, @PathVariable String nickname, @PathVariable String title) {
-        return articleService.findByNicknameAndTitle(likedUser, nickname, title);
+        return articleService.lookupByNicknameAndTitle(likedUser, nickname, title);
     }
 
     @Operation(summary = "블로그 글 수정")
@@ -100,10 +101,11 @@ public class ArticleApi {
         return articleService.articlesAll(nickname, page, size);
     }
 
-    @Operation(summary = "유저의 블로그 글 좋아요", description = "이미 좋아요 되어있다면 좋아요 수 증가하지 않음")
-    @PostMapping("/like/{article-id}")
-    public LikeResponse postLike(
-            @Login User loginUser, @PathVariable(ARTICLE_ID_PATH_VARIABLE) Long articleId) {
-        return articleService.postLike(loginUser, articleId);
+    @Operation(summary = "닉네임/제목 기반 유저의 블로그 글 좋아요", description = "이미 좋아요 되어있다면 좋아요 수 증가하지 않음")
+    @PostMapping("/like/{nickname}/{title}")
+    public LikeResponse postLikeByNicknameAndTitle(
+            @Login User loginUser, @PathVariable String nickname, @PathVariable String title) {
+        Article article = articleService.findByNicknameAndTitle(nickname, title);
+        return articleService.postLikeByNicknameAndTitle(loginUser, article);
     }
 }

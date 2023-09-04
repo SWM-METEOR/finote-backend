@@ -77,7 +77,7 @@ public class ArticleService {
     }
 
     @Transactional
-    public ArticleResponse findById(User likedUser, Long articleId) {
+    public ArticleResponse lookupById(User likedUser, Long articleId) {
         Article article =
                 articleRepository
                         .findByIdAndIsDeleted(articleId, false)
@@ -92,12 +92,9 @@ public class ArticleService {
     }
 
     @Transactional
-    public ArticleResponse findByNicknameAndTitle(User likedUser, String nickname, String title) {
-        User findUser = userService.findByNickname(nickname); // 유저가 존재하는지 확인
-        Article article =
-                articleRepository
-                        .findByUserAndTitleAndIsDeleted(findUser, title, false)
-                        .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
+    public ArticleResponse lookupByNicknameAndTitle(User likedUser, String nickname, String title) {
+        Article article = findByNicknameAndTitle(nickname, title);
+
         boolean isLiked = false;
         if (likedUser != null) {
             ArticleLikeCache articleLikeCache = cacheService.findLikelog(likedUser, article);
@@ -206,14 +203,9 @@ public class ArticleService {
         return articlePreviewResponseList;
     }
 
-    @CacheEvict(key = "#user.id + '-' + #articleId", value = "ArticleLikeLog")
+    @CacheEvict(key = "#user.id + '-' + #article.id", value = "ArticleLikeLog")
     @Transactional
-    public LikeResponse postLike(User user, Long articleId) {
-        Article article =
-                articleRepository
-                        .findByIdAndIsDeleted(articleId, false)
-                        .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
-
+    public LikeResponse postLikeByNicknameAndTitle(User user, Article article) {
         ArticleLikeCache articleLikeCache = cacheService.findLikelog(user, article);
 
         Optional<ArticleLike> byUserAndArticle = articleLikeService.findByUser(user, article);
@@ -267,5 +259,12 @@ public class ArticleService {
         articleLikeService.deleteAllByArticle(article);
         // 키워드 내역 soft delete
         articleKeywordService.deleteArticleKeyword(article);
+    }
+
+    public Article findByNicknameAndTitle(String nickname, String title) {
+        User findUser = userService.findByNickname(nickname); // 유저가 존재하는지 확인
+        return articleRepository
+                .findByUserAndTitleAndIsDeleted(findUser, title, false)
+                .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
     }
 }
