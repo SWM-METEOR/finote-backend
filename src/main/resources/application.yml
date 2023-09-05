@@ -82,4 +82,22 @@ logging:
   slack:
     webhook-uri: ${SLACK_WEBHOOK_URI}
   config: classpath:logback-slack.xml
+  level:
+    com:
+      amazonaws:
+        util:
+          com.amazonaws.util.EC2MetadataUtils: error
 
+# AWS S3 cloud
+cloud:
+  aws:
+    s3:
+      bucket: ${S3_BUCKET_NAME}
+    region:
+      static: ${S3_REGION}
+      auto: false
+    credentials:
+      access-key: ${S3_ACCESS_KEY}
+      secret-key: ${S3_SECRET_KEY}
+    stack:
+      auto: false
