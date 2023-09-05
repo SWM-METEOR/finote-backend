@@ -4,9 +4,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import kr.co.finote.backend.global.annotation.Login;
 import kr.co.finote.backend.src.article.dto.response.ArticlePreviewListResponse;
 import kr.co.finote.backend.src.article.service.ArticleService;
+import kr.co.finote.backend.src.common.dto.request.FileUploadRequest;
 import kr.co.finote.backend.src.common.dto.response.FollowResultResponse;
 import kr.co.finote.backend.src.common.dto.response.FollowUserListResponse;
+import kr.co.finote.backend.src.common.dto.response.PresignedUrlResponse;
 import kr.co.finote.backend.src.common.service.FollowService;
+import kr.co.finote.backend.src.common.service.S3Service;
 import kr.co.finote.backend.src.user.domain.User;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +24,7 @@ public class CommonApi {
 
     FollowService followService;
     ArticleService articleService;
+    S3Service s3Service;
 
     @Operation(summary = "유저 팔로우", description = "팔로우 할 유저의 닉네임을 Path-variable로 전달")
     @PostMapping("/follow/{nickname}")
@@ -53,5 +57,11 @@ public class CommonApi {
     @GetMapping("/followers/{nickname}")
     public FollowUserListResponse followers(@PathVariable String nickname) {
         return followService.followers(nickname);
+    }
+
+    @Operation(summary = "pre-signed url 조회", description = "이미지 업로드 위한 url 제공")
+    @PostMapping("/pre-signed-url")
+    public PresignedUrlResponse getPreSignedUrl(@RequestBody FileUploadRequest request) {
+        return s3Service.getPresignedUrl(request);
     }
 }
