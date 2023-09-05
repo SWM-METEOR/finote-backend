@@ -1,7 +1,7 @@
 package kr.co.finote.backend.global.argumentresolver;
 
 import javax.servlet.http.HttpServletRequest;
-import kr.co.finote.backend.global.annotation.Liked;
+import kr.co.finote.backend.global.annotation.LoginOptional;
 import kr.co.finote.backend.global.code.ResponseCode;
 import kr.co.finote.backend.global.exception.UnAuthorizedException;
 import kr.co.finote.backend.global.jwt.JwtTokenProvider;
@@ -19,17 +19,17 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class LikedArgumentResolver implements HandlerMethodArgumentResolver {
+public class LoginOptionalArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        boolean hasLikedAnnotation = parameter.hasParameterAnnotation(Liked.class);
-        boolean hasMemberType = User.class.isAssignableFrom(parameter.getParameterType());
+        boolean hasLoginOptionalAnnotation = parameter.hasParameterAnnotation(LoginOptional.class);
+        boolean hasUserType = User.class.isAssignableFrom(parameter.getParameterType());
 
-        return hasLikedAnnotation && hasMemberType;
+        return hasLoginOptionalAnnotation && hasUserType;
     }
 
     @Override
