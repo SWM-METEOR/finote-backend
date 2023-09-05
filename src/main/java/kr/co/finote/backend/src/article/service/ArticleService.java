@@ -19,6 +19,7 @@ import kr.co.finote.backend.src.article.dto.request.DragArticleRequest;
 import kr.co.finote.backend.src.article.dto.response.*;
 import kr.co.finote.backend.src.article.repository.ArticleEsRepository;
 import kr.co.finote.backend.src.article.repository.ArticleRepository;
+import kr.co.finote.backend.src.common.service.FollowService;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -51,6 +52,7 @@ public class ArticleService {
     private final UserService userService;
     private final CacheService cacheService;
     private final ArticleLikeService articleLikeService;
+    private final FollowService followService;
 
     @Transactional
     public PostArticleResponse save(ArticleRequest articleRequest, User loginUser)
@@ -77,31 +79,33 @@ public class ArticleService {
     }
 
     @Transactional
-    public ArticleResponse lookupById(User likedUser, Long articleId) {
+    public ArticleResponse lookupById(User user, Long articleId) {
         Article article =
                 articleRepository
                         .findByIdAndIsDeleted(articleId, false)
                         .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
-        boolean isLiked = false;
-        if (likedUser != null) {
-            ArticleLikeCache articleLikeCache = cacheService.findLikelog(likedUser, article);
-            isLiked = articleLikeCache != null && !articleLikeCache.getIsDeleted();
-        }
 
-        return ArticleResponse.of(article, isLiked);
+        // Front-end와 협의 결과 글 수정시에만 사용되기 때문에 상수 값 전달
+        return ArticleResponse.of(article, false, false);
     }
 
     @Transactional
-    public ArticleResponse lookupByNicknameAndTitle(User likedUser, String nickname, String title) {
+    public ArticleResponse lookupByNicknameAndTitle(User user, String nickname, String title) {
         Article article = findByNicknameAndTitle(nickname, title);
 
         boolean isLiked = false;
-        if (likedUser != null) {
-            ArticleLikeCache articleLikeCache = cacheService.findLikelog(likedUser, article);
+        if (user != null) {
+            ArticleLikeCache articleLikeCache = cacheService.findLikelog(user, article);
             isLiked = articleLikeCache != null && !articleLikeCache.getIsDeleted();
         }
 
-        return ArticleResponse.of(article, isLiked);
+        boolean isFollowed = false;
+        if (user != null) {
+            User authorUser = userService.findByNickname(nickname);
+            isFollowed = followService.isFollowed(user, authorUser);
+        }
+
+        return ArticleResponse.of(article, isLiked, isFollowed);
     }
 
     public ArticlePreviewListResponse getDragRelatedArticle(

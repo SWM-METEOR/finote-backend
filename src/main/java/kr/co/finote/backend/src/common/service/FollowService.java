@@ -88,6 +88,13 @@ public class FollowService {
         return FollowUserListResponse.of(followUserResponses);
     }
 
+    public boolean isFollowed(User fromUser, User toUser) {
+        return followInfoRepository
+                .findByFromUserAndToUser(fromUser, toUser)
+                .map(followInfo -> !followInfo.getIsDeleted())
+                .orElse(false);
+    }
+
     private List<FollowUserResponse> FollowerUserList(List<FollowInfo> followInfos) {
         return followInfos.stream()
                 .map(followInfo -> FollowUserResponse.of(followInfo.getFromUser()))
