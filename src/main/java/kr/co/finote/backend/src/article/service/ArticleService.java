@@ -101,8 +101,8 @@ public class ArticleService {
 
         boolean isFollowed = false;
         if (user != null) {
-            User byNickname = userService.findByNickname(nickname);
-            isFollowed = followService.isFollowed(user, byNickname);
+            User authorUser = userService.findByNickname(nickname);
+            isFollowed = followService.isFollowed(user, authorUser);
         }
 
         return ArticleResponse.of(article, isLiked, isFollowed);
