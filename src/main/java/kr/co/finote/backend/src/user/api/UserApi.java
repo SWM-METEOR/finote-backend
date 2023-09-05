@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import javax.validation.Valid;
 import kr.co.finote.backend.global.annotation.Login;
 import kr.co.finote.backend.global.authentication.PrincipalDetails;
+import kr.co.finote.backend.src.article.dto.response.ArticlePreviewListResponse;
 import kr.co.finote.backend.src.article.service.ArticleLikeService;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.dto.request.*;
@@ -76,5 +77,14 @@ public class UserApi {
     @GetMapping("/articles/like/count")
     public LikeCountResponse getLikeCount(@Login User loginUser) {
         return articleLikeService.getLikeCount(loginUser);
+    }
+
+    @Operation(summary = "내가 좋아요 한 글")
+    @GetMapping("/articles/like")
+    public ArticlePreviewListResponse getLikeArticles(
+            @Login User loginUser,
+            @RequestParam int page,
+            @RequestParam(required = false, defaultValue = "10") int size) {
+        return articleLikeService.getLikeArticles(loginUser, page, size);
     }
 }
