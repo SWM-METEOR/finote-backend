@@ -67,7 +67,7 @@ public class User extends BaseEntity {
     public void updateAdditionalInfo(AdditionalInfoRequest additionalInfoRequest) {
         this.nickname = additionalInfoRequest.getNickname();
         this.blogName = additionalInfoRequest.getBlogName();
-        this.blogUrl = additionalInfoRequest.getBlogUrl();
+        this.profileImageUrl = additionalInfoRequest.getProfileImageUrl();
     }
 
     public void updateRefreshToken(String refreshToken) {

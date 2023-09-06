@@ -6,15 +6,12 @@ import lombok.Getter;
 @Getter
 public class AdditionalInfoRequest {
 
-    @NotBlank(message = "프로필 이미지 url을 입력해주세요.")
-    private String profileImage;
+    // TODO : finote의 기본 프사 S3링크를 @Default로 설정하기
+    private String profileImageUrl;
 
     @NotBlank(message = "닉네임을 입력해주세요.")
     private String nickname;
 
     @NotBlank(message = "블로그 이름을 입력해주세요.")
     private String blogName;
-
-    @NotBlank(message = "블로그 url을 입력해주세요.")
-    private String blogUrl;
 }

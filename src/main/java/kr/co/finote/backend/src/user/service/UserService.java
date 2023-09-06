@@ -3,7 +3,6 @@ package kr.co.finote.backend.src.user.service;
 import kr.co.finote.backend.global.code.ResponseCode;
 import kr.co.finote.backend.global.exception.InvalidInputException;
 import kr.co.finote.backend.global.exception.NotFoundException;
-import kr.co.finote.backend.global.exception.UnAuthorizedException;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.dto.request.AdditionalInfoRequest;
 import kr.co.finote.backend.src.user.repository.UserRepository;
@@ -53,12 +52,11 @@ public class UserService {
     public void editAdditionalInfo(User user, AdditionalInfoRequest request) {
         validateNickname(request.getNickname());
         validateBlogName(request.getBlogName());
-        validateBlogUrl(request.getBlogUrl());
 
         User findUser =
                 userRepository
                         .findByIdAndIsDeleted(user.getId(), false)
-                        .orElseThrow(() -> new UnAuthorizedException(ResponseCode.UNAUTHENTICATED));
+                        .orElseThrow(() -> new NotFoundException(ResponseCode.USER_NOT_FOUND));
 
         findUser.updateAdditionalInfo(request);
     }
