@@ -3,7 +3,6 @@ package kr.co.finote.backend.src.user.api;
 import io.swagger.v3.oas.annotations.Operation;
 import javax.validation.Valid;
 import kr.co.finote.backend.global.annotation.Login;
-import kr.co.finote.backend.global.authentication.PrincipalDetails;
 import kr.co.finote.backend.src.article.dto.response.ArticlePreviewListResponse;
 import kr.co.finote.backend.src.article.service.ArticleLikeService;
 import kr.co.finote.backend.src.user.domain.User;
@@ -16,8 +15,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -66,10 +63,8 @@ public class UserApi {
     /* API related to additional-info */
     @Operation(summary = "추가 정보 입력")
     @PostMapping("/additional-info")
-    public void additionalInfo(@RequestBody @Valid AdditionalInfoRequest request) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
-        User loginUser = principal.getUser();
+    public void additionalInfo(
+            @Login User loginUser, @RequestBody @Valid AdditionalInfoRequest request) {
         userService.editAdditionalInfo(loginUser, request);
     }
 
