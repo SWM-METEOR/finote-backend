@@ -20,4 +20,8 @@ public interface FollowInfoRepository extends JpaRepository<FollowInfo, Long> {
     @Query(
             "select fi from FollowInfo fi join fetch fi.fromUser WHERE fi.toUser = :toUser AND fi.isDeleted = false")
     List<FollowInfo> findAllWithToUser(@Param("toUser") User toUser);
+
+    int countByToUserAndIsDeleted(User toUser, boolean isDeleted);
+
+    int countByFromUserAndIsDeleted(User fromUser, boolean isDeleted);
 }

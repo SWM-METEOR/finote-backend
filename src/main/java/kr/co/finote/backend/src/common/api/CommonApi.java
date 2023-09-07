@@ -5,9 +5,7 @@ import kr.co.finote.backend.global.annotation.Login;
 import kr.co.finote.backend.src.article.dto.response.ArticlePreviewListResponse;
 import kr.co.finote.backend.src.article.service.ArticleService;
 import kr.co.finote.backend.src.common.dto.request.FileUploadRequest;
-import kr.co.finote.backend.src.common.dto.response.FollowResultResponse;
-import kr.co.finote.backend.src.common.dto.response.FollowUserListResponse;
-import kr.co.finote.backend.src.common.dto.response.PresignedUrlResponse;
+import kr.co.finote.backend.src.common.dto.response.*;
 import kr.co.finote.backend.src.common.service.FollowService;
 import kr.co.finote.backend.src.common.service.S3Service;
 import kr.co.finote.backend.src.user.domain.User;
@@ -63,5 +61,17 @@ public class CommonApi {
     @PostMapping("/pre-signed-url")
     public PresignedUrlResponse getPreSignedUrl(@RequestBody FileUploadRequest request) {
         return s3Service.getPresignedUrl(request);
+    }
+
+    @Operation(summary = "팔로워 수")
+    @GetMapping("/followers/count")
+    public FollowersCountResponse getFollowerCount(@Login User loginUser) {
+        return followService.followersCount(loginUser);
+    }
+
+    @Operation(summary = "팔로잉 수")
+    @GetMapping("/followings/count")
+    public FollowingsCountResponse getFollowingCount(@Login User loginUser) {
+        return followService.followingsCount(loginUser);
     }
 }
