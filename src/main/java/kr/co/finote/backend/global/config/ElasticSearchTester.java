@@ -13,7 +13,7 @@ public class ElasticSearchTester {
 
     private final ArticleEsRepository articleEsRepository;
 
-    @Scheduled(fixedDelay = 100000, initialDelay = 100000)
+    @Scheduled(fixedDelay = 10000, initialDelay = 10000)
     public void keepConnectionAlive() {
         log.info("ElasticSearch Connection Alive");
         try {
