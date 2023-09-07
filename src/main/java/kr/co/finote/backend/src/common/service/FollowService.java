@@ -6,9 +6,7 @@ import java.util.stream.Collectors;
 import kr.co.finote.backend.global.code.ResponseCode;
 import kr.co.finote.backend.global.exception.InvalidInputException;
 import kr.co.finote.backend.src.common.domain.FollowInfo;
-import kr.co.finote.backend.src.common.dto.response.FollowResultResponse;
-import kr.co.finote.backend.src.common.dto.response.FollowUserListResponse;
-import kr.co.finote.backend.src.common.dto.response.FollowUserResponse;
+import kr.co.finote.backend.src.common.dto.response.*;
 import kr.co.finote.backend.src.common.repository.FollowInfoRepository;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.service.UserService;
@@ -93,6 +91,17 @@ public class FollowService {
                 .findByFromUserAndToUser(fromUser, toUser)
                 .map(followInfo -> !followInfo.getIsDeleted())
                 .orElse(false);
+    }
+
+    public FollowersCountResponse followersCount(User user) {
+
+        return FollowersCountResponse.createFollowersResponse(
+                followInfoRepository.countByToUserAndIsDeleted(user, false));
+    }
+
+    public FollowingsCountResponse followingsCount(User user) {
+        return FollowingsCountResponse.createFollowingsResponse(
+                followInfoRepository.countByFromUserAndIsDeleted(user, false));
     }
 
     private List<FollowUserResponse> FollowerUserList(List<FollowInfo> followInfos) {
