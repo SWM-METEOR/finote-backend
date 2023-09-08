@@ -99,6 +99,12 @@ public class FollowService {
                 followInfoRepository.countByToUserAndIsDeleted(user, false));
     }
 
+    public FollowersCountResponse followersCount(String nickname) {
+        User user = userService.findByNickname(nickname);
+        return FollowersCountResponse.createFollowersResponse(
+                followInfoRepository.countByToUserAndIsDeleted(user, false));
+    }
+
     public FollowingsCountResponse followingsCount(User user) {
         return FollowingsCountResponse.createFollowingsResponse(
                 followInfoRepository.countByFromUserAndIsDeleted(user, false));

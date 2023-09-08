@@ -1,6 +1,7 @@
 package kr.co.finote.backend.src.common.api;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.finote.backend.global.annotation.Login;
 import kr.co.finote.backend.src.article.dto.response.ArticlePreviewListResponse;
 import kr.co.finote.backend.src.article.service.ArticleService;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Tag(name = "Common API", description = "공통 API")
 public class CommonApi {
 
     FollowService followService;
@@ -63,15 +65,21 @@ public class CommonApi {
         return s3Service.getPresignedUrl(request);
     }
 
-    @Operation(summary = "팔로워 수")
+    @Operation(summary = "내 팔로워 수")
     @GetMapping("/followers/count")
     public FollowersCountResponse getFollowerCount(@Login User loginUser) {
         return followService.followersCount(loginUser);
     }
 
-    @Operation(summary = "팔로잉 수")
+    @Operation(summary = "내 팔로잉 수")
     @GetMapping("/followings/count")
     public FollowingsCountResponse getFollowingCount(@Login User loginUser) {
         return followService.followingsCount(loginUser);
+    }
+
+    @Operation(summary = "다른 유저의 팔로워 수")
+    @GetMapping("/followers/count/{nickname}")
+    public FollowersCountResponse getFollowingCount(@PathVariable String nickname) {
+        return followService.followersCount(nickname);
     }
 }
