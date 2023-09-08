@@ -41,11 +41,17 @@ public class Article extends BaseEntity {
     private String thumbnail;
 
     public static Article createArticle(ArticleRequest articleRequest, User user) {
+        String thumbnail1 = articleRequest.getThumbnail();
+        if (thumbnail1 == null || thumbnail1.equals("")) {
+            thumbnail1 =
+                    "https://finote-image-bucket.s3.ap-northeast-2.amazonaws.com/finote_logo.png"; // deafult
+            // 로고
+        }
         return Article.builder()
                 .title(articleRequest.getTitle())
                 .body(articleRequest.getBody())
-                .thumbnail("")
-                .user(user) // TODO thumbnail 저장 코드 추가
+                .thumbnail(thumbnail1)
+                .user(user)
                 .build();
     }
 

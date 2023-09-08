@@ -37,11 +37,13 @@ class ArticleServiceTest {
     private static final String TITLE = "title";
     private static final String BODY = "body";
 
+    private static final String THUMBNAIL = "thumbnail";
+
     @Test
     @DisplayName("게시글 작성 성공")
     void saveSuccess() throws JsonProcessingException {
         // given
-        ArticleRequest articleRequest = new ArticleRequest(TITLE, BODY);
+        ArticleRequest articleRequest = new ArticleRequest(TITLE, BODY, THUMBNAIL);
         User user = new User();
 
         when(articleRepository.findByUserAndTitleAndIsDeleted(user, TITLE, false))
@@ -62,7 +64,7 @@ class ArticleServiceTest {
     @DisplayName("게시글 작성 실패 - 이미 존재하는 제목")
     void saveFail() {
         // given
-        ArticleRequest articleRequest = new ArticleRequest(TITLE, BODY);
+        ArticleRequest articleRequest = new ArticleRequest(TITLE, BODY, THUMBNAIL);
         User user = new User();
 
         when(articleRepository.findByUserAndTitleAndIsDeleted(user, TITLE, false))
