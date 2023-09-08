@@ -2,6 +2,7 @@ package kr.co.finote.backend.src.article.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import javax.validation.Valid;
 import kr.co.finote.backend.global.annotation.Login;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/articles")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Tag(name = "Article API", description = "블로그 글 API")
 public class ArticleApi {
 
     ArticleService articleService;

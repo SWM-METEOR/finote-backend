@@ -1,6 +1,7 @@
 package kr.co.finote.backend.src.user.api;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.finote.backend.global.authentication.oauth.google.dto.request.GoogleAccessToken;
 import kr.co.finote.backend.global.authentication.oauth.google.dto.response.GoogleLoginResponse;
 import kr.co.finote.backend.global.authentication.oauth.google.dto.response.GoogleUserInfo;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/users")
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Tag(name = "Login API", description = "로그인 API")
 public class LoginApi {
 
     LoginService loginService;
