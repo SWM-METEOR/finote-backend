@@ -9,6 +9,7 @@ import kr.co.finote.backend.src.article.service.ArticleLikeService;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.dto.request.*;
 import kr.co.finote.backend.src.user.dto.response.BlogResponse;
+import kr.co.finote.backend.src.user.dto.response.EmailCodeValidationResponse;
 import kr.co.finote.backend.src.user.dto.response.LikeCountResponse;
 import kr.co.finote.backend.src.user.dto.response.NicknameResponse;
 import kr.co.finote.backend.src.user.service.UserService;
@@ -30,6 +31,20 @@ public class UserApi {
     ArticleLikeService articleLikeService;
 
     /* Field Validation API */
+
+    @Operation(summary = "이메일 인증 코드 발송")
+    @PostMapping(value = "/issue/email-code")
+    public void sendEmailCode(@RequestBody @Valid EmailCodeRequest request) {
+        userService.issueEmailCode(request);
+    }
+
+    @Operation(summary = "이메일 인증 코드 확인")
+    @PostMapping(value = "/validation/email-code")
+    public EmailCodeValidationResponse validateEmailCode(
+            @RequestBody @Valid EmailCodeValidationRequest request) {
+        return userService.validateEmailCode(request);
+    }
+
     @Operation(summary = "닉네임 중복 검사")
     @PostMapping(value = "/validation/nickname")
     public void validateNickname(@RequestBody @Valid NicknameDuplicateCheckRequest request) {
