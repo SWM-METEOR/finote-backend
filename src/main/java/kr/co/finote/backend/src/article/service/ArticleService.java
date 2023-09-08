@@ -85,27 +85,14 @@ public class ArticleService {
                         .findByIdAndIsDeleted(articleId, false)
                         .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
 
-        // Front-end와 협의 결과 글 수정시에만 사용되기 때문에 상수 값 전달
-        return ArticleResponse.of(article, false, false);
+        return ArticleResponse.of(article);
     }
 
     @Transactional
     public ArticleResponse lookupByNicknameAndTitle(User user, String nickname, String title) {
         Article article = findByNicknameAndTitle(nickname, title);
 
-        boolean isLiked = false;
-        if (user != null) {
-            ArticleLikeCache articleLikeCache = cacheService.findLikelog(user, article);
-            isLiked = articleLikeCache != null && !articleLikeCache.getIsDeleted();
-        }
-
-        boolean isFollowed = false;
-        if (user != null) {
-            User authorUser = userService.findByNickname(nickname);
-            isFollowed = followService.isFollowed(user, authorUser);
-        }
-
-        return ArticleResponse.of(article, isLiked, isFollowed);
+        return ArticleResponse.of(article);
     }
 
     public ArticlePreviewListResponse getDragRelatedArticle(

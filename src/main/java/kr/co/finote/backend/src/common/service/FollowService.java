@@ -109,6 +109,23 @@ public class FollowService {
                 followInfoRepository.countByFromUserAndIsDeleted(user, false));
     }
 
+    public FollowerCheckResponse checkFollow(User fromUser, String nickname) {
+        // 비로그인 유저에 대한 처리
+        if (fromUser == null) {
+            return FollowerCheckResponse.createFollowerCheckResponse(false);
+        }
+
+        User toUser = userService.findByNickname(nickname);
+
+        boolean isFollowed =
+                followInfoRepository
+                        .findByFromUserAndToUser(fromUser, toUser)
+                        .filter(followInfo -> !followInfo.getIsDeleted())
+                        .isPresent();
+
+        return FollowerCheckResponse.createFollowerCheckResponse(isFollowed);
+    }
+
     private List<FollowUserResponse> FollowerUserList(List<FollowInfo> followInfos) {
         return followInfos.stream()
                 .map(followInfo -> FollowUserResponse.of(followInfo.getFromUser()))
