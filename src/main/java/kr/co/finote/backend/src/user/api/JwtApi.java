@@ -1,6 +1,7 @@
 package kr.co.finote.backend.src.user.api;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.finote.backend.global.jwt.JwtToken;
 import kr.co.finote.backend.src.user.service.JwtService;
 import lombok.AccessLevel;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Tag(name = "Jwt API", description = "JWT API")
 public class JwtApi {
 
     JwtService jwtService;
