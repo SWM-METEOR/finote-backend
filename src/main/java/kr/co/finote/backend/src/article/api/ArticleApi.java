@@ -50,8 +50,8 @@ public class ArticleApi {
     @Operation(summary = "블로그 작성자 닉네임, 글 제목으로 조회")
     @GetMapping("/{nickname}/{title}")
     public ArticleResponse getArticleByNicknameAndTitle(
-            @LoginOptional User user, @PathVariable String nickname, @PathVariable String title) {
-        return articleService.lookupByNicknameAndTitle(user, nickname, title);
+            @PathVariable String nickname, @PathVariable String title) {
+        return articleService.lookupByNicknameAndTitle(nickname, title);
     }
 
     @Operation(summary = "블로그 글 수정")
@@ -109,5 +109,12 @@ public class ArticleApi {
             @Login User loginUser, @PathVariable String nickname, @PathVariable String title) {
         Article article = articleService.findByNicknameAndTitle(nickname, title);
         return articleService.postLikeByNicknameAndTitle(loginUser, article);
+    }
+
+    @Operation(summary = "독자의 글에 대한 좋아요 여부 확인")
+    @GetMapping("/check-like/{nickname}/{title}")
+    public ArticleLikeCheckResponse checkLike(
+            @LoginOptional User user, @PathVariable String nickname, @PathVariable String title) {
+        return articleService.checkLike(user, nickname, title);
     }
 }

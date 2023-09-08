@@ -89,7 +89,7 @@ public class ArticleService {
     }
 
     @Transactional
-    public ArticleResponse lookupByNicknameAndTitle(User user, String nickname, String title) {
+    public ArticleResponse lookupByNicknameAndTitle(String nickname, String title) {
         Article article = findByNicknameAndTitle(nickname, title);
 
         return ArticleResponse.of(article);
@@ -257,5 +257,18 @@ public class ArticleService {
         return articleRepository
                 .findByUserAndTitleAndIsDeleted(findUser, title, false)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
+    }
+
+    public ArticleLikeCheckResponse checkLike(User reader, String authorNickname, String title) {
+        if (reader == null) {
+            return ArticleLikeCheckResponse.createArticleLikeCheckResponse(false);
+        }
+
+        Article article = findByNicknameAndTitle(authorNickname, title);
+        ArticleLikeCache likelog = cacheService.findLikelog(reader, article);
+
+        boolean isLiked = (likelog == null || likelog.getIsDeleted()) ? false : true;
+
+        return ArticleLikeCheckResponse.createArticleLikeCheckResponse(isLiked);
     }
 }
