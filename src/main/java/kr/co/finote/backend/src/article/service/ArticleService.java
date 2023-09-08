@@ -265,7 +265,7 @@ public class ArticleService {
         }
 
         Article article = findByNicknameAndTitle(authorNickname, title);
-        ArticleLikeCache likelog = cacheService.findLikelog(reader, article);
+        ArticleLikeCache likelog = articleLikeCacheService.findLikeLog(reader, article);
 
         boolean isLiked = (likelog == null || likelog.getIsDeleted()) ? false : true;
 
