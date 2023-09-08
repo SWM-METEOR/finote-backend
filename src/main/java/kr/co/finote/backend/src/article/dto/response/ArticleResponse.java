@@ -16,10 +16,8 @@ public class ArticleResponse {
     private String authorId;
     private String authorNickname;
     private String profileImageUrl;
-    private Boolean isLiked;
-    private Boolean isFollowed;
 
-    public static ArticleResponse of(Article article, boolean isLiked, boolean isFollowed) {
+    public static ArticleResponse of(Article article) {
         return ArticleResponse.builder()
                 .id(article.getId())
                 .title(article.getTitle())
@@ -28,8 +26,6 @@ public class ArticleResponse {
                 .authorNickname(article.getUser().getNickname())
                 .profileImageUrl(article.getUser().getProfileImageUrl())
                 .createDate(article.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-                .isLiked(isLiked)
-                .isFollowed(isFollowed)
                 .build();
     }
 }

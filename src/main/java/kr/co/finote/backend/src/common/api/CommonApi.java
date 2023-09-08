@@ -3,6 +3,7 @@ package kr.co.finote.backend.src.common.api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.finote.backend.global.annotation.Login;
+import kr.co.finote.backend.global.annotation.LoginOptional;
 import kr.co.finote.backend.src.article.dto.response.ArticlePreviewListResponse;
 import kr.co.finote.backend.src.article.service.ArticleService;
 import kr.co.finote.backend.src.common.dto.request.FileUploadRequest;
@@ -81,5 +82,12 @@ public class CommonApi {
     @GetMapping("/followers/count/{nickname}")
     public FollowersCountResponse getFollowingCount(@PathVariable String nickname) {
         return followService.followersCount(nickname);
+    }
+
+    @Operation(summary = "유저에 대한 팔로우 여부 체크")
+    @GetMapping("/check-follow/{nickname}")
+    public FollowerCheckResponse checkFollow(
+            @LoginOptional User loginUser, @PathVariable String nickname) {
+        return followService.checkFollow(loginUser, nickname);
     }
 }
