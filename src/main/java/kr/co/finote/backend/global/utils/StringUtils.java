@@ -46,4 +46,13 @@ public class StringUtils {
             return doc.text().substring(0, PREVIEW_TEXT_MAX_LENGTH);
         else return doc.text();
     }
+
+    public static String makeRandom6Number() {
+        StringBuilder randomString = new StringBuilder();
+        for (int i = 0; i < 6; i++) {
+            int random = (int) (Math.random() * 10);
+            randomString.append(random);
+        }
+        return randomString.toString();
+    }
 }
