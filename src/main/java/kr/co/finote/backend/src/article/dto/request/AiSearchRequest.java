@@ -12,6 +12,6 @@ import lombok.*;
 public class AiSearchRequest {
 
     @NotBlank(message = "GPT 질문 내용이 있어야합니다.")
-    @Size(max = 1000)
+    @Size(max = 6000)
     private String prompt;
 }

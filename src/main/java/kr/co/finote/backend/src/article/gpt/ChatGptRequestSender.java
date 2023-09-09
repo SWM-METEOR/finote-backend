@@ -11,6 +11,7 @@ import kr.co.finote.backend.src.article.dto.response.ChatgptResponse;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -23,6 +24,7 @@ import org.springframework.web.client.RestTemplate;
 @Getter
 @Setter
 @RequiredArgsConstructor
+@Slf4j
 public class ChatGptRequestSender {
 
     @Value("${FINOTE_GPT_KEY}")
@@ -37,6 +39,9 @@ public class ChatGptRequestSender {
     @Value("${GPT_TEMPERATURE}")
     private Float TEMPERATURE;
 
+    @Value("${GPT_MODEL}")
+    private String MODEL;
+
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
 
@@ -50,8 +55,7 @@ public class ChatGptRequestSender {
 
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("messages", messages);
-//        requestBody.put("model", "gpt-3.5-turbo");
-        requestBody.put("model", "gpt-3.5-turbo-16k");
+        requestBody.put("model", MODEL);
         requestBody.put("temperature", TEMPERATURE);
         requestBody.put("max_tokens", MAX_TOKENS);
 
