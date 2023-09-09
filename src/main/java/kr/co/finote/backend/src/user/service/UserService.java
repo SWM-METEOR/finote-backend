@@ -8,10 +8,12 @@ import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.dto.request.AdditionalInfoRequest;
 import kr.co.finote.backend.src.user.dto.request.EmailCodeRequest;
 import kr.co.finote.backend.src.user.dto.request.EmailCodeValidationRequest;
+import kr.co.finote.backend.src.user.dto.request.EmailJoinRequest;
 import kr.co.finote.backend.src.user.dto.response.EmailCodeValidationResponse;
 import kr.co.finote.backend.src.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,7 @@ public class UserService {
     public static final int BLOG_URL_MAX_LENGTH = 100;
     private final UserRepository userRepository;
 
+    private final PasswordEncoder bcryptPasswordEncoder;
     private final MailService mailService;
     private final EmailCodeCacheService emailCodeCacheService;
 
@@ -43,15 +46,6 @@ public class UserService {
             throw new InvalidInputException(ResponseCode.DUPLICATE_BLOG_NAME);
         } else if (blogName.length() > BLOG_NAME_MAX_LENGTH) {
             throw new InvalidInputException(ResponseCode.BLOG_NAME_TOO_LONG);
-        } // 그 외 금지문자 포함 등의 error 처리 예정
-    }
-
-    public void validateBlogUrl(String blogUrl) {
-        boolean existsByBlogUrl = userRepository.existsByBlogUrlAndIsDeleted(blogUrl, false);
-        if (existsByBlogUrl) {
-            throw new InvalidInputException(ResponseCode.DUPLICATE_BLOG_URL);
-        } else if (blogUrl.length() > BLOG_URL_MAX_LENGTH) {
-            throw new InvalidInputException(ResponseCode.BLOG_URL_TOO_LONG);
         } // 그 외 금지문자 포함 등의 error 처리 예정
     }
 
@@ -118,5 +112,31 @@ public class UserService {
                     request.getEmail()); // 캐시에 저장된 이메일 코드가 있고, 입력한 코드와 일치하면 캐시에서 삭제
             return EmailCodeValidationResponse.createEmailValidationResponse(true); // true 리턴
         }
+    }
+
+    @Transactional
+    public void joinByEmail(EmailJoinRequest request) {
+        // 기존에 가입된 이메일 있는지 확인
+        userRepository
+                .findByEmailAndIsDeleted(request.getEmail(), false)
+                .ifPresent(
+                        user -> {
+                            throw new InvalidInputException(ResponseCode.EMAIL_ALREADY_EXIST);
+                        });
+        String email = request.getEmail();
+        String password = request.getPassword();
+        String saltedPassword = password + email.split("@")[0] + "_"; // 이메일 앞 부분을 붙여서 비밀번호 salting
+        String encodedPassword = bcryptPasswordEncoder.encode(saltedPassword);
+
+        // 중복 닉네임이 없을 때까지 닉네임 생성
+        String randomNickname = StringUtils.makeRandomString();
+        boolean existsByNickName = userRepository.existsByNicknameAndIsDeleted(randomNickname, false);
+        while (existsByNickName) {
+            randomNickname = StringUtils.makeRandomString();
+            existsByNickName = userRepository.existsByNicknameAndIsDeleted(randomNickname, false);
+        }
+
+        User user = User.newEmailUser(email, encodedPassword, randomNickname);
+        userRepository.save(user);
     }
 }
