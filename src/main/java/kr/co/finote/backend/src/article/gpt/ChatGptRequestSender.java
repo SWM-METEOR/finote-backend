@@ -50,7 +50,8 @@ public class ChatGptRequestSender {
 
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("messages", messages);
-        requestBody.put("model", "gpt-3.5-turbo");
+//        requestBody.put("model", "gpt-3.5-turbo");
+        requestBody.put("model", "gpt-3.5-turbo-16k");
         requestBody.put("temperature", TEMPERATURE);
         requestBody.put("max_tokens", MAX_TOKENS);
 
