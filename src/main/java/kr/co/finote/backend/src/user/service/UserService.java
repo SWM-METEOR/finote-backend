@@ -90,8 +90,9 @@ public class UserService {
     public void issueEmailCode(EmailCodeRequest request) {
         String emailCode =
                 emailCodeCacheService.findEmailCode(request.getEmail()); // 캐시에 저장된 이메일 코드가 있는지 확인
-        if (emailCode != null)
+        if (emailCode != null) {
             emailCodeCacheService.evictEmailCode(request.getEmail()); // 기존에 발급받은 코드가 존재하면 무효화
+        }
         String random6Number = StringUtils.makeRandom6Number();
         log.info("random6Number: {}", random6Number);
         String body = "";

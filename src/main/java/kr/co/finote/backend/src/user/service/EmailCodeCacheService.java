@@ -2,6 +2,7 @@ package kr.co.finote.backend.src.user.service;
 
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -12,10 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class EmailCodeCacheService {
 
-    private final CacheManager cacheManager;
+    @Qualifier("emailCodeManager")
+    private final CacheManager emailCodeManager;
 
     public String findEmailCode(String email) {
-        return Objects.requireNonNull(cacheManager.getCache("EmailCode")).get(email, String.class);
+        return Objects.requireNonNull(emailCodeManager.getCache("EmailCode")).get(email, String.class);
     }
 
     @Cacheable(key = "#email", value = "EmailCode", cacheManager = "emailCodeManager")
