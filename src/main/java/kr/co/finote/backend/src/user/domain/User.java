@@ -40,7 +40,6 @@ public class User extends BaseEntity {
     private String profileImageUrl;
 
     private String blogName;
-    private String blogUrl;
 
     private String refreshToken;
 
@@ -56,7 +55,21 @@ public class User extends BaseEntity {
                 .nickname(randomNickname)
                 .profileImageUrl(null)
                 .blogName(randomNickname)
-                .blogUrl(googleUserInfo.getName() + "/" + randomNickname)
+                .build();
+    }
+
+    public static User newEmailUser(String email, String password, String randomNickname) {
+        return User.builder()
+                .email(email)
+                .password(password)
+                .username(null)
+                .provider(null)
+                .providerId(null)
+                .role(Role.USER)
+                .lastLoginDate(null)
+                .nickname(randomNickname)
+                .profileImageUrl(null)
+                .blogName(randomNickname)
                 .build();
     }
 

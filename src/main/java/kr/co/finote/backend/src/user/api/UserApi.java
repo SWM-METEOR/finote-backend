@@ -30,8 +30,7 @@ public class UserApi {
     UserService userService;
     ArticleLikeService articleLikeService;
 
-    /* Field Validation API */
-
+    /* Email Join API */
     @Operation(summary = "이메일 인증 코드 발송")
     @PostMapping(value = "/issue/email-code")
     public void sendEmailCode(@RequestBody @Valid EmailCodeRequest request) {
@@ -45,6 +44,13 @@ public class UserApi {
         return userService.validateEmailCode(request);
     }
 
+    @Operation(summary = "이메일 회원가입")
+    @PostMapping(value = "/join/email")
+    public void joinByEmail(@RequestBody @Valid EmailJoinRequest request) {
+        userService.joinByEmail(request);
+    }
+
+    /* Field Validation API */
     @Operation(summary = "닉네임 중복 검사")
     @PostMapping(value = "/validation/nickname")
     public void validateNickname(@RequestBody @Valid NicknameDuplicateCheckRequest request) {
@@ -58,12 +64,6 @@ public class UserApi {
         userService.validateBlogName(request.getBlogName());
     }
 
-    @Operation(summary = "블로그 URL 중복 검사")
-    @PostMapping(value = "/validation/blog-url")
-    public void validateBlogUrl(@RequestBody @Valid BlogUrlDuplicateCheckRequest request) {
-        userService.validateBlogUrl(request.getBlogUrl());
-    }
-
     /* Field Getter API */
     @Operation(summary = "닉네임 가져오기")
     @GetMapping("/nickname")
@@ -71,7 +71,7 @@ public class UserApi {
         return NicknameResponse.of(loginUser);
     }
 
-    @Operation(summary = "블로그 정보(이름, url) 가져오기")
+    @Operation(summary = "블로그 정보 가져오기")
     @GetMapping("/blog-info")
     public BlogResponse getBlogInfo(@Login User loginUser) {
         return BlogResponse.of(loginUser);

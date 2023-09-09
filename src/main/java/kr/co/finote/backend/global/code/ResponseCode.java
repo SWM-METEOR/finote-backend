@@ -26,6 +26,7 @@ public enum ResponseCode {
     DUPLICATE_BLOG_URL(BAD_REQUEST, "400_DUPLICATE_BLOG_URL", "중복된 블로그 url 입니다."),
     BLOG_URL_TOO_LONG(BAD_REQUEST, "400_BLOG_URL_TOO_LONG", "블로그 url은 100자 이하로 입력해주세요."),
     EMAIL_SENDING_FAILED(BAD_REQUEST, "400_EMAIL_SENDING_FAILED", "이메일 전송에 실패했습니다."),
+    EMAIL_ALREADY_EXIST(BAD_REQUEST, "400_EMAIL_ALREADY_EXIST", "해당 이메일로 가입된 계정이 존재합니다."),
 
     /** article error */
     ARTICLE_NOT_FOUND(NOT_FOUND, "404_ARTICLE_NOT_FOUND", "해당 게시글을 찾을 수 없습니다."),

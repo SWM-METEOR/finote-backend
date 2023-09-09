@@ -9,9 +9,8 @@ import lombok.Getter;
 public class BlogResponse {
 
     private String blogName;
-    private String blogUrl;
 
     public static BlogResponse of(User loginUser) {
-        return new BlogResponse(loginUser.getBlogName(), loginUser.getBlogUrl());
+        return new BlogResponse(loginUser.getBlogName());
     }
 }
