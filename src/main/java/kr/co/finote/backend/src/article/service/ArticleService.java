@@ -50,7 +50,7 @@ public class ArticleService {
     private final ArticleKeywordService articleKeywordService;
     private final ElasticService elasticService;
     private final UserService userService;
-    private final CacheService cacheService;
+    private final ArticleLikeCacheService articleLikeCacheService;
     private final ArticleLikeService articleLikeService;
     private final FollowService followService;
 
@@ -197,7 +197,7 @@ public class ArticleService {
     @CacheEvict(key = "#user.id + '-' + #article.id", value = "ArticleLikeLog")
     @Transactional
     public LikeResponse postLikeByNicknameAndTitle(User user, Article article) {
-        ArticleLikeCache articleLikeCache = cacheService.findLikelog(user, article);
+        ArticleLikeCache articleLikeCache = articleLikeCacheService.findLikeLog(user, article);
 
         Optional<ArticleLike> byUserAndArticle = articleLikeService.findByUser(user, article);
 
@@ -265,7 +265,7 @@ public class ArticleService {
         }
 
         Article article = findByNicknameAndTitle(authorNickname, title);
-        ArticleLikeCache likelog = cacheService.findLikelog(reader, article);
+        ArticleLikeCache likelog = articleLikeCacheService.findLikeLog(reader, article);
 
         boolean isLiked = (likelog == null || likelog.getIsDeleted()) ? false : true;
 

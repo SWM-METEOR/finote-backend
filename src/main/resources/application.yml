@@ -60,6 +60,27 @@ spring:
               - profile
               - email
 
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          timeout: 5000
+          ssl:
+            trust: ${MAIL_HOST}
+            enable: true
+            required: true
+    protocol: smtp
+    default-encoding: UTF-8
+    test-connection: true
+
 springdoc:
   swagger-ui:
     path: /finote-api-docs
@@ -101,3 +122,4 @@ cloud:
       secret-key: ${S3_SECRET_KEY}
     stack:
       auto: false
+
