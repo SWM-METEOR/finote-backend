@@ -71,7 +71,7 @@ public class UserApi {
         return NicknameResponse.of(loginUser);
     }
 
-    @Operation(summary = "블로그 정보(이름, url) 가져오기")
+    @Operation(summary = "블로그 정보 가져오기")
     @GetMapping("/blog-info")
     public BlogResponse getBlogInfo(@Login User loginUser) {
         return BlogResponse.of(loginUser);
