@@ -35,18 +35,12 @@ public class UserService {
 
     public ValidationNicknameResponse validateNickname(String nickname) {
         boolean existsByNickname = userRepository.existsByNicknameAndIsDeleted(nickname, false);
-        if (existsByNickname) {
-            return ValidationNicknameResponse.createValidationNicknameRResponse(true);
-        }
-        return ValidationNicknameResponse.createValidationNicknameRResponse(false);
+        return ValidationNicknameResponse.createValidationNicknameResponse(existsByNickname);
     }
 
     public ValidationBlogNameResponse validateBlogName(String blogName) {
         boolean existsByBlogName = userRepository.existsByBlogNameAndIsDeleted(blogName, false);
-        if (existsByBlogName) {
-            return ValidationBlogNameResponse.createValidationBlogNameRResponse(true);
-        } // 그 외 금지문자 포함 등의 error 처리 예정
-        return ValidationBlogNameResponse.createValidationBlogNameRResponse(false);
+        return ValidationBlogNameResponse.createValidationBlogNameResponse(existsByBlogName);
     }
 
     @Transactional

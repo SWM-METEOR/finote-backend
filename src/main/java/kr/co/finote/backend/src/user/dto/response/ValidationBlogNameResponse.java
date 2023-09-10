@@ -9,7 +9,7 @@ public class ValidationBlogNameResponse {
 
     private boolean isDuplicated;
 
-    public static ValidationBlogNameResponse createValidationBlogNameRResponse(boolean isDuplicated) {
+    public static ValidationBlogNameResponse createValidationBlogNameResponse(boolean isDuplicated) {
         return ValidationBlogNameResponse.builder().isDuplicated(isDuplicated).build();
     }
 }
