@@ -25,9 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
 
-    public static final int NICK_NAME_MAX_LENGTH = 100;
-    public static final int BLOG_NAME_MAX_LENGTH = 100;
-    public static final int BLOG_URL_MAX_LENGTH = 100;
     private final UserRepository userRepository;
 
     private final PasswordEncoder bcryptPasswordEncoder;
@@ -120,7 +117,7 @@ public class UserService {
                         });
         String email = request.getEmail();
         String password = request.getPassword();
-        String saltedPassword = password + email.split("@")[0] + "_"; // 이메일 앞 부분을 붙여서 비밀번호 salting
+        String saltedPassword = password + "_" + email.split("@")[0]; // 이메일 앞 부분을 붙여서 비밀번호 salting
         String encodedPassword = bcryptPasswordEncoder.encode(saltedPassword);
 
         // 중복 닉네임이 없을 때까지 닉네임 생성

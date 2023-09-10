@@ -46,4 +46,12 @@ public class JwtService {
         Optional<User> findUser = userRepository.findByEmailAndIsDeleted(email, false);
         return findUser.filter(user -> user.getRefreshToken() != null).isPresent();
     }
+
+    public String createAccessTokenByEmail(String email) {
+        return jwtTokenProvider.createToken(email);
+    }
+
+    public String createRefreshToken() {
+        return jwtTokenProvider.createRefreshToken();
+    }
 }

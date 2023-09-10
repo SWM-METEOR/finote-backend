@@ -6,6 +6,8 @@ import kr.co.finote.backend.global.authentication.oauth.google.dto.request.Googl
 import kr.co.finote.backend.global.authentication.oauth.google.dto.response.GoogleLoginResponse;
 import kr.co.finote.backend.global.authentication.oauth.google.dto.response.GoogleUserInfo;
 import kr.co.finote.backend.global.jwt.JwtToken;
+import kr.co.finote.backend.src.user.dto.request.EmailLoginRequest;
+import kr.co.finote.backend.src.user.dto.response.EmailLoginResponse;
 import kr.co.finote.backend.src.user.dto.response.GoogleLoginCodeResponse;
 import kr.co.finote.backend.src.user.service.LoginService;
 import lombok.AccessLevel;
@@ -40,6 +42,12 @@ public class LoginApi {
     @GetMapping("/callback")
     public GoogleLoginCodeResponse callback(@RequestParam String code) {
         return GoogleLoginCodeResponse.createGoogleLoginCodeResponse(code);
+    }
+
+    @Operation(summary = "이메일 로그인")
+    @PostMapping("/login/email")
+    public EmailLoginResponse login(@RequestBody EmailLoginRequest emailLoginRequest) {
+        return loginService.loginByEmail(emailLoginRequest);
     }
 
     @Operation(summary = "로그아웃", description = "토큰 만료기간과 상관 없이 액세스, 리프레시 토큰 모두 초기화")
