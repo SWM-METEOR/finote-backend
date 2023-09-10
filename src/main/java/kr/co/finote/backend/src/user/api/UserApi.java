@@ -2,7 +2,9 @@ package kr.co.finote.backend.src.user.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 import javax.validation.Valid;
+
 import kr.co.finote.backend.global.annotation.Login;
 import kr.co.finote.backend.src.article.dto.response.ArticlePreviewListResponse;
 import kr.co.finote.backend.src.article.service.ArticleLikeService;
