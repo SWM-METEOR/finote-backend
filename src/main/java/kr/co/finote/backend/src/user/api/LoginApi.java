@@ -2,6 +2,7 @@ package kr.co.finote.backend.src.user.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import javax.validation.Valid;
 import kr.co.finote.backend.global.authentication.oauth.google.dto.request.GoogleAccessToken;
 import kr.co.finote.backend.global.authentication.oauth.google.dto.response.GoogleLoginResponse;
 import kr.co.finote.backend.global.authentication.oauth.google.dto.response.GoogleUserInfo;
@@ -46,7 +47,7 @@ public class LoginApi {
 
     @Operation(summary = "이메일 로그인")
     @PostMapping("/login/email")
-    public EmailLoginResponse login(@RequestBody EmailLoginRequest emailLoginRequest) {
+    public EmailLoginResponse login(@RequestBody @Valid EmailLoginRequest emailLoginRequest) {
         return loginService.loginByEmail(emailLoginRequest);
     }
 
