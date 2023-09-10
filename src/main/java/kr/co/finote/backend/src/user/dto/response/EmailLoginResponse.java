@@ -1,6 +1,5 @@
 package kr.co.finote.backend.src.user.dto.response;
 
-import kr.co.finote.backend.src.user.domain.User;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,8 +12,7 @@ public class EmailLoginResponse {
     private String refreshToken;
 
     public static EmailLoginResponse createSuccessEmailLoginResponse(
-            User user, String accessToken, String refreshToken) {
-        user.updateRefreshToken(refreshToken);
+            String accessToken, String refreshToken) {
         return EmailLoginResponse.builder()
                 .isSuccess(true)
                 .accessToken(accessToken)

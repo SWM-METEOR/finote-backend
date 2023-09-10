@@ -78,7 +78,8 @@ public class LoginService {
             user.updateLastLoginDate(LocalDateTime.now());
             String accessTokenByEmail = jwtService.createAccessTokenByEmail(user.getEmail());
             String refreshToken = jwtService.createRefreshToken();
-            return GoogleLoginResponse.oldUser(user, accessTokenByEmail, refreshToken);
+            user.updateRefreshToken(refreshToken);
+            return GoogleLoginResponse.oldUser(accessTokenByEmail, refreshToken);
         } else {
             // 중복 nickname이 없을 때까지 랜덤 nickname 생성
             String randomNickname = StringUtils.makeRandomString();
@@ -92,7 +93,8 @@ public class LoginService {
             userRepository.save(user);
             String accessTokenByEmail = jwtService.createAccessTokenByEmail(user.getEmail());
             String refreshToken = jwtService.createRefreshToken();
-            return GoogleLoginResponse.freshUser(user, accessTokenByEmail, refreshToken);
+            user.updateRefreshToken(refreshToken);
+            return GoogleLoginResponse.freshUser(accessTokenByEmail, refreshToken);
         }
     }
 
@@ -115,8 +117,8 @@ public class LoginService {
                 // 새로운 refresh token 생성
                 String refreshToken = jwtService.createRefreshToken();
                 // 로그인 성공 및 새로운 access token, refresh token 생성
-                return EmailLoginResponse.createSuccessEmailLoginResponse(
-                        loginUser, accessTokenByEmail, refreshToken);
+                loginUser.updateRefreshToken(refreshToken);
+                return EmailLoginResponse.createSuccessEmailLoginResponse(accessTokenByEmail, refreshToken);
             } else {
                 // 비밀번호가 일치하지 않을 경우 실패 응답 반환
                 return EmailLoginResponse.createFailEmailLoginResponse();
