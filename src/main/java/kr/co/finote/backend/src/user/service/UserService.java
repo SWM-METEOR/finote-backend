@@ -10,6 +10,8 @@ import kr.co.finote.backend.src.user.dto.request.EmailCodeRequest;
 import kr.co.finote.backend.src.user.dto.request.EmailCodeValidationRequest;
 import kr.co.finote.backend.src.user.dto.request.EmailJoinRequest;
 import kr.co.finote.backend.src.user.dto.response.EmailCodeValidationResponse;
+import kr.co.finote.backend.src.user.dto.response.ValidationBlogNameResponse;
+import kr.co.finote.backend.src.user.dto.response.ValidationNicknameResponse;
 import kr.co.finote.backend.src.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,22 +33,20 @@ public class UserService {
     private final MailService mailService;
     private final EmailCodeCacheService emailCodeCacheService;
 
-    public void validateNickname(String nickname) {
+    public ValidationNicknameResponse validateNickname(String nickname) {
         boolean existsByNickname = userRepository.existsByNicknameAndIsDeleted(nickname, false);
         if (existsByNickname) {
-            throw new InvalidInputException(ResponseCode.DUPLICATE_NICKNAME);
-        } else if (nickname.length() > NICK_NAME_MAX_LENGTH) {
-            throw new InvalidInputException(ResponseCode.NICKNAME_TOO_LONG);
-        } // 그 외 금지문자 포함 등의 error 처리 예정
+            return ValidationNicknameResponse.createValidationNicknameRResponse(true);
+        }
+        return ValidationNicknameResponse.createValidationNicknameRResponse(false);
     }
 
-    public void validateBlogName(String blogName) {
+    public ValidationBlogNameResponse validateBlogName(String blogName) {
         boolean existsByBlogName = userRepository.existsByBlogNameAndIsDeleted(blogName, false);
         if (existsByBlogName) {
-            throw new InvalidInputException(ResponseCode.DUPLICATE_BLOG_NAME);
-        } else if (blogName.length() > BLOG_NAME_MAX_LENGTH) {
-            throw new InvalidInputException(ResponseCode.BLOG_NAME_TOO_LONG);
+            return ValidationBlogNameResponse.createValidationBlogNameRResponse(true);
         } // 그 외 금지문자 포함 등의 error 처리 예정
+        return ValidationBlogNameResponse.createValidationBlogNameRResponse(false);
     }
 
     @Transactional
