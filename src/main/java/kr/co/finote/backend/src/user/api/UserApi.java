@@ -48,6 +48,13 @@ public class UserApi {
     }
 
     /* Field Validation API */
+    @Operation(summary = "이메일 중복 검사")
+    @PostMapping(value = "/validation/email")
+    public ValidationEmailResponse validateEmail(
+            @RequestBody @Valid EmailDuplicateCheckRequest request) {
+        return userService.validateEmail(request.getEmail());
+    }
+
     @Operation(summary = "닉네임 중복 검사")
     @PostMapping(value = "/validation/nickname")
     public ValidationNicknameResponse validateNickname(

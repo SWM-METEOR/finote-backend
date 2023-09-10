@@ -11,6 +11,7 @@ import kr.co.finote.backend.src.user.dto.request.EmailCodeValidationRequest;
 import kr.co.finote.backend.src.user.dto.request.EmailJoinRequest;
 import kr.co.finote.backend.src.user.dto.response.EmailCodeValidationResponse;
 import kr.co.finote.backend.src.user.dto.response.ValidationBlogNameResponse;
+import kr.co.finote.backend.src.user.dto.response.ValidationEmailResponse;
 import kr.co.finote.backend.src.user.dto.response.ValidationNicknameResponse;
 import kr.co.finote.backend.src.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -132,5 +133,10 @@ public class UserService {
 
         User user = User.newEmailUser(email, encodedPassword, randomNickname);
         userRepository.save(user);
+    }
+
+    public ValidationEmailResponse validateEmail(String email) {
+        boolean existsByEmail = userRepository.existsByEmailAndIsDeleted(email, false);
+        return ValidationEmailResponse.createValidationEmailResponse(existsByEmail);
     }
 }

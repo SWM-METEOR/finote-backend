@@ -18,4 +18,6 @@ public interface UserRepository extends JpaRepository<User, String> {
     boolean existsByNicknameAndIsDeleted(String nickName, Boolean isDeleted);
 
     boolean existsByBlogNameAndIsDeleted(String blogName, Boolean isDeleted);
+
+    boolean existsByEmailAndIsDeleted(String email, Boolean isDeleted);
 }
