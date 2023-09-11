@@ -10,9 +10,10 @@ import kr.co.finote.backend.global.authentication.oauth.google.dto.response.Goog
 import kr.co.finote.backend.global.code.ResponseCode;
 import kr.co.finote.backend.global.exception.UnAuthorizedException;
 import kr.co.finote.backend.global.jwt.JwtToken;
-import kr.co.finote.backend.global.jwt.JwtTokenProvider;
 import kr.co.finote.backend.global.utils.StringUtils;
 import kr.co.finote.backend.src.user.domain.User;
+import kr.co.finote.backend.src.user.dto.request.EmailLoginRequest;
+import kr.co.finote.backend.src.user.dto.response.EmailLoginResponse;
 import kr.co.finote.backend.src.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
@@ -33,7 +35,8 @@ public class LoginService {
     private final GoogleOauth googleOauth;
     private final RestTemplate restTemplate;
     private final UserRepository userRepository;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final PasswordEncoder bCryptPasswordEncoder;
+    private final JwtService jwtService;
 
     public GoogleAccessToken getGoogleAccessToken(String code) throws JsonProcessingException {
         Map<String, String> params = new HashMap<>();
@@ -73,7 +76,10 @@ public class LoginService {
         if (findUser.isPresent()) {
             User user = findUser.get();
             user.updateLastLoginDate(LocalDateTime.now());
-            return GoogleLoginResponse.oldUser(user, jwtTokenProvider);
+            String accessTokenByEmail = jwtService.createAccessTokenByEmail(user.getEmail());
+            String refreshToken = jwtService.createRefreshToken();
+            user.updateRefreshToken(refreshToken);
+            return GoogleLoginResponse.oldUser(accessTokenByEmail, refreshToken);
         } else {
             // 중복 nickname이 없을 때까지 랜덤 nickname 생성
             String randomNickname = StringUtils.makeRandomString();
@@ -85,8 +91,41 @@ public class LoginService {
 
             User user = User.newGoogleUser(response, randomNickname, LocalDateTime.now());
             userRepository.save(user);
+            String accessTokenByEmail = jwtService.createAccessTokenByEmail(user.getEmail());
+            String refreshToken = jwtService.createRefreshToken();
+            user.updateRefreshToken(refreshToken);
+            return GoogleLoginResponse.freshUser(accessTokenByEmail, refreshToken);
+        }
+    }
 
-            return GoogleLoginResponse.freshUser(user, jwtTokenProvider);
+    @Transactional
+    public EmailLoginResponse loginByEmail(EmailLoginRequest emailLoginRequest) {
+        String email = emailLoginRequest.getEmail();
+        String password = emailLoginRequest.getPassword();
+        Optional<User> findByEmail = userRepository.findByEmailAndIsDeleted(email, false);
+        if (findByEmail.isPresent()) {
+            // 해당 이메일로 가입된 로그인 유저 확인
+            User loginUser = findByEmail.get();
+            // 비밀번호 검증을 위한 salting
+            String inputPasswordSalted = password + "_" + email.split("@")[0];
+            // 암호화된 비밀번호 검증
+            boolean matches = bCryptPasswordEncoder.matches(inputPasswordSalted, loginUser.getPassword());
+            if (matches) {
+                loginUser.updateLastLoginDate(LocalDateTime.now());
+                // 새로운 access token 생성
+                String accessTokenByEmail = jwtService.createAccessTokenByEmail(loginUser.getEmail());
+                // 새로운 refresh token 생성
+                String refreshToken = jwtService.createRefreshToken();
+                // 로그인 성공 및 새로운 access token, refresh token 생성
+                loginUser.updateRefreshToken(refreshToken);
+                return EmailLoginResponse.createSuccessEmailLoginResponse(accessTokenByEmail, refreshToken);
+            } else {
+                // 비밀번호가 일치하지 않을 경우 실패 응답 반환
+                return EmailLoginResponse.createFailEmailLoginResponse();
+            }
+        } else {
+            // 해당 이메일로 가입된 유저가 존재하지 않을 경우 실패 응답 반환
+            return EmailLoginResponse.createFailEmailLoginResponse();
         }
     }
 
