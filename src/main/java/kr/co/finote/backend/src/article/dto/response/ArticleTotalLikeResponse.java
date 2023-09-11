@@ -10,8 +10,6 @@ public class ArticleTotalLikeResponse {
     private int totalLike;
 
     public static ArticleTotalLikeResponse createArticleTotalLikeResponse(int totalLike) {
-        return ArticleTotalLikeResponse.builder()
-                .totalLike(totalLike)
-                .build();
+        return ArticleTotalLikeResponse.builder().totalLike(totalLike).build();
     }
 }

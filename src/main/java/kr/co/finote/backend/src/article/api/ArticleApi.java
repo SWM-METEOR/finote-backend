@@ -121,7 +121,8 @@ public class ArticleApi {
 
     @Operation(summary = "글의 총 좋아요 수")
     @GetMapping("/total-like/{nickname}/{title}")
-    public ArticleTotalLikeResponse totalLike(@PathVariable String nickname, @PathVariable String title) {
+    public ArticleTotalLikeResponse totalLike(
+            @PathVariable String nickname, @PathVariable String title) {
         return articleService.totalLike(nickname, title);
     }
 }
