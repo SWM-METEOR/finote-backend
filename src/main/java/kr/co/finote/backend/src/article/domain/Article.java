@@ -48,7 +48,7 @@ public class Article extends BaseEntity {
             // 로고
         }
         return Article.builder()
-                .title(articleRequest.getTitle())
+                .title(articleRequest.getTitle().trim())
                 .body(articleRequest.getBody())
                 .thumbnail(thumbnail1)
                 .user(user)
@@ -61,7 +61,7 @@ public class Article extends BaseEntity {
     }
 
     public void editArticle(ArticleRequest articleRequest) {
-        this.title = articleRequest.getTitle();
+        this.title = articleRequest.getTitle().trim();
         this.body = articleRequest.getBody();
     }
 
