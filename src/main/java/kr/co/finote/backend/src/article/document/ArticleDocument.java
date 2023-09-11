@@ -39,7 +39,7 @@ public class ArticleDocument {
     public static ArticleDocument createDocument(Long articleId, ArticleRequest request, User user) {
         return ArticleDocument.builder()
                 .articleId(articleId)
-                .title(request.getTitle())
+                .title(request.getTitle().trim())
                 .body(request.getBody())
                 .totalLike(0)
                 .reply(0)
