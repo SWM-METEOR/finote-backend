@@ -103,6 +103,7 @@ public class ArticleApi {
         return articleService.articlesAll(nickname, page, size);
     }
 
+    /* 글 좋아요 관련 API */
     @Operation(summary = "닉네임/제목 기반 유저의 블로그 글 좋아요", description = "이미 좋아요 되어있다면 좋아요 수 증가하지 않음")
     @PostMapping("/like/{nickname}/{title}")
     public LikeResponse postLikeByNicknameAndTitle(
@@ -116,5 +117,11 @@ public class ArticleApi {
     public ArticleLikeCheckResponse checkLike(
             @LoginOptional User user, @PathVariable String nickname, @PathVariable String title) {
         return articleService.checkLike(user, nickname, title);
+    }
+
+    @Operation(summary = "글의 총 좋아요 수")
+    @GetMapping("/total-like/{nickname}/{title}")
+    public ArticleTotalLikeResponse totalLike(@PathVariable String nickname, @PathVariable String title) {
+        return articleService.totalLike(nickname, title);
     }
 }

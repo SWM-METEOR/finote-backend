@@ -271,4 +271,9 @@ public class ArticleService {
 
         return ArticleLikeCheckResponse.createArticleLikeCheckResponse(isLiked);
     }
+
+    public ArticleTotalLikeResponse totalLike(String authorNickname, String title) {
+        Article article = findByNicknameAndTitle(authorNickname, title);
+        return ArticleTotalLikeResponse.createArticleTotalLikeResponse(article.getTotalLike());
+    }
 }
