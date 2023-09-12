@@ -26,11 +26,9 @@ public class Question extends BaseEntity {
     private User user;
 
     @Column(nullable = false)
-    @ColumnDefault("")
-    private String title;
+    private String title = "";
 
-    @ColumnDefault("")
-    private String body;
+    private String body = "";
 
     @ColumnDefault("0")
     private int totalLike;
