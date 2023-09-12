@@ -104,12 +104,10 @@ public class UserService {
         if (emailCode == null || !emailCode.equals(request.getCode()))
             return EmailCodeValidationResponse.createEmailValidationResponse(
                     false); // 캐시에 저장된 이메일 코드가 없으면 false 리턴
-        else {
-            emailJoinCacheService.evictEmailCode(
-                    request.getEmail()); // 캐시에 저장된 이메일 코드가 있고, 입력한 코드와 일치하면 캐시에서 삭제
-            emailJoinCacheService.cacheVerifiedEmail(request.getEmail(), emailCode); // 인증된 이메일과 코드 캐시에 저장
-            return EmailCodeValidationResponse.createEmailValidationResponse(true); // true 리턴
-        }
+        emailJoinCacheService.evictEmailCode(
+                request.getEmail()); // 캐시에 저장된 이메일 코드가 있고, 입력한 코드와 일치하면 캐시에서 삭제
+        emailJoinCacheService.cacheVerifiedEmail(request.getEmail(), emailCode); // 인증된 이메일과 코드 캐시에 저장
+        return EmailCodeValidationResponse.createEmailValidationResponse(true); // true 리턴
     }
 
     @Transactional
