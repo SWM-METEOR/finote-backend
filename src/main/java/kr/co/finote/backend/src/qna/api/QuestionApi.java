@@ -30,10 +30,25 @@ public class QuestionApi {
         return questionService.postQuestion(LoginUser, request);
     }
 
-    @Operation(summary = "질문글 조회")
+    @Operation(summary = "닉네임/제목 질문글 조회")
     @GetMapping("/{nickname}/{title}")
     public QuestionResponse getQuestionByNicknameAndTitle(
             @PathVariable String nickname, @PathVariable String title) {
         return questionService.lookupByNicknameAndTitle(nickname, title);
+    }
+
+    @Operation(summary = "id 질문글 조회")
+    @GetMapping("/{question-id}")
+    public QuestionResponse getQuestionById(@PathVariable("question-id") Long questionId) {
+        return questionService.lookupById(questionId);
+    }
+
+    @Operation(summary = "질문글 수정")
+    @PostMapping("/edit/{question-id}")
+    public PostQuestionResponse editQuestion(
+            @Login User loginUser,
+            @PathVariable("question-id") Long questionId,
+            @RequestBody @Valid PostQuestionRequest request) {
+        return questionService.editQuestion(loginUser, questionId, request);
     }
 }
