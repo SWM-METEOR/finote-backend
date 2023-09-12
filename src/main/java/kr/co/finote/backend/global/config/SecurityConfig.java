@@ -37,6 +37,9 @@ public class SecurityConfig {
     @Value("${COMMON_URLS}")
     private String[] commonUrls;
 
+    @Value("${QNA_URLS}")
+    private String[] qnaUrls;
+
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtService jwtService;
 
@@ -60,6 +63,8 @@ public class SecurityConfig {
                 .antMatchers(articleUrls)
                 .authenticated()
                 .antMatchers(commonUrls)
+                .authenticated()
+                .antMatchers(qnaUrls)
                 .authenticated()
                 .anyRequest()
                 .permitAll()
