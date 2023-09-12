@@ -37,6 +37,32 @@ public class QuestionService {
         return QuestionResponse.of(author, findQuestion);
     }
 
+    public QuestionResponse lookupById(Long questionId) {
+        Question findQuestion =
+                questionRepository
+                        .findByIdAndIsDeleted(questionId, false)
+                        .orElseThrow(() -> new NotFoundException(ResponseCode.QUESTION_NOT_FOUND));
+        User author = findQuestion.getUser();
+
+        return QuestionResponse.of(author, findQuestion);
+    }
+
+    @Transactional
+    public PostQuestionResponse editQuestion(
+            User loginUser, Long questionId, PostQuestionRequest request) {
+        Question question =
+                questionRepository
+                        .findByIdAndIsDeleted(questionId, false)
+                        .orElseThrow(() -> new NotFoundException(ResponseCode.QUESTION_NOT_FOUND));
+
+        if (!question.getUser().getNickname().equals(loginUser.getNickname())) {
+            throw new InvalidInputException(ResponseCode.QUESTION_NOT_WRITER);
+        }
+
+        question.edit(request);
+        return PostQuestionResponse.of(loginUser, question);
+    }
+
     private Question findByUserAndTitle(User user, String title) {
         return questionRepository
                 .findByUserAndTitleAndIsDeleted(user, title, false)

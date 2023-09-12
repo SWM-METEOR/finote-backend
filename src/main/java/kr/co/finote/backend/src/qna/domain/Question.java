@@ -45,4 +45,9 @@ public class Question extends BaseEntity {
                 .totalAnswer(0)
                 .build();
     }
+
+    public void edit(PostQuestionRequest request) {
+        this.title = request.getTitle().trim();
+        this.body = request.getBody();
+    }
 }
