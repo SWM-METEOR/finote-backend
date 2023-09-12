@@ -11,10 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class EmailCodeCacheService {
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
+public class EmailJoinCacheService {
 
     @Qualifier("emailCodeManager")
     private final CacheManager emailCodeManager;
+
+    @Qualifier("verifiedEmailManager")
+    private final CacheManager verifiedEmailManager;
 
     public String findEmailCode(String email) {
         return Objects.requireNonNull(emailCodeManager.getCache("EmailCode")).get(email, String.class);
@@ -28,4 +32,18 @@ public class EmailCodeCacheService {
 
     @CacheEvict(key = "#email", value = "EmailCode", cacheManager = "emailCodeManager")
     public void evictEmailCode(String email) {}
+
+    public String findVerifiedEmail(String email) {
+        return Objects.requireNonNull(verifiedEmailManager.getCache("VerifiedEmail"))
+                .get(email, String.class);
+    }
+
+    @Cacheable(key = "#email", value = "VerifiedEmail", cacheManager = "verifiedEmailManager")
+    @Transactional
+    public String cacheVerifiedEmail(String email, String code) {
+        return code;
+    }
+
+    @CacheEvict(key = "#email", value = "VerifiedEmail", cacheManager = "verifiedEmailManager")
+    public void evictVerifiedEmail(String email) {}
 }

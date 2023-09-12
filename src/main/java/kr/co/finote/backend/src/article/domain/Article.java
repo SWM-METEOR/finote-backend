@@ -34,7 +34,7 @@ public class Article extends BaseEntity {
     private int totalLike;
 
     @ColumnDefault("0")
-    private int reply;
+    private int totalReply;
 
     @ColumnDefault("")
     @Column(nullable = false)
