@@ -15,4 +15,7 @@ public class EmailJoinRequest {
     @NotBlank(message = "비밀번호가 입력되지 않았습니다.")
     @ValidPassword
     private String password;
+
+    @NotBlank(message = "코드가 입력되지 않았습니다.")
+    private String code;
 }

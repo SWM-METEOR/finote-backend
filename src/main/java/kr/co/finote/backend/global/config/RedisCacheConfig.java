@@ -38,6 +38,16 @@ public class RedisCacheConfig {
                 .build();
     }
 
+    @Bean
+    public CacheManager verifiedEmailManager(RedisConnectionFactory redisConnectionFactory) {
+        RedisCacheConfiguration redisCacheConfiguration =
+                generateCacheConfiguration().entryTtl(Duration.ofMinutes(30));
+
+        return RedisCacheManager.RedisCacheManagerBuilder.fromConnectionFactory(redisConnectionFactory)
+                .cacheDefaults(redisCacheConfiguration)
+                .build();
+    }
+
     private RedisCacheConfiguration generateCacheConfiguration() {
         return RedisCacheConfiguration.defaultCacheConfig()
                 .serializeKeysWith(

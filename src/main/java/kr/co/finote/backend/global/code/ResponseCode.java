@@ -27,6 +27,8 @@ public enum ResponseCode {
     BLOG_URL_TOO_LONG(BAD_REQUEST, "400_BLOG_URL_TOO_LONG", "블로그 url은 100자 이하로 입력해주세요."),
     EMAIL_SENDING_FAILED(BAD_REQUEST, "400_EMAIL_SENDING_FAILED", "이메일 전송에 실패했습니다."),
     EMAIL_ALREADY_EXIST(BAD_REQUEST, "400_EMAIL_ALREADY_EXIST", "해당 이메일로 가입된 계정이 존재합니다."),
+    EMAIL_NOT_VERIFIED(BAD_REQUEST, "400_NOT_VERIFIED_EMAIL", "인증되지 않은 이메일입니다."),
+    EMAIL_CODE_NOT_MATCH(BAD_REQUEST, "400_EMAIL_CODE_NOT_MATCH", "인증 코드가 일치하지 않습니다."),
 
     /** article error */
     ARTICLE_NOT_FOUND(NOT_FOUND, "404_ARTICLE_NOT_FOUND", "해당 게시글을 찾을 수 없습니다."),

@@ -25,7 +25,7 @@ public class ArticlePreviewResponse {
                         .id(article.getId())
                         .title(article.getTitle())
                         .totalLike(article.getTotalLike())
-                        .reply(article.getReply())
+                        .reply(article.getTotalReply())
                         .authorNickname(article.getUser().getNickname())
                         .date(article.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
                         .thumbnail(article.getThumbnail())
