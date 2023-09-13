@@ -38,6 +38,7 @@ public class User extends BaseEntity {
     @Column(unique = true)
     private String nickname;
 
+    @Column(nullable = false, length = 500)
     private String profileImageUrl;
 
     private String blogName;

@@ -41,7 +41,7 @@ public class Article extends BaseEntity {
         String thumbnail1 = articleRequest.getThumbnail();
         if (thumbnail1 == null || thumbnail1.equals("")) {
             thumbnail1 =
-                    "https://finote-image-bucket.s3.ap-northeast-2.amazonaws.com/finote_logo.png"; // deafult
+                    "https://finote-image-bucket.s3.ap-northeast-2.amazonaws.com/finote.png"; // deafult
             // 로고
         }
         return Article.builder()
@@ -60,6 +60,7 @@ public class Article extends BaseEntity {
     public void editArticle(ArticleRequest articleRequest) {
         this.title = articleRequest.getTitle().trim();
         this.body = articleRequest.getBody();
+        this.thumbnail = articleRequest.getThumbnail();
     }
 
     public void deleteArticle() {
