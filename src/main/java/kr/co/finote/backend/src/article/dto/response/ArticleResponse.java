@@ -12,6 +12,7 @@ public class ArticleResponse {
     private Long id;
     private String title;
     private String body;
+    private String thumbnail;
     private String createDate;
     private String authorId;
     private String authorNickname;
@@ -22,6 +23,7 @@ public class ArticleResponse {
                 .id(article.getId())
                 .title(article.getTitle())
                 .body(article.getBody())
+                .thumbnail(article.getThumbnail() == null ? "" : article.getThumbnail())
                 .authorId(article.getUser().getId())
                 .authorNickname(article.getUser().getNickname())
                 .profileImageUrl(article.getUser().getProfileImageUrl())
