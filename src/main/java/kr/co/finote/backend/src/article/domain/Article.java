@@ -34,7 +34,7 @@ public class Article extends BaseEntity {
     @ColumnDefault("0")
     private int totalReply;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 500)
     private String thumbnail = "";
 
     public static Article createArticle(ArticleRequest articleRequest, User user) {
