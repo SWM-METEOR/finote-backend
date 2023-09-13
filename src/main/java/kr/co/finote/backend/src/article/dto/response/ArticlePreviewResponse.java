@@ -18,6 +18,7 @@ public class ArticlePreviewResponse {
     private String authorNickname;
     private String date;
     private String thumbnail;
+    private String profileImageUrl;
 
     public static ArticlePreviewResponse of(Article article, String previewBody) {
         ArticlePreviewResponse articlePreviewResponse =
@@ -29,6 +30,7 @@ public class ArticlePreviewResponse {
                         .authorNickname(article.getUser().getNickname())
                         .date(article.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
                         .thumbnail(article.getThumbnail())
+                        .profileImageUrl(article.getUser().getProfileImageUrl())
                         .build();
         articlePreviewResponse.updateBody(previewBody);
         return articlePreviewResponse;
@@ -44,6 +46,8 @@ public class ArticlePreviewResponse {
                         .authorNickname(document.getAuthorNickName())
                         .date(document.getCreatedDate())
                         .thumbnail(document.getThumbnail() == null ? "" : document.getThumbnail())
+                        .profileImageUrl(
+                                "https://finote-image-bucket.s3.ap-northeast-2.amazonaws.com/profile_image.png")
                         .build();
         articlePreviewResponse.updateBody(previewBody);
         return articlePreviewResponse;

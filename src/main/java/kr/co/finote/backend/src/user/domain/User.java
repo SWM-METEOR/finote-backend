@@ -1,6 +1,7 @@
 package kr.co.finote.backend.src.user.domain;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import javax.persistence.*;
 import kr.co.finote.backend.global.authentication.oauth.google.dto.response.GoogleUserInfo;
 import kr.co.finote.backend.global.entity.BaseEntity;
@@ -53,7 +54,8 @@ public class User extends BaseEntity {
                 .role(Role.USER)
                 .lastLoginDate(lastLoginDate)
                 .nickname(randomNickname)
-                .profileImageUrl(null)
+                .profileImageUrl(
+                        "https://finote-image-bucket.s3.ap-northeast-2.amazonaws.com/profile_image.png")
                 .blogName(randomNickname)
                 .build();
     }
@@ -68,7 +70,8 @@ public class User extends BaseEntity {
                 .role(Role.USER)
                 .lastLoginDate(null)
                 .nickname(randomNickname)
-                .profileImageUrl(null)
+                .profileImageUrl(
+                        "https://finote-image-bucket.s3.ap-northeast-2.amazonaws.com/profile_image.png")
                 .blogName(randomNickname)
                 .build();
     }
@@ -80,7 +83,8 @@ public class User extends BaseEntity {
     public void updateAdditionalInfo(AdditionalInfoRequest additionalInfoRequest) {
         this.nickname = additionalInfoRequest.getNickname();
         this.blogName = additionalInfoRequest.getBlogName();
-        this.profileImageUrl = additionalInfoRequest.getProfileImageUrl();
+        if (!Objects.equals(additionalInfoRequest.getProfileImageUrl(), ""))
+            this.profileImageUrl = additionalInfoRequest.getProfileImageUrl();
     }
 
     public void updateRefreshToken(String refreshToken) {
