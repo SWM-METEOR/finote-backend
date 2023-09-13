@@ -37,10 +37,17 @@ public class ArticleDocument {
     private String thumbnail;
 
     public static ArticleDocument createDocument(Long articleId, ArticleRequest request, User user) {
+        String thumbnail1 = request.getThumbnail();
+        if (thumbnail1 == null || thumbnail1.equals("")) {
+            thumbnail1 =
+                    "https://finote-image-bucket.s3.ap-northeast-2.amazonaws.com/finote_logo.png"; // deafult
+            // 로고
+        }
         return ArticleDocument.builder()
                 .articleId(articleId)
                 .title(request.getTitle().trim())
                 .body(request.getBody())
+                .thumbnail(thumbnail1)
                 .totalLike(0)
                 .reply(0)
                 .authorNickName(user.getNickname())
