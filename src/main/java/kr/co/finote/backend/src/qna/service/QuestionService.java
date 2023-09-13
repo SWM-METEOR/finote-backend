@@ -63,6 +63,20 @@ public class QuestionService {
         return PostQuestionResponse.of(loginUser, question);
     }
 
+    @Transactional
+    public void deleteQuestion(User loginUser, Long questionId) {
+        Question question =
+                questionRepository
+                        .findByIdAndIsDeleted(questionId, false)
+                        .orElseThrow(() -> new NotFoundException(ResponseCode.QUESTION_NOT_FOUND));
+
+        if (!question.getUser().getNickname().equals(loginUser.getNickname())) {
+            throw new InvalidInputException(ResponseCode.QUESTION_NOT_WRITER);
+        }
+
+        question.delete();
+    }
+
     private Question findByUserAndTitle(User user, String title) {
         return questionRepository
                 .findByUserAndTitleAndIsDeleted(user, title, false)

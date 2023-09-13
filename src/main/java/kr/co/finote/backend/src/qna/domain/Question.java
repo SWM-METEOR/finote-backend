@@ -50,4 +50,8 @@ public class Question extends BaseEntity {
         this.title = request.getTitle().trim();
         this.body = request.getBody();
     }
+
+    public void delete() {
+        this.isDeleted = true;
+    }
 }

@@ -51,4 +51,10 @@ public class QuestionApi {
             @RequestBody @Valid PostQuestionRequest request) {
         return questionService.editQuestion(loginUser, questionId, request);
     }
+
+    @Operation(summary = "질문글 삭제")
+    @PostMapping("/delete/{question-id}")
+    public void deleteQuestion(@Login User loginUser, @PathVariable("question-id") Long questionId) {
+        questionService.deleteQuestion(loginUser, questionId);
+    }
 }
