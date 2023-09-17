@@ -96,7 +96,6 @@ public class ArticleService {
         return ArticleResponse.of(article);
     }
 
-    @Transactional
     public void updateViewOrNot(HttpServletRequest request, Article article) {
         String ipAddress = request.getHeader("X-FORWARDED-FOR"); // 로드밸런서를 통해 들들어올 경우 IP 변경
         if (ipAddress == null) {
