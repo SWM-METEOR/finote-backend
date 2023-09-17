@@ -38,8 +38,8 @@ class ArticleServiceTest {
 
     private static final String TITLE = "title";
     private static final String BODY = "body";
-
     private static final String THUMBNAIL = "thumbnail";
+    private static final String NICKNAME = "nickname";
 
     @Test
     @DisplayName("게시글 작성 성공")
@@ -112,10 +112,10 @@ class ArticleServiceTest {
         Article article = new Article(1L, new User(), TITLE, BODY, 0, 0, 0, "");
         when(articleRepository.findByUserAndTitleAndIsDeleted(user, TITLE, false))
                 .thenReturn(Optional.of(article));
-        when(userService.findByNickname("nickname")).thenReturn(user);
+        when(userService.findByNickname(NICKNAME)).thenReturn(user);
 
         // when
-        Article findArticle = articleService.findByNicknameAndTitle("nickname", TITLE);
+        Article findArticle = articleService.findByNicknameAndTitle(NICKNAME, TITLE);
 
         // then
         Assertions.assertThat(findArticle.getId()).isEqualTo(1L);
@@ -126,27 +126,14 @@ class ArticleServiceTest {
     void findByNicknameAndTitleFail() {
         // given
         User user = new User();
-        Article article = new Article(1L, new User(), TITLE, BODY, 0, 0, 0, "");
         when(articleRepository.findByUserAndTitleAndIsDeleted(user, TITLE, false))
                 .thenReturn(Optional.empty());
-        when(userService.findByNickname("nickname")).thenReturn(user);
+        when(userService.findByNickname(NICKNAME)).thenReturn(user);
 
         // when
         assertThrows(
-                NotFoundException.class, () -> articleService.findByNicknameAndTitle("nickname", TITLE));
+                NotFoundException.class, () -> articleService.findByNicknameAndTitle(NICKNAME, TITLE));
 
         // then
-    }
-
-    @Test
-    @DisplayName("lookUpByNicknameAndTitle Test")
-    void lookupByNicknameAndTitle() {
-        // given
-        Article article = new Article(1L, new User(), TITLE, BODY, 0, 0, 0, "");
-
-        // when
-
-        // then
-
     }
 }

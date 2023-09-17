@@ -11,6 +11,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Getter
 @Builder
 @NoArgsConstructor
+@SuppressWarnings("PMD.UnusedAssignment")
 public class Article extends BaseEntity {
 
     @Id
