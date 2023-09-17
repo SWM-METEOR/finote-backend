@@ -6,9 +6,11 @@ import static org.mockito.Mockito.when;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.Optional;
 import kr.co.finote.backend.global.exception.InvalidInputException;
+import kr.co.finote.backend.global.exception.NotFoundException;
 import kr.co.finote.backend.src.article.document.ArticleDocument;
 import kr.co.finote.backend.src.article.domain.Article;
 import kr.co.finote.backend.src.article.dto.request.ArticleRequest;
+import kr.co.finote.backend.src.article.dto.response.ArticleResponse;
 import kr.co.finote.backend.src.article.dto.response.PostArticleResponse;
 import kr.co.finote.backend.src.article.repository.ArticleEsRepository;
 import kr.co.finote.backend.src.article.repository.ArticleRepository;
@@ -49,7 +51,7 @@ class ArticleServiceTest {
         when(articleRepository.findByUserAndTitleAndIsDeleted(user, TITLE, false))
                 .thenReturn(Optional.empty());
         when(articleRepository.save(ArgumentMatchers.any(Article.class)))
-                .thenReturn(new Article(1L, user, TITLE, BODY, 0, 0, ""));
+                .thenReturn(new Article(1L, user, TITLE, BODY, 0, 0, 0, ""));
         when(articleEsRepository.save(ArgumentMatchers.any()))
                 .thenReturn(new ArticleDocument("id", 1L, TITLE, BODY, 0, 0, "author", "2023-01-01", ""));
 
@@ -74,5 +76,77 @@ class ArticleServiceTest {
         assertThrows(InvalidInputException.class, () -> articleService.save(articleRequest, user));
 
         // then
+    }
+
+    @Test
+    @DisplayName("findById Success")
+    void findByIdSuccess() {
+        // given
+        Article article = new Article(1L, new User(), TITLE, BODY, 0, 0, 0, "");
+        when(articleRepository.findByIdAndIsDeleted(1L, false)).thenReturn(Optional.of(article));
+
+        // when
+        ArticleResponse articleResponse = articleService.findById(1L);
+
+        // then
+        Assertions.assertThat(articleResponse.getId()).isEqualTo(1L);
+    }
+
+    @Test
+    @DisplayName("findById Fail - 존재하지 않는 게시글")
+    void findByIdFail() {
+        // given
+        when(articleRepository.findByIdAndIsDeleted(1L, false)).thenReturn(Optional.empty());
+
+        // when
+        assertThrows(NotFoundException.class, () -> articleService.findById(1L));
+
+        // then
+    }
+
+    @Test
+    @DisplayName("findByNicknameTitle Success")
+    void findByNicknameAndTitleSuccess() {
+        // given
+        User user = new User();
+        Article article = new Article(1L, new User(), TITLE, BODY, 0, 0, 0, "");
+        when(articleRepository.findByUserAndTitleAndIsDeleted(user, TITLE, false))
+                .thenReturn(Optional.of(article));
+        when(userService.findByNickname("nickname")).thenReturn(user);
+
+        // when
+        Article findArticle = articleService.findByNicknameAndTitle("nickname", TITLE);
+
+        // then
+        Assertions.assertThat(findArticle.getId()).isEqualTo(1L);
+    }
+
+    @Test
+    @DisplayName("findByNicknameTitle Fail")
+    void findByNicknameAndTitleFail() {
+        // given
+        User user = new User();
+        Article article = new Article(1L, new User(), TITLE, BODY, 0, 0, 0, "");
+        when(articleRepository.findByUserAndTitleAndIsDeleted(user, TITLE, false))
+                .thenReturn(Optional.empty());
+        when(userService.findByNickname("nickname")).thenReturn(user);
+
+        // when
+        assertThrows(
+                NotFoundException.class, () -> articleService.findByNicknameAndTitle("nickname", TITLE));
+
+        // then
+    }
+
+    @Test
+    @DisplayName("lookUpByNicknameAndTitle Test")
+    void lookupByNicknameAndTitle() {
+        // given
+        Article article = new Article(1L, new User(), TITLE, BODY, 0, 0, 0, "");
+
+        // when
+
+        // then
+
     }
 }

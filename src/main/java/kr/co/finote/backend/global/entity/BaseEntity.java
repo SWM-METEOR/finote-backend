@@ -19,4 +19,9 @@ public class BaseEntity {
     @LastModifiedDate private LocalDateTime lastModifiedDate;
 
     protected Boolean isDeleted = false;
+
+    public BaseEntity() {
+        this.createdDate = LocalDateTime.now();
+        this.lastModifiedDate = LocalDateTime.now();
+    }
 }
