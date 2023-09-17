@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
 import kr.co.finote.backend.global.code.ResponseCode;
 import kr.co.finote.backend.global.exception.InvalidInputException;
 import kr.co.finote.backend.global.exception.NotFoundException;
@@ -19,7 +20,6 @@ import kr.co.finote.backend.src.article.dto.request.DragArticleRequest;
 import kr.co.finote.backend.src.article.dto.response.*;
 import kr.co.finote.backend.src.article.repository.ArticleEsRepository;
 import kr.co.finote.backend.src.article.repository.ArticleRepository;
-import kr.co.finote.backend.src.common.service.FollowService;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +52,7 @@ public class ArticleService {
     private final UserService userService;
     private final ArticleLikeCacheService articleLikeCacheService;
     private final ArticleLikeService articleLikeService;
-    private final FollowService followService;
+    private final ArticleViewCacheService articleViewCacheService;
 
     @Transactional
     public PostArticleResponse save(ArticleRequest articleRequest, User loginUser)
@@ -79,7 +79,7 @@ public class ArticleService {
     }
 
     @Transactional
-    public ArticleResponse lookupById(User user, Long articleId) {
+    public ArticleResponse findById(Long articleId) {
         Article article =
                 articleRepository
                         .findByIdAndIsDeleted(articleId, false)
@@ -89,10 +89,29 @@ public class ArticleService {
     }
 
     @Transactional
-    public ArticleResponse lookupByNicknameAndTitle(String nickname, String title) {
+    public ArticleResponse lookupByNicknameAndTitle(
+            String nickname, String title, HttpServletRequest request) {
         Article article = findByNicknameAndTitle(nickname, title);
-
+        updateViewOrNot(request, article);
         return ArticleResponse.of(article);
+    }
+
+    @Transactional
+    public void updateViewOrNot(HttpServletRequest request, Article article) {
+        String ipAddress = request.getHeader("X-FORWARDED-FOR"); // 로드밸런서를 통해 들들어올 경우 IP 변경
+        if (ipAddress == null) {
+            ipAddress = request.getRemoteAddr();
+        } else {
+            ipAddress = ipAddress.split(",")[0];
+        }
+        log.info("ipAddress : {}", ipAddress);
+        String key = ipAddress + "-" + article.getId();
+        boolean hasViewCache = articleViewCacheService.hasViewCache(key);
+        if (!hasViewCache) {
+            // 만약 24시간 내 조회 이력이 없을 경우
+            article.updateTotalView(); // 조회수 업데이트
+            articleViewCacheService.cacheView(key); // 조회 내역 캐싱
+        }
     }
 
     public ArticlePreviewListResponse getDragRelatedArticle(

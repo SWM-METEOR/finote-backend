@@ -34,6 +34,9 @@ public class Article extends BaseEntity {
     @ColumnDefault("0")
     private int totalReply;
 
+    @ColumnDefault("0")
+    private int totalView;
+
     @Column(nullable = false, length = 500)
     private String thumbnail = "";
 
@@ -65,5 +68,9 @@ public class Article extends BaseEntity {
 
     public void deleteArticle() {
         this.isDeleted = true;
+    }
+
+    public void updateTotalView() {
+        this.totalView++;
     }
 }
