@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import kr.co.finote.backend.global.annotation.Login;
 import kr.co.finote.backend.global.annotation.LoginOptional;
@@ -44,14 +45,14 @@ public class ArticleApi {
     @Operation(summary = "블로그 id로 글 조회")
     @GetMapping("/{articleId}")
     public ArticleResponse getArticle(@LoginOptional User user, @PathVariable Long articleId) {
-        return articleService.lookupById(user, articleId);
+        return articleService.findById(articleId);
     }
 
     @Operation(summary = "블로그 작성자 닉네임, 글 제목으로 조회")
     @GetMapping("/{nickname}/{title}")
     public ArticleResponse getArticleByNicknameAndTitle(
-            @PathVariable String nickname, @PathVariable String title) {
-        return articleService.lookupByNicknameAndTitle(nickname, title);
+            @PathVariable String nickname, @PathVariable String title, HttpServletRequest request) {
+        return articleService.lookupByNicknameAndTitle(nickname, title, request);
     }
 
     @Operation(summary = "블로그 글 수정")

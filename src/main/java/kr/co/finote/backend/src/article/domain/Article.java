@@ -11,7 +11,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Getter
 @Builder
 @NoArgsConstructor
-@AllArgsConstructor
+@SuppressWarnings("PMD.UnusedAssignment")
 public class Article extends BaseEntity {
 
     @Id
@@ -34,8 +34,31 @@ public class Article extends BaseEntity {
     @ColumnDefault("0")
     private int totalReply;
 
+    @ColumnDefault("0")
+    private int totalView;
+
     @Column(nullable = false, length = 500)
     private String thumbnail = "";
+
+    public Article(
+            Long id,
+            User user,
+            String title,
+            String body,
+            int totalLike,
+            int totalReply,
+            int totalView,
+            String thumbnail) {
+        super();
+        this.id = id;
+        this.user = user;
+        this.title = title;
+        this.body = body;
+        this.totalLike = totalLike;
+        this.totalReply = totalReply;
+        this.totalView = totalView;
+        this.thumbnail = thumbnail;
+    }
 
     public static Article createArticle(ArticleRequest articleRequest, User user) {
         String thumbnail1 = articleRequest.getThumbnail();
@@ -65,5 +88,9 @@ public class Article extends BaseEntity {
 
     public void deleteArticle() {
         this.isDeleted = true;
+    }
+
+    public void updateTotalView() {
+        this.totalView++;
     }
 }
