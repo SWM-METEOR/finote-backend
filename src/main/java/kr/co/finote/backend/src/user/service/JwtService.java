@@ -8,9 +8,11 @@ import kr.co.finote.backend.global.jwt.JwtTokenProvider;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class JwtService {
@@ -26,6 +28,7 @@ public class JwtService {
                 userRepository
                         .findByRefreshTokenAndIsDeleted(refreshToken, false)
                         .orElseThrow(() -> new UnAuthorizedException(ResponseCode.INVALID_REFRESH_TOKEN));
+        log.info("refresh token is not same as in repository");
 
         if (jwtTokenProvider.validateTokenExpiration(refreshToken)) {
             String token = jwtTokenProvider.createToken(user.getEmail());
@@ -37,6 +40,7 @@ public class JwtService {
         }
 
         user.updateRefreshToken(null);
+        log.info("refresh token is exist, but is already expired");
         throw new UnAuthorizedException(ResponseCode.INVALID_REFRESH_TOKEN);
     }
 
