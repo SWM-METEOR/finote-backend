@@ -8,6 +8,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
+@NotBlank
 public class EmailJoinRequest {
 
     @NotBlank(message = "이메일이 입력되지 않았습니다.")
