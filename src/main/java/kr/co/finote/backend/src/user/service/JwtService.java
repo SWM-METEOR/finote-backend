@@ -28,7 +28,9 @@ public class JwtService {
                 userRepository
                         .findByRefreshTokenAndIsDeleted(refreshToken, false)
                         .orElseThrow(() -> new UnAuthorizedException(ResponseCode.INVALID_REFRESH_TOKEN));
-        log.info("refresh token is not same as in repository");
+
+        log.info("client refresh token = {}", refreshToken);
+        log.info("server refresh token = {}", user.getRefreshToken());
 
         if (jwtTokenProvider.validateTokenExpiration(refreshToken)) {
             String token = jwtTokenProvider.createToken(user.getEmail());
