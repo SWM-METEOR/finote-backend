@@ -71,6 +71,7 @@ class UserServiceTest {
     void validateBlogNameValid() {
         // given
         String blogName = "blogName";
+        when(userRepository.existsByBlogNameAndIsDeleted(blogName, false)).thenReturn(false);
 
         // when
         ValidationBlogNameResponse validationBlogNameResponse = userService.validateBlogName(blogName);
