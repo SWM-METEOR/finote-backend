@@ -1,9 +1,11 @@
 package kr.co.finote.backend.src.user.dto.request;
 
 import javax.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public class AdditionalInfoRequest {
 
     // TODO : finote의 기본 프사 S3링크를 @Default로 설정하기

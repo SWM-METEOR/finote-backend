@@ -26,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
-
     private final PasswordEncoder bcryptPasswordEncoder;
     private final MailService mailService;
     private final EmailJoinCacheService emailJoinCacheService;
@@ -74,6 +73,13 @@ public class UserService {
 
     @SuppressWarnings("PMD.AvoidDuplicateLiterals")
     public void issueEmailCode(EmailCodeRequest request) {
+        userRepository
+                .findByEmailAndIsDeleted(request.getEmail(), false)
+                .ifPresent(
+                        user -> {
+                            throw new InvalidInputException(ResponseCode.EMAIL_ALREADY_EXIST);
+                        }); // 이미 가입된 이메일인지 확인
+
         String emailCode =
                 emailJoinCacheService.findEmailCode(request.getEmail()); // 캐시에 저장된 이메일 코드가 있는지 확인
         if (emailCode != null) {
