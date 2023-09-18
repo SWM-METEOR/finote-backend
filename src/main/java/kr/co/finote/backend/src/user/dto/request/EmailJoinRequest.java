@@ -5,9 +5,11 @@ import kr.co.finote.backend.global.annotation.ValidEmail;
 import kr.co.finote.backend.global.annotation.ValidPassword;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @NotBlank
 public class EmailJoinRequest {
 
