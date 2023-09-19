@@ -53,19 +53,32 @@ public class ArticleService {
     private final ArticleLikeCacheService articleLikeCacheService;
     private final ArticleLikeService articleLikeService;
     private final ArticleViewCacheService articleViewCacheService;
+    private int callCount = 0;
+    private final int MAX_CALL_COUNT = 3;
 
     @Transactional
     public PostArticleResponse save(ArticleRequest articleRequest, User loginUser)
             throws JsonProcessingException {
-        isDuplicateTitle(articleRequest, loginUser); // 동일 title에 대한 중복 체크
+        Article saveArticle = null;
+        try {
+            callCount++;
+            isDuplicateTitle(articleRequest, loginUser); // 동일 title에 대한 중복 체크
 
-        Article article = Article.createArticle(articleRequest, loginUser);
-        Article saveArticle = articleRepository.save(article); // 새로운 아티클 RDB 저장
-        ArticleDocument document =
-                ArticleDocument.createDocument(saveArticle.getId(), articleRequest, loginUser);
-        articleEsRepository.save(document); // 새로운 아티클 ES 저장
-
-        keywordService.extractAndSaveKeywords(saveArticle); // 키워드 추출 및 저장
+            Article article = Article.createArticle(articleRequest, loginUser);
+            saveArticle = articleRepository.save(article); // 새로운 아티클 RDB 저장
+            ArticleDocument document =
+                    ArticleDocument.createDocument(saveArticle.getId(), articleRequest, loginUser);
+            articleEsRepository.save(document); // 새로운 아티클 ES 저장
+            keywordService.extractAndSaveKeywords(saveArticle); // 키워드 추출 및 저장
+        } catch (Exception e) {
+            if (callCount > MAX_CALL_COUNT) {
+                throw e;
+            }
+            save(articleRequest, loginUser);
+        }
+        if (saveArticle == null) {
+            throw new InvalidInputException(ResponseCode.INTERNAL_ERROR);
+        }
         return PostArticleResponse.of(saveArticle);
     }
 
