@@ -289,6 +289,7 @@ public class ArticleService {
         return articleRepository
                 .findByUserAndTitleAndIsDeleted(findUser, title, false)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
+
     }
 
     public ArticleLikeCheckResponse checkLike(User reader, String authorNickname, String title) {

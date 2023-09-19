@@ -12,9 +12,11 @@ import kr.co.finote.backend.src.article.domain.Article;
 import kr.co.finote.backend.src.article.dto.request.AiSearchRequest;
 import kr.co.finote.backend.src.article.dto.request.ArticleRequest;
 import kr.co.finote.backend.src.article.dto.request.DragArticleRequest;
+import kr.co.finote.backend.src.article.dto.request.ReplyRequest;
 import kr.co.finote.backend.src.article.dto.response.*;
 import kr.co.finote.backend.src.article.service.AiSearchService;
 import kr.co.finote.backend.src.article.service.ArticleService;
+import kr.co.finote.backend.src.article.service.ReplyService;
 import kr.co.finote.backend.src.user.domain.User;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,8 @@ public class ArticleApi {
 
     ArticleService articleService;
     AiSearchService aiSearchService;
+    ReplyService replyService;
+
     static final String ARTICLE_ID_PATH_VARIABLE = "article-id";
 
     @Operation(summary = "블로그 글 작성")
@@ -125,5 +129,16 @@ public class ArticleApi {
     public ArticleTotalLikeResponse totalLike(
             @PathVariable String nickname, @PathVariable String title) {
         return articleService.totalLike(nickname, title);
+    }
+
+    /* 댓글 API */
+    @Operation(summary = "댓글 작성")
+    @PostMapping("/replies/write/{nickname}/{title}")
+    public PostReplyResponse postReply(
+            @Login User loginUser,
+            @PathVariable String nickname,
+            @PathVariable String title,
+            @RequestBody @Valid ReplyRequest request) {
+        return replyService.postReply(loginUser, nickname, title, request);
     }
 }
