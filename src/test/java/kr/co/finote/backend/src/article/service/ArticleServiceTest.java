@@ -136,25 +136,24 @@ class ArticleServiceTest {
         assertThat(findArticle.getId()).isEqualTo(1L);
     }
 
-    //    @Test
-    //    @DisplayName("findByNicknameTitle Fail - 존재하지 않는 게시글")
-    //    void findByNicknameAndTitleFail() {
-    //        // given
-    //        User user = new User();
-    //        when(articleRepository.findByUserAndTitleAndIsDeleted(user, "title", false))
-    //                .thenReturn(Optional.empty());
-    //        when(userService.findByNickname("nickname")).thenReturn(user);
-    //
-    //        // when
-    //        NotFoundException notFoundException =
-    //                assertThrows(
-    //                        NotFoundException.class,
-    //                        () -> articleService.findByNicknameAndTitle("nickname", "title"));
-    //
-    //        // then
-    //
-    // assertThat(notFoundException.getResponseCode()).isEqualTo(ResponseCode.ARTICLE_NOT_FOUND);
-    //    }
+    @Test
+    @DisplayName("findByNicknameTitle Fail - 존재하지 않는 게시글")
+    void findByNicknameAndTitleFail() {
+        // given
+        User user = new User();
+        when(articleRepository.findByUserAndTitleAndIsDeleted(user, "title", false))
+                .thenReturn(Optional.empty());
+        when(userService.findByNickname("nickname")).thenReturn(user);
+
+        // when
+        NotFoundException notFoundException =
+                assertThrows(
+                        NotFoundException.class,
+                        () -> articleService.findByNicknameAndTitle("nickname", "title"));
+
+        // then
+        assertThat(notFoundException.getResponseCode()).isEqualTo(ResponseCode.ARTICLE_NOT_FOUND);
+    }
 
     @Test
     @DisplayName("lookUpByNicknameAndTitle Success")
@@ -181,27 +180,26 @@ class ArticleServiceTest {
         assertThat(articleResponse.getId()).isEqualTo(1L);
     }
 
-    //    @Test
-    //    @DisplayName("lookUpByNicknameAndTitle Fail - 존재하지 않는 게시글")
-    //    void lookupByNicknameAndTitleFail() {
-    //        // given
-    //        User user = new User();
-    //        when(userService.findByNickname("nickname")).thenReturn(user);
-    //        when(articleRepository.findByUserAndTitleAndIsDeleted(user, "title", false))
-    //                .thenReturn(Optional.empty());
-    //        HttpServletRequest request = mock(HttpServletRequest.class);
-    //
-    //        // when
-    //        NotFoundException notFoundException =
-    //                assertThrows(
-    //                        NotFoundException.class,
-    //                        () -> articleService.lookupByNicknameAndTitle("nickname", "title",
-    // request));
-    //
-    //        // then
-    //
-    // assertThat(notFoundException.getResponseCode()).isEqualTo(ResponseCode.ARTICLE_NOT_FOUND);
-    //    }
+    @Test
+    @DisplayName("lookUpByNicknameAndTitle Fail - 존재하지 않는 게시글")
+    void lookupByNicknameAndTitleFail() {
+        // given
+        User user = new User();
+        when(userService.findByNickname("nickname")).thenReturn(user);
+        when(articleRepository.findByUserAndTitleAndIsDeleted(user, "title", false))
+                .thenReturn(Optional.empty());
+        HttpServletRequest request = mock(HttpServletRequest.class);
+
+        // when
+        NotFoundException notFoundException =
+                assertThrows(
+                        NotFoundException.class,
+                        () -> articleService.lookupByNicknameAndTitle("nickname", "title", request));
+
+        // then
+
+        assertThat(notFoundException.getResponseCode()).isEqualTo(ResponseCode.ARTICLE_NOT_FOUND);
+    }
 
     @Test
     @DisplayName("updateViewOrNot - 조회수 업데이트 O")
