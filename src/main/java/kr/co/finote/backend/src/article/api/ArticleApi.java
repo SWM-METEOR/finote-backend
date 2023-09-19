@@ -133,7 +133,7 @@ public class ArticleApi {
 
     /* 댓글 API */
     @Operation(summary = "댓글 작성")
-    @PostMapping("/replies/{nickname}/{title}")
+    @PostMapping("/replies/write/{nickname}/{title}")
     public PostReplyResponse postReply(
             @Login User loginUser,
             @PathVariable String nickname,
