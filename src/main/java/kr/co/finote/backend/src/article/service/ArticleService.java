@@ -285,9 +285,18 @@ public class ArticleService {
 
     public Article findByNicknameAndTitle(String nickname, String title) {
         User findUser = userService.findByNickname(nickname); // 유저가 존재하는지 확인
-        return articleRepository
-                .findByUserAndTitleAndIsDeleted(findUser, title, false)
-                .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
+
+        //TODO : 에러 해결 후 원래대로 return 으로 article 객체 반환
+        Optional<Article> findArticle = articleRepository.findByUserAndTitleAndIsDeleted(findUser, title, false);
+        if (findArticle.isPresent()) {
+            return findArticle.get();
+        }else {
+            log.error("nickname = {}, title = {}", nickname, findArticle.get().getTitle());
+            throw new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND);
+        }
+//        return articleRepository
+//                .findByUserAndTitleAndIsDeleted(findUser, title, false)
+//                .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
     }
 
     public ArticleLikeCheckResponse checkLike(User reader, String authorNickname, String title) {
