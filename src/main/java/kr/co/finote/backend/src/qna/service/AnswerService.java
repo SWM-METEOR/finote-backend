@@ -22,6 +22,6 @@ public class AnswerService {
         Answer answer = Answer.createAnswer(writer, question, request);
 
         Answer savedAnswer = answerRepository.save(answer);
-        return PostAnswerResponse.of(writer, savedAnswer);
+        return PostAnswerResponse.of(savedAnswer);
     }
 }
