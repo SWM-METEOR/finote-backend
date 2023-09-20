@@ -83,6 +83,14 @@ public class QuestionService {
                 .orElseThrow(() -> new NotFoundException(ResponseCode.QUESTION_NOT_FOUND));
     }
 
+    public Question findByNicknameAndTitle(String nickname, String title) {
+        User author = userService.findByNickname(nickname);
+
+        return questionRepository
+                .findByUserAndTitleAndIsDeleted(author, title, false)
+                .orElseThrow(() -> new NotFoundException(ResponseCode.QUESTION_NOT_FOUND));
+    }
+
     private void isDuplicatedTitle(User author, PostQuestionRequest request) {
         questionRepository
                 .findByUserAndTitleAndIsDeleted(author, request.getTitle(), false)
