@@ -27,7 +27,8 @@ public class ArticleResponse {
                 .authorId(article.getUser().getId())
                 .authorNickname(article.getUser().getNickname())
                 .profileImageUrl(article.getUser().getProfileImageUrl())
-                .createDate(article.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .createDate(
+                        article.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .build();
     }
 }
