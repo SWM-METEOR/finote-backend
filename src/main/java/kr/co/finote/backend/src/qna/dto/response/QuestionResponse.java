@@ -29,9 +29,11 @@ public class QuestionResponse {
                 .id(question.getId())
                 .totalAnswer(question.getTotalAnswer())
                 .title(question.getTitle())
+                .body(question.getBody())
                 .authorNickname(user.getNickname())
                 .profileImageUrl(user.getProfileImageUrl())
-                .createdDate(question.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .createdDate(
+                        question.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .build();
     }
 }
