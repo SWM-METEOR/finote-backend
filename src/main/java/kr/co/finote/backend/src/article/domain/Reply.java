@@ -34,4 +34,12 @@ public class Reply extends BaseEntity {
     public static Reply createReply(User user, Article article, String content, Boolean isMine) {
         return new Reply(null, user, article, content, isMine);
     }
+
+    public void edit(String content) {
+        this.content = content;
+    }
+
+    public void delete() {
+        this.isDeleted = true;
+    }
 }

@@ -298,7 +298,7 @@ public class ArticleService {
         Article article = findByNicknameAndTitle(authorNickname, title);
         ArticleLikeCache likelog = articleLikeCacheService.findLikeLog(reader, article);
 
-        boolean isLiked = (likelog == null || likelog.getIsDeleted()) ? false : true;
+        boolean isLiked = likelog != null && !likelog.getIsDeleted();
 
         return ArticleLikeCheckResponse.createArticleLikeCheckResponse(isLiked);
     }

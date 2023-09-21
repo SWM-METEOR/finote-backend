@@ -2,6 +2,8 @@ package kr.co.finote.backend.src.article.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import kr.co.finote.backend.global.code.ResponseCode;
+import kr.co.finote.backend.global.exception.NotFoundException;
 import kr.co.finote.backend.src.article.domain.Article;
 import kr.co.finote.backend.src.article.domain.Reply;
 import kr.co.finote.backend.src.article.dto.request.ReplyRequest;
@@ -13,6 +15,7 @@ import kr.co.finote.backend.src.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -53,5 +56,32 @@ public class ReplyService {
 
     private static boolean isMine(String authorEmail, String loginUserEmail) {
         return authorEmail.equals(loginUserEmail);
+    }
+
+    @Transactional
+    public PostReplyResponse editReply(User longUser, Long replyId, ReplyRequest request) {
+        Reply reply = getReply(replyId);
+        checkReplyAuthority(longUser, reply);
+        reply.edit(request.getContent());
+        return PostReplyResponse.createPostReplyResponse(reply.getId());
+    }
+
+    private static void checkReplyAuthority(User longUser, Reply reply) {
+        if (!reply.getUser().getEmail().equals(longUser.getEmail())) {
+            throw new NotFoundException(ResponseCode.REPLY_NOT_WRITER);
+        }
+    }
+
+    private Reply getReply(Long replyId) {
+        return replyRepository
+                .findById(replyId)
+                .orElseThrow(() -> new NotFoundException(ResponseCode.REPLY_NOT_FOUND));
+    }
+
+    @Transactional
+    public void deleteReply(User loginUser, Long replyId) {
+        Reply reply = getReply(replyId);
+        checkReplyAuthority(loginUser, reply);
+        reply.delete();
     }
 }
