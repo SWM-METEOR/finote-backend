@@ -37,7 +37,7 @@ public class ReplyService {
 
     public ReplyListResponse getReplies(String nickname, String title) {
         Article article = articleService.findByNicknameAndTitle(nickname, title);
-        List<Reply> replyList = replyRepository.findByArticleAndIsDeleted(article, false);
+        List<Reply> replyList = replyRepository.findAllWithArticle(article);
         List<ReplyResponse> replyResponseList = getReplyResponses(replyList);
         return ReplyListResponse.of(replyResponseList);
     }
