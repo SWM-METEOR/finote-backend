@@ -152,6 +152,7 @@ class ArticleServiceTest {
                         () -> articleService.findByNicknameAndTitle("nickname", "title"));
 
         // then
+
         assertThat(notFoundException.getResponseCode()).isEqualTo(ResponseCode.ARTICLE_NOT_FOUND);
     }
 

@@ -6,6 +6,7 @@ import kr.co.finote.backend.src.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @AllArgsConstructor
@@ -17,17 +18,20 @@ public class Reply extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_id")
     private Article article;
 
     private String content;
 
-    public static Reply createReply(User user, Article article, String content) {
-        return new Reply(null, user, article, content);
+    @ColumnDefault("false")
+    private boolean isMine;
+
+    public static Reply createReply(User user, Article article, String content, Boolean isMine) {
+        return new Reply(null, user, article, content, isMine);
     }
 }

@@ -285,7 +285,6 @@ public class ArticleService {
 
     public Article findByNicknameAndTitle(String nickname, String title) {
         User findUser = userService.findByNickname(nickname); // 유저가 존재하는지 확인
-
         return articleRepository
                 .findByUserAndTitleAndIsDeleted(findUser, title, false)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
