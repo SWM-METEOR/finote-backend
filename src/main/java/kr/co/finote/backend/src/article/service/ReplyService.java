@@ -24,7 +24,7 @@ public class ReplyService {
     public PostReplyResponse postReply(
             User loginUser, String nickname, String title, ReplyRequest request) {
         Article article = articleService.findByNicknameAndTitle(nickname, title);
-        boolean mine = isMine(article, loginUser);
+        boolean mine = isMine(article.getUser().getEmail(), loginUser.getEmail());
         Reply saveReply = saveReply(loginUser, request, article, mine);
         return PostReplyResponse.createPostReplyResponse(saveReply.getId());
     }
@@ -51,7 +51,7 @@ public class ReplyService {
         return replyResponseList;
     }
 
-    private static boolean isMine(Article article, User loginUser) {
-        return article.getUser().getEmail().equals(loginUser.getEmail());
+    private static boolean isMine(String authorEmail, String loginUserEmail) {
+        return authorEmail.equals(loginUserEmail);
     }
 }
