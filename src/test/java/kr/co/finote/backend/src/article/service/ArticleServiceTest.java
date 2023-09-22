@@ -99,7 +99,7 @@ class ArticleServiceTest {
         when(articleRepository.findByIdAndIsDeleted(1L, false)).thenReturn(Optional.of(article));
 
         // when
-        ArticleResponse articleResponse = articleService.findById(1L);
+        ArticleResponse articleResponse = articleService.lookupById(1L);
 
         // then
         assertThat(articleResponse.getId()).isEqualTo(1L);
@@ -113,7 +113,7 @@ class ArticleServiceTest {
 
         // when
         NotFoundException notFoundException =
-                assertThrows(NotFoundException.class, () -> articleService.findById(1L));
+                assertThrows(NotFoundException.class, () -> articleService.lookupById(1L));
 
         // then
         assertThat(notFoundException.getResponseCode()).isEqualTo(ResponseCode.ARTICLE_NOT_FOUND);

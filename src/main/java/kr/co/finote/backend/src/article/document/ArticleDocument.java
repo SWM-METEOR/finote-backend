@@ -54,4 +54,10 @@ public class ArticleDocument {
                 .createdDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
                 .build();
     }
+
+    public void editArticleDocument(ArticleRequest request) {
+        this.title = request.getTitle().trim();
+        this.body = request.getBody();
+        this.thumbnail = request.getThumbnail();
+    }
 }

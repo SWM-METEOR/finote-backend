@@ -3,8 +3,13 @@ package kr.co.finote.backend.src.article.service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
+import kr.co.finote.backend.global.code.ResponseCode;
+import kr.co.finote.backend.global.exception.NotFoundException;
 import kr.co.finote.backend.src.article.document.ArticleDocument;
+import kr.co.finote.backend.src.article.dto.request.ArticleRequest;
+import kr.co.finote.backend.src.article.repository.ArticleEsRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.QueryStringQueryBuilder;
 import org.springframework.data.domain.PageRequest;
@@ -17,9 +22,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ElasticService {
 
     private final ElasticsearchRestTemplate elasticSearchrestTemplate;
+    private final ArticleEsRepository articleEsRepository;
 
     public Comparator<SearchHit<ArticleDocument>> scorecomparator() {
         return (o1, o2) -> {
@@ -52,5 +59,18 @@ public class ElasticService {
     public NativeSearchQuery getNativeSearchQuery(String searchText) {
         QueryStringQueryBuilder builder = QueryBuilders.queryStringQuery(searchText);
         return new NativeSearchQuery(builder);
+    }
+
+    public void deleteArticle(Long articleId) {
+        articleEsRepository.deleteByArticleId(articleId);
+    }
+
+    public void editArticle(Long articleId, ArticleRequest request) {
+        ArticleDocument articleDocument =
+                articleEsRepository
+                        .findByArticleId(articleId)
+                        .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
+        articleDocument.editArticleDocument(request);
+        articleEsRepository.save(articleDocument);
     }
 }
