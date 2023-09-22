@@ -41,4 +41,19 @@ public class ReplyApi {
             @RequestBody @Valid ReplyRequest request) {
         return replyService.postReply(loginUser, nickname, title, request);
     }
+
+    @Operation(summary = "댓글 수정")
+    @PostMapping("/replies/edit/{reply-id}")
+    public PostReplyResponse editReply(
+            @Login User loginUser,
+            @PathVariable("reply-id") Long replyId,
+            @RequestBody @Valid ReplyRequest request) {
+        return replyService.editReply(loginUser, replyId, request);
+    }
+
+    @Operation(summary = "댓글 삭제")
+    @PostMapping("/replies/delete/{reply-id}")
+    public void deleteReply(@Login User loginUser, @PathVariable("reply-id") Long replyId) {
+        replyService.deleteReply(loginUser, replyId);
+    }
 }
