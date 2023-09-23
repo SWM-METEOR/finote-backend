@@ -92,13 +92,16 @@ public class ArticleService {
     }
 
     @Transactional
-    public ArticleResponse findById(Long articleId) {
-        Article article =
-                articleRepository
-                        .findByIdAndIsDeleted(articleId, false)
-                        .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
+    public ArticleResponse lookupById(Long articleId) {
+        Article article = findById(articleId);
 
         return ArticleResponse.of(article);
+    }
+
+    private Article findById(Long articleId) {
+        return articleRepository
+                .findByIdAndIsDeleted(articleId, false)
+                .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
     }
 
     @Transactional
@@ -251,32 +254,27 @@ public class ArticleService {
 
     @Transactional
     public PostArticleResponse editArticle(User loginUser, Long articleId, ArticleRequest request) {
-        Article article =
-                articleRepository
-                        .findByIdAndIsDeleted(articleId, false)
-                        .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
-
-        if (!article.getUser().getEmail().equals((loginUser.getEmail()))) {
-            throw new InvalidInputException(ResponseCode.ARTICLE_NOT_WRITER);
-        }
-
+        Article article = findById(articleId);
+        checkArticleAuthority(loginUser, article);
+        // ES 수정
+        elasticService.editArticle(article.getId(), request);
         article.editArticle(request);
         return PostArticleResponse.of(article);
     }
 
-    @Transactional
-    public void deleteArticle(User loginUser, Long articleId) {
-        Article article =
-                articleRepository
-                        .findByIdAndIsDeleted(articleId, false)
-                        .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
-
+    private static void checkArticleAuthority(User loginUser, Article article) {
         if (!article.getUser().getEmail().equals((loginUser.getEmail()))) {
             throw new InvalidInputException(ResponseCode.ARTICLE_NOT_WRITER);
         }
+    }
 
+    @Transactional
+    public void deleteArticle(User loginUser, Long articleId) {
+        Article article = findById(articleId);
+        checkArticleAuthority(loginUser, article);
+        // ES 삭제
         article.deleteArticle();
-
+        elasticService.deleteArticle(article.getId());
         // 좋아요 내역 완전 삭제
         articleLikeService.deleteAllByArticle(article);
         // 키워드 내역 soft delete

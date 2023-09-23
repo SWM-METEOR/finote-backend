@@ -46,7 +46,7 @@ public class ArticleApi {
     @Operation(summary = "블로그 id로 글 조회")
     @GetMapping("/{articleId}")
     public ArticleResponse getArticle(@LoginOptional User user, @PathVariable Long articleId) {
-        return articleService.findById(articleId);
+        return articleService.lookupById(articleId);
     }
 
     @Operation(summary = "블로그 작성자 닉네임, 글 제목으로 조회")
