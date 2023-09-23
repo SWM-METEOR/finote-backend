@@ -81,6 +81,12 @@ public class UserApi {
         return BlogResponse.of(loginUser);
     }
 
+    @Operation(summary = "프로밀 이미지 url 가져오기")
+    @GetMapping("/profile-image-url")
+    public ProfileImageUrlResponse getProfileImage(@Login User loginUser) {
+        return ProfileImageUrlResponse.of(loginUser);
+    }
+
     /* API related to additional-info */
     @Operation(summary = "추가 정보 입력")
     @PostMapping("/additional-info")
