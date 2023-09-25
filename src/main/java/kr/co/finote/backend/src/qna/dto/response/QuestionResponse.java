@@ -33,7 +33,7 @@ public class QuestionResponse {
                 .authorNickname(user.getNickname())
                 .profileImageUrl(user.getProfileImageUrl())
                 .createdDate(
-                        question.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                        question.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))
                 .build();
     }
 }
