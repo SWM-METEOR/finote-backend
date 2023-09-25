@@ -27,7 +27,7 @@ public class AnswerResponse {
                 .profileImage(answer.getUser().getProfileImageUrl())
                 .nickname(answer.getUser().getNickname())
                 .createdDate(
-                        answer.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                        answer.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))
                 .totalLike(answer.getTotalLike())
                 .totalUnlike(answer.getTotalUnlike())
                 .build();
