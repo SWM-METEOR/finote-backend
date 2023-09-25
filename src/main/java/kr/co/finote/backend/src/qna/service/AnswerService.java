@@ -26,12 +26,11 @@ public class AnswerService {
     public PostAnswerResponse postAnswer(
             User writer, String authorNickname, String title, PostAnswerRequest request) {
         Question question = questionService.findByNicknameAndTitle(authorNickname, title);
-        question.updateTotalAnswer(1);
+        updateTotalAnswer(question, 1);
         // Es 업데이트
-        questionEsService.editDocumentByQuestion(question);
+        editDocumentByQuestion(question);
 
-        Answer answer = Answer.createAnswer(writer, question, request);
-        Answer savedAnswer = answerRepository.save(answer);
+        Answer savedAnswer = saveAnswer(writer, question, request);
         return PostAnswerResponse.of(savedAnswer);
     }
 
@@ -46,5 +45,18 @@ public class AnswerService {
 
     private List<AnswerResponse> toAnswerReponseList(List<Answer> answerList) {
         return answerList.stream().map(AnswerResponse::of).collect(Collectors.toList());
+    }
+
+    private void updateTotalAnswer(Question question, int amount) {
+        question.updateTotalAnswer(amount);
+    }
+
+    private void editDocumentByQuestion(Question question) {
+        questionEsService.editDocumentByQuestion(question);
+    }
+
+    private Answer saveAnswer(User writer, Question question, PostAnswerRequest request) {
+        Answer answer = Answer.createAnswer(writer, question, request);
+        return answerRepository.save(answer);
     }
 }
