@@ -41,7 +41,13 @@ public class QuestionDocument {
                 .build();
     }
 
-    public void edit(String title) {
-        this.title = title;
+    public void editByQuestion(Question question) {
+        this.title = question.getTitle();
+        this.totalAnswer = question.getTotalAnswer();
+    }
+
+    public void editByUser(User user) {
+        this.authorNickname = user.getNickname();
+        this.profileImageUrl = user.getProfileImageUrl();
     }
 }

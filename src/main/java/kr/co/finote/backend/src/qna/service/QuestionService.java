@@ -81,7 +81,7 @@ public class QuestionService {
         }
 
         question.edit(request);
-        questionEsService.editDocument(question.getId(), request.getTitle());
+        questionEsService.editDocumentByQuestion(question);
         return PostQuestionResponse.of(loginUser, question);
     }
 
