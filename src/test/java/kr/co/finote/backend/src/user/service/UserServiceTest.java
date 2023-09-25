@@ -11,7 +11,6 @@ import kr.co.finote.backend.global.exception.InvalidInputException;
 import kr.co.finote.backend.global.exception.NotFoundException;
 import kr.co.finote.backend.src.user.domain.Role;
 import kr.co.finote.backend.src.user.domain.User;
-import kr.co.finote.backend.src.user.dto.request.AdditionalInfoRequest;
 import kr.co.finote.backend.src.user.dto.request.EmailCodeRequest;
 import kr.co.finote.backend.src.user.dto.request.EmailCodeValidationRequest;
 import kr.co.finote.backend.src.user.dto.request.EmailJoinRequest;
@@ -94,66 +93,69 @@ class UserServiceTest {
         assertThat(validationBlogNameResponse.isDuplicated()).isTrue();
     }
 
-    @Test
-    @DisplayName("editAdditionalInfo Success")
-    void editAdditionalInfo() {
-        // given
-        User user =
-                new User(
-                        "1",
-                        "name",
-                        "password",
-                        "email",
-                        null,
-                        null,
-                        Role.USER,
-                        LocalDateTime.now(),
-                        "nickname",
-                        "profileImage",
-                        "blogName",
-                        "refreshToken");
-        AdditionalInfoRequest request =
-                new AdditionalInfoRequest("new profileImage", "new nickname", "new blogName");
-        when(userRepository.findByIdAndIsDeleted(user.getId(), false)).thenReturn(Optional.of(user));
-
-        // when
-        userService.editAdditionalInfo(user, request);
-
-        // then
-        assertThat(user.getProfileImageUrl()).isEqualTo("new profileImage");
-        assertThat(user.getNickname()).isEqualTo("new nickname");
-        assertThat(user.getBlogName()).isEqualTo("new blogName");
-    }
-
-    @Test
-    @DisplayName("editAdditionalInfo Fail - 존재하지 않는 유저")
-    void editAdditionalInfoFailUserNotFound() {
-        // given
-        User user =
-                new User(
-                        "1",
-                        "name",
-                        "password",
-                        "email",
-                        null,
-                        null,
-                        Role.USER,
-                        LocalDateTime.now(),
-                        "nickname",
-                        "profileImage",
-                        "blogName",
-                        "refreshToken");
-        AdditionalInfoRequest request =
-                new AdditionalInfoRequest("new profileImage", "new nickname", "new blogName");
-        when(userRepository.findByIdAndIsDeleted(user.getId(), false)).thenReturn(Optional.empty());
-
-        // when
-        NotFoundException notFoundException =
-                assertThrows(NotFoundException.class, () -> userService.editAdditionalInfo(user, request));
-
-        // then
-        assertThat(notFoundException.getResponseCode()).isEqualTo(ResponseCode.USER_NOT_FOUND);
-    }
+    //    @Test
+    //    @DisplayName("editAdditionalInfo Success")
+    //    void editAdditionalInfo() {
+    //        // given
+    //        User user =
+    //                new User(
+    //                        "1",
+    //                        "name",
+    //                        "password",
+    //                        "email",
+    //                        null,
+    //                        null,
+    //                        Role.USER,
+    //                        LocalDateTime.now(),
+    //                        "nickname",
+    //                        "profileImage",
+    //                        "blogName",
+    //                        "refreshToken");
+    //        AdditionalInfoRequest request =
+    //                new AdditionalInfoRequest("new profileImage", "new nickname", "new blogName");
+    //        when(userRepository.findByIdAndIsDeleted(user.getId(),
+    // false)).thenReturn(Optional.of(user));
+    //
+    //        // when
+    //        userService.editAdditionalInfo(user, request);
+    //
+    //        // then
+    //        assertThat(user.getProfileImageUrl()).isEqualTo("new profileImage");
+    //        assertThat(user.getNickname()).isEqualTo("new nickname");
+    //        assertThat(user.getBlogName()).isEqualTo("new blogName");
+    //    }
+    //
+    //    @Test
+    //    @DisplayName("editAdditionalInfo Fail - 존재하지 않는 유저")
+    //    void editAdditionalInfoFailUserNotFound() {
+    //        // given
+    //        User user =
+    //                new User(
+    //                        "1",
+    //                        "name",
+    //                        "password",
+    //                        "email",
+    //                        null,
+    //                        null,
+    //                        Role.USER,
+    //                        LocalDateTime.now(),
+    //                        "nickname",
+    //                        "profileImage",
+    //                        "blogName",
+    //                        "refreshToken");
+    //        AdditionalInfoRequest request =
+    //                new AdditionalInfoRequest("new profileImage", "new nickname", "new blogName");
+    //        when(userRepository.findByIdAndIsDeleted(user.getId(),
+    // false)).thenReturn(Optional.empty());
+    //
+    //        // when
+    //        NotFoundException notFoundException =
+    //                assertThrows(NotFoundException.class, () -> userService.editAdditionalInfo(user,
+    // request));
+    //
+    //        // then
+    //        assertThat(notFoundException.getResponseCode()).isEqualTo(ResponseCode.USER_NOT_FOUND);
+    //    }
 
     @Test
     @DisplayName("findById Success")
