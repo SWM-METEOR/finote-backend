@@ -54,4 +54,9 @@ public class Question extends BaseEntity {
     public void delete() {
         this.isDeleted = true;
     }
+
+    // TODO : 분산 환경의 동시성 문제 해결하기
+    public void updateTotalAnswer(int amount) {
+        this.totalAnswer += amount;
+    }
 }

@@ -4,6 +4,7 @@ import kr.co.finote.backend.global.code.ResponseCode;
 import kr.co.finote.backend.global.exception.InvalidInputException;
 import kr.co.finote.backend.global.exception.NotFoundException;
 import kr.co.finote.backend.global.utils.StringUtils;
+import kr.co.finote.backend.src.qna.service.QuestionEsService;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.dto.request.AdditionalInfoRequest;
 import kr.co.finote.backend.src.user.dto.request.EmailCodeRequest;
@@ -29,6 +30,7 @@ public class UserService {
     private final PasswordEncoder bcryptPasswordEncoder;
     private final MailService mailService;
     private final EmailJoinCacheService emailJoinCacheService;
+    private final QuestionEsService questionEsService;
 
     public ValidationNicknameResponse validateNickname(String nickname) {
         boolean existsByNickname = userRepository.existsByNicknameAndIsDeleted(nickname, false);
@@ -51,6 +53,7 @@ public class UserService {
                         .orElseThrow(() -> new NotFoundException(ResponseCode.USER_NOT_FOUND));
 
         findUser.updateAdditionalInfo(request);
+        questionEsService.editDocumentByUser(findUser);
     }
 
     public User findById(String userId) {

@@ -12,20 +12,25 @@ import kr.co.finote.backend.src.qna.repository.AnswerRepository;
 import kr.co.finote.backend.src.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class AnswerService {
 
     private final QuestionService questionService;
+    private final QuestionEsService questionEsService;
     private final AnswerRepository answerRepository;
 
+    @Transactional
     public PostAnswerResponse postAnswer(
             User writer, String authorNickname, String title, PostAnswerRequest request) {
         Question question = questionService.findByNicknameAndTitle(authorNickname, title);
-        Answer answer = Answer.createAnswer(writer, question, request);
+        updateTotalAnswer(question, 1);
+        // Es 업데이트
+        editDocumentByQuestion(question);
 
-        Answer savedAnswer = answerRepository.save(answer);
+        Answer savedAnswer = saveAnswer(writer, question, request);
         return PostAnswerResponse.of(savedAnswer);
     }
 
@@ -40,5 +45,18 @@ public class AnswerService {
 
     private List<AnswerResponse> toAnswerReponseList(List<Answer> answerList) {
         return answerList.stream().map(AnswerResponse::of).collect(Collectors.toList());
+    }
+
+    private void updateTotalAnswer(Question question, int amount) {
+        question.updateTotalAnswer(amount);
+    }
+
+    private void editDocumentByQuestion(Question question) {
+        questionEsService.editDocumentByQuestion(question);
+    }
+
+    private Answer saveAnswer(User writer, Question question, PostAnswerRequest request) {
+        Answer answer = Answer.createAnswer(writer, question, request);
+        return answerRepository.save(answer);
     }
 }

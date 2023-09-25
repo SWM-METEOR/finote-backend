@@ -52,7 +52,10 @@ public enum ResponseCode {
     /** question error */
     QUESTION_ALREADY_EXIST(BAD_REQUEST, "400_QUESTION_ALREADY_EXIST", "같은 제목의 질문 글을 이미 등록했습니다."),
     QUESTION_NOT_FOUND(NOT_FOUND, "404_QUESTION_NOT_FOUND", "해당 질문 글을 찾을 수 없습니다."),
-    QUESTION_NOT_WRITER(BAD_REQUEST, "404_QUESTION_NOT_WRITER", "질문 글 수정/삭제 권한이 없습니다.");
+    QUESTION_NOT_WRITER(BAD_REQUEST, "404_QUESTION_NOT_WRITER", "질문 글 수정/삭제 권한이 없습니다."),
+
+    /** Conncetion error */
+    ES_NOT_CONNECT(INTERNAL_SERVER_ERROR, "500_ES_NOT_CONNECT", "Es서버와 연결 되지 않았습니다.");
 
     private final HttpStatus status;
     private final String code;
