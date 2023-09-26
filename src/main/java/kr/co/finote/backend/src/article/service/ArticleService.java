@@ -293,4 +293,11 @@ public class ArticleService {
     public void editTotalReply(Article article, int num) {
         article.editTotalReply(num);
     }
+
+    public void updateEs() {
+        List<Article> articleList = articleRepository.findAll();
+        for (Article article : articleList) {
+            articleEsService.addArticle(article); // article ES에 추가
+        }
+    }
 }

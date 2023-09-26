@@ -123,4 +123,12 @@ public class ArticleEsService {
     public void deleteArticle(Long articleId) {
         articleEsRepository.deleteByArticleId(articleId);
     }
+
+    public void addArticle(Article article) {
+        List<ArticleDocument> articleDocumentList =
+                articleEsRepository.findByArticleId(article.getId());
+        if (articleDocumentList.isEmpty()) {
+            articleEsRepository.save(ArticleDocument.of(article));
+        }
+    }
 }
