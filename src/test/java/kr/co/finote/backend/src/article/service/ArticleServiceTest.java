@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import kr.co.finote.backend.global.code.ResponseCode;
 import kr.co.finote.backend.global.exception.InvalidInputException;
 import kr.co.finote.backend.global.exception.NotFoundException;
-import kr.co.finote.backend.src.article.document.ArticleDocument;
 import kr.co.finote.backend.src.article.domain.Article;
 import kr.co.finote.backend.src.article.domain.ArticleLike;
 import kr.co.finote.backend.src.article.dto.cache.ArticleLikeCache;
@@ -44,7 +43,7 @@ class ArticleServiceTest {
     @Mock private ArticleEsRepository articleEsRepository;
     @Mock private KeywordService keywordService;
     @Mock private ArticleKeywordService articleKeywordService;
-    @Mock private ElasticService elasticService;
+    @Mock private ArticleEsService articleEsService;
     @Mock private UserService userService;
     @Mock private ArticleLikeService articleLikeService;
     @Mock private ArticleViewCacheService articleViewCacheService;
@@ -61,9 +60,6 @@ class ArticleServiceTest {
                 .thenReturn(Optional.empty());
         when(articleRepository.save(ArgumentMatchers.any(Article.class)))
                 .thenReturn(new Article(1L, user, "title", "body", 0, 0, 0, ""));
-        when(articleEsRepository.save(ArgumentMatchers.any()))
-                .thenReturn(
-                        new ArticleDocument("id", 1L, "title", "body", 0, 0, "author", "2023-01-01", ""));
 
         // when
         PostArticleResponse postArticleResponse = articleService.save(articleRequest, user);
