@@ -42,8 +42,8 @@ public class ArticlePreviewResponse {
                         .id(document.getArticleId())
                         .title(document.getTitle())
                         .totalLike(document.getTotalLike())
-                        .reply(document.getReply())
-                        .authorNickname(document.getAuthorNickName())
+                        .reply(document.getTotalReply())
+                        .authorNickname(document.getAuthorNickname())
                         .date(document.getCreatedDate())
                         .thumbnail(document.getThumbnail() == null ? "" : document.getThumbnail())
                         .profileImageUrl(

@@ -3,6 +3,7 @@ package kr.co.finote.backend.src.article.document;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import javax.persistence.Id;
+import kr.co.finote.backend.src.article.domain.Article;
 import kr.co.finote.backend.src.article.dto.request.ArticleRequest;
 import kr.co.finote.backend.src.user.domain.User;
 import lombok.AllArgsConstructor;
@@ -29,12 +30,11 @@ public class ArticleDocument {
     private String body;
 
     private int totalLike;
-    private int reply;
-
-    private String authorNickName;
-    private String createdDate;
-
+    private int totalReply;
     private String thumbnail;
+    private String createdDate;
+    private String authorNickname;
+    private String profileImageUrl;
 
     public static ArticleDocument createDocument(Long articleId, ArticleRequest request, User user) {
         String thumbnail1 = request.getThumbnail();
@@ -49,15 +49,31 @@ public class ArticleDocument {
                 .body(request.getBody())
                 .thumbnail(thumbnail1)
                 .totalLike(0)
-                .reply(0)
-                .authorNickName(user.getNickname())
+                .totalReply(0)
+                .authorNickname(user.getNickname())
+                .profileImageUrl(user.getProfileImageUrl())
                 .createdDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
                 .build();
     }
 
-    public void editArticleDocument(ArticleRequest request) {
-        this.title = request.getTitle().trim();
-        this.body = request.getBody();
-        this.thumbnail = request.getThumbnail();
+    public void editDocument(Article article) {
+        this.title = article.getTitle().trim();
+        this.body = article.getBody();
+        this.thumbnail = article.getThumbnail();
+    }
+
+    public void editTotalLike(int totalLike) {
+        this.totalLike = totalLike;
+        this.totalLike = Math.max(0, this.totalLike);
+    }
+
+    public void editTotalReply(int totalReply) {
+        this.totalReply = totalReply;
+        this.totalReply = Math.max(0, this.totalReply);
+    }
+
+    public void editByUser(User user) {
+        this.authorNickname = user.getNickname();
+        this.profileImageUrl = user.getProfileImageUrl();
     }
 }

@@ -75,9 +75,9 @@ public class Article extends BaseEntity {
                 .build();
     }
 
-    public void updateLikeCount(int num) {
+    public void editTotalLike(int num) {
         this.totalLike += num;
-        totalLike = Math.max(0, totalLike);
+        this.totalLike = Math.max(0, this.totalLike);
     }
 
     public void editArticle(ArticleRequest articleRequest) {
@@ -90,7 +90,12 @@ public class Article extends BaseEntity {
         this.isDeleted = true;
     }
 
-    public void updateTotalView() {
+    public void editTotalView() {
         this.totalView++;
+    }
+
+    public void editTotalReply(int num) {
+        this.totalReply += num;
+        this.totalReply = Math.max(0, totalReply);
     }
 }

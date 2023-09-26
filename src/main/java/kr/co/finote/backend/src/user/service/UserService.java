@@ -4,6 +4,7 @@ import kr.co.finote.backend.global.code.ResponseCode;
 import kr.co.finote.backend.global.exception.InvalidInputException;
 import kr.co.finote.backend.global.exception.NotFoundException;
 import kr.co.finote.backend.global.utils.StringUtils;
+import kr.co.finote.backend.src.article.service.ArticleEsService;
 import kr.co.finote.backend.src.qna.service.QuestionEsService;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.dto.request.AdditionalInfoRequest;
@@ -31,6 +32,7 @@ public class UserService {
     private final MailService mailService;
     private final EmailJoinCacheService emailJoinCacheService;
     private final QuestionEsService questionEsService;
+    private final ArticleEsService articleEsService;
 
     public ValidationNicknameResponse validateNickname(String nickname) {
         boolean existsByNickname = userRepository.existsByNicknameAndIsDeleted(nickname, false);
@@ -44,16 +46,16 @@ public class UserService {
 
     @Transactional
     public void editAdditionalInfo(User user, AdditionalInfoRequest request) {
-        validateNickname(request.getNickname());
-        validateBlogName(request.getBlogName());
-
-        User findUser =
-                userRepository
-                        .findByIdAndIsDeleted(user.getId(), false)
-                        .orElseThrow(() -> new NotFoundException(ResponseCode.USER_NOT_FOUND));
-
+        validateInput(request);
+        User findUser = findById(user.getId());
         findUser.updateAdditionalInfo(request);
         questionEsService.editDocumentByUser(findUser);
+        articleEsService.editArticleByUser(findUser);
+    }
+
+    private void validateInput(AdditionalInfoRequest request) {
+        validateNickname(request.getNickname());
+        validateBlogName(request.getBlogName());
     }
 
     public User findById(String userId) {

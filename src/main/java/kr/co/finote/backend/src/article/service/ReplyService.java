@@ -23,10 +23,14 @@ public class ReplyService {
 
     private final ReplyRepository replyRepository;
     private final ArticleService articleService;
+    private final ArticleEsService articleEsService;
 
     public PostReplyResponse postReply(
             User loginUser, String nickname, String title, ReplyRequest request) {
         Article article = articleService.findByNicknameAndTitle(nickname, title);
+        articleService.editTotalReply(article, 1); // 댓글 등록 시 댓글 수 증가
+        articleEsService.editTotalReply(
+                article.getId(), article.getTotalReply()); // 댓글 수 증가 Elasticsearch에도 반영
         boolean mine = isMine(article.getUser().getEmail(), loginUser.getEmail());
         Reply saveReply = saveReply(loginUser, request, article, mine);
         return PostReplyResponse.createPostReplyResponse(saveReply.getId());
@@ -83,5 +87,9 @@ public class ReplyService {
         Reply reply = getReply(replyId);
         checkReplyAuthority(loginUser, reply);
         reply.delete();
+        articleService.editTotalReply(reply.getArticle(), -1); // 댓글 삭제 시 댓글 수 감소
+        articleEsService.editTotalReply(
+                reply.getArticle().getId(),
+                reply.getArticle().getTotalReply()); // 댓글 수 감소 Elasticsearch에도 반영
     }
 }

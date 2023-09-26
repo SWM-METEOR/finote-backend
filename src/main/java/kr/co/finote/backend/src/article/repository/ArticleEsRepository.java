@@ -1,6 +1,6 @@
 package kr.co.finote.backend.src.article.repository;
 
-import java.util.Optional;
+import java.util.List;
 import kr.co.finote.backend.src.article.document.ArticleDocument;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Repository;
@@ -8,7 +8,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ArticleEsRepository extends ElasticsearchRepository<ArticleDocument, String> {
 
-    Optional<ArticleDocument> findByArticleId(Long articleId);
+    List<ArticleDocument> findByArticleId(Long articleId);
 
     void deleteByArticleId(Long articleId);
+
+    List<ArticleDocument> findByAuthorNickname(String authorNickName);
 }

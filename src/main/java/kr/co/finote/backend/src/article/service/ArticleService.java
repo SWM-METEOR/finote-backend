@@ -18,7 +18,6 @@ import kr.co.finote.backend.src.article.dto.cache.ArticleLikeCache;
 import kr.co.finote.backend.src.article.dto.request.ArticleRequest;
 import kr.co.finote.backend.src.article.dto.request.DragArticleRequest;
 import kr.co.finote.backend.src.article.dto.response.*;
-import kr.co.finote.backend.src.article.repository.ArticleEsRepository;
 import kr.co.finote.backend.src.article.repository.ArticleRepository;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.service.UserService;
@@ -43,42 +42,25 @@ public class ArticleService {
 
     // article 관련 레포지토리만 의존
     private final ArticleRepository articleRepository;
-    private final ArticleEsRepository articleEsRepository;
 
     // 나머지는 다른 도메인 서비스에 의존
-    private final KeywordService keywordService;
     private final ArticleKeywordService articleKeywordService;
-    private final ElasticService elasticService;
+    private final ArticleEsService articleEsService;
     private final UserService userService;
     private final ArticleLikeCacheService articleLikeCacheService;
     private final ArticleLikeService articleLikeService;
     private final ArticleViewCacheService articleViewCacheService;
-    private int callCount = 0;
-    private final int MAX_CALL_COUNT = 3;
 
     @Transactional
     public PostArticleResponse save(ArticleRequest articleRequest, User loginUser)
             throws JsonProcessingException {
-        Article saveArticle = null;
-        try {
-            callCount++;
-            isDuplicateTitle(articleRequest, loginUser); // 동일 title에 대한 중복 체크
 
-            Article article = Article.createArticle(articleRequest, loginUser);
-            saveArticle = articleRepository.save(article); // 새로운 아티클 RDB 저장
-            ArticleDocument document =
-                    ArticleDocument.createDocument(saveArticle.getId(), articleRequest, loginUser);
-            articleEsRepository.save(document); // 새로운 아티클 ES 저장
-            keywordService.extractAndSaveKeywords(saveArticle); // 키워드 추출 및 저장
-        } catch (Exception e) {
-            if (callCount > MAX_CALL_COUNT) {
-                throw e;
-            }
-            save(articleRequest, loginUser);
-        }
-        if (saveArticle == null) {
-            throw new InvalidInputException(ResponseCode.INTERNAL_ERROR);
-        }
+        // RDB 저장
+        isDuplicateTitle(articleRequest, loginUser);
+        Article saveArticle = articleRepository.save(Article.createArticle(articleRequest, loginUser));
+
+        // ES 저장로직은 별도 ES 서비스로 분리
+        articleEsService.save(articleRequest, loginUser, saveArticle.getId());
         return PostArticleResponse.of(saveArticle);
     }
 
@@ -124,18 +106,19 @@ public class ArticleService {
         boolean hasViewCache = articleViewCacheService.hasViewCache(key);
         if (!hasViewCache) {
             // 만약 24시간 내 조회 이력이 없을 경우
-            article.updateTotalView(); // 조회수 업데이트
+            article.editTotalView(); // 조회수 업데이트
             articleViewCacheService.cacheView(key); // 조회 내역 캐싱
         }
     }
 
     public ArticlePreviewListResponse getDragRelatedArticle(
             int page, int size, DragArticleRequest request) {
-        SearchHits<ArticleDocument> byTitle = elasticService.search(page, size, request.getDragText());
+        SearchHits<ArticleDocument> byTitle =
+                articleEsService.search(page, size, request.getDragText());
 
         List<SearchHit<ArticleDocument>> searchHits =
                 byTitle.getSearchHits().stream()
-                        .sorted(elasticService.scorecomparator())
+                        .sorted(articleEsService.scorecomparator())
                         .collect(Collectors.toList());
 
         List<ArticleDocument> documents =
@@ -162,10 +145,10 @@ public class ArticleService {
             String keyword = articleKeyword.getKeyword().getValue();
 
             // 각각의 키워드에 대해 es 검색
-            SearchHits<ArticleDocument> byKeyword = elasticService.search(keyword);
+            SearchHits<ArticleDocument> byKeyword = articleEsService.search(keyword);
             List<SearchHit<ArticleDocument>> searchHits =
                     byKeyword.getSearchHits().stream()
-                            .sorted(elasticService.scorecomparator())
+                            .sorted(articleEsService.scorecomparator())
                             .collect(Collectors.toList());
 
             List<ArticleDocument> documents =
@@ -237,17 +220,18 @@ public class ArticleService {
 
         if (articleLikeCache != null) {
             if (articleLikeCache.getIsDeleted()) {
-                article.updateLikeCount(1);
+                article.editTotalLike(1);
                 byUserAndArticle.get().updateIsDeleted(false);
             } else {
-                article.updateLikeCount(-1);
+                article.editTotalLike(-1);
                 byUserAndArticle.get().updateIsDeleted(true);
             }
             return LikeResponse.of(article);
         }
 
-        article.updateLikeCount(1);
+        article.editTotalLike(1);
         articleLikeService.save(user, article);
+        articleEsService.editTotalLike(article.getId(), article.getTotalLike());
 
         return LikeResponse.of(article);
     }
@@ -257,7 +241,7 @@ public class ArticleService {
         Article article = findById(articleId);
         checkArticleAuthority(loginUser, article);
         // ES 수정
-        elasticService.editArticle(article.getId(), request);
+        articleEsService.editDocument(article);
         article.editArticle(request);
         return PostArticleResponse.of(article);
     }
@@ -274,7 +258,7 @@ public class ArticleService {
         checkArticleAuthority(loginUser, article);
         // ES 삭제
         article.deleteArticle();
-        elasticService.deleteArticle(article.getId());
+        articleEsService.deleteArticle(article.getId());
         // 좋아요 내역 완전 삭제
         articleLikeService.deleteAllByArticle(article);
         // 키워드 내역 soft delete
@@ -294,9 +278,9 @@ public class ArticleService {
         }
 
         Article article = findByNicknameAndTitle(authorNickname, title);
-        ArticleLikeCache likelog = articleLikeCacheService.findLikeLog(reader, article);
+        ArticleLikeCache likeLog = articleLikeCacheService.findLikeLog(reader, article);
 
-        boolean isLiked = likelog != null && !likelog.getIsDeleted();
+        boolean isLiked = likeLog != null && !likeLog.getIsDeleted();
 
         return ArticleLikeCheckResponse.createArticleLikeCheckResponse(isLiked);
     }
@@ -304,5 +288,9 @@ public class ArticleService {
     public ArticleTotalLikeResponse totalLike(String authorNickname, String title) {
         Article article = findByNicknameAndTitle(authorNickname, title);
         return ArticleTotalLikeResponse.createArticleTotalLikeResponse(article.getTotalLike());
+    }
+
+    public void editTotalReply(Article article, int num) {
+        article.editTotalReply(num);
     }
 }

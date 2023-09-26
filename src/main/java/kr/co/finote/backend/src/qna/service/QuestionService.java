@@ -32,18 +32,18 @@ public class QuestionService {
     public PostQuestionResponse postQuestion(User author, PostQuestionRequest request) {
         isDuplicatedTitle(author, request);
 
-        int call_count = 0;
+        int callCount = 0;
         boolean isSaved = false;
         Question savedQuestion = questionRepository.save(Question.createQuestion(author, request));
 
-        while (call_count < MAX_CALL_COUNT) {
-            call_count += 1;
+        while (callCount < MAX_CALL_COUNT) {
+            callCount += 1;
             try {
                 questionEsService.saveDocument(savedQuestion, author);
                 isSaved = true;
                 break;
             } catch (Exception e) {
-                log.info("Save Question Document : {}", call_count);
+                log.info("Save Question Document : {}", callCount);
             }
         }
         if (!isSaved) throw new ConnectException(ResponseCode.ES_NOT_CONNECT);
@@ -76,9 +76,7 @@ public class QuestionService {
                         .findByIdAndIsDeleted(questionId, false)
                         .orElseThrow(() -> new NotFoundException(ResponseCode.QUESTION_NOT_FOUND));
 
-        if (!question.getUser().getNickname().equals(loginUser.getNickname())) {
-            throw new InvalidInputException(ResponseCode.QUESTION_NOT_WRITER);
-        }
+        checkQuestionAuthority(loginUser, question);
 
         question.edit(request);
         questionEsService.editDocumentByQuestion(question);
@@ -92,12 +90,16 @@ public class QuestionService {
                         .findByIdAndIsDeleted(questionId, false)
                         .orElseThrow(() -> new NotFoundException(ResponseCode.QUESTION_NOT_FOUND));
 
-        if (!question.getUser().getNickname().equals(loginUser.getNickname())) {
-            throw new InvalidInputException(ResponseCode.QUESTION_NOT_WRITER);
-        }
+        checkQuestionAuthority(loginUser, question);
 
         question.delete();
         questionEsService.deleteDocument(question.getId());
+    }
+
+    private static void checkQuestionAuthority(User loginUser, Question question) {
+        if (!question.getUser().getNickname().equals(loginUser.getNickname())) {
+            throw new InvalidInputException(ResponseCode.QUESTION_NOT_WRITER);
+        }
     }
 
     private Question findByUserAndTitle(User user, String title) {
