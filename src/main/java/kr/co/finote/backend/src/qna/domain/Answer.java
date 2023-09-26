@@ -38,6 +38,6 @@ public class Answer extends BaseEntity {
     private int totalUnlike;
 
     public static Answer createAnswer(User user, Question question, PostAnswerRequest request) {
-        return Answer.builder().user(user).question(question).body(request.getBody()).build();
+        return Answer.builder().user(user).question(question).body(request.getContent()).build();
     }
 }

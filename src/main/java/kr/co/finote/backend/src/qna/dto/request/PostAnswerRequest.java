@@ -13,5 +13,5 @@ import lombok.NoArgsConstructor;
 public class PostAnswerRequest {
 
     @NotBlank(message = "답변 내용을 입력해주세요")
-    private String body;
+    private String content;
 }
