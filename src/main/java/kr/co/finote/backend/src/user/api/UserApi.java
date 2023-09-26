@@ -9,6 +9,7 @@ import kr.co.finote.backend.src.article.service.ArticleLikeService;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.dto.request.*;
 import kr.co.finote.backend.src.user.dto.response.*;
+import kr.co.finote.backend.src.user.service.CategoryService;
 import kr.co.finote.backend.src.user.service.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class UserApi {
 
     UserService userService;
     ArticleLikeService articleLikeService;
+    CategoryService categoryService;
 
     /* Email Join API */
     @Operation(summary = "이메일 인증 코드 발송")
@@ -108,5 +110,12 @@ public class UserApi {
             @RequestParam int page,
             @RequestParam(required = false, defaultValue = "10") int size) {
         return articleLikeService.getLikeArticles(loginUser, page, size);
+    }
+
+    @Operation(summary = "카테고리 생성")
+    @PostMapping("/categories/add")
+    public CategoryResponse addCategory(
+            @Login User loginUser, @RequestBody @Valid CategoryRequest request) {
+        return categoryService.addCategory(loginUser, request);
     }
 }
