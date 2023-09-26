@@ -127,4 +127,10 @@ public class ArticleApi {
             @PathVariable String nickname, @PathVariable String title) {
         return articleService.totalLike(nickname, title);
     }
+
+    @Operation(summary = "글 데이터 ES 업데이트")
+    @PostMapping("/update-es")
+    public void updateEs() {
+        articleService.updateEs();
+    }
 }

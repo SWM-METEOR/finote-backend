@@ -56,6 +56,20 @@ public class ArticleDocument {
                 .build();
     }
 
+    public static ArticleDocument of(Article article) {
+        return ArticleDocument.builder()
+                .articleId(article.getId())
+                .title(article.getTitle().trim())
+                .body(article.getBody())
+                .thumbnail(article.getThumbnail())
+                .totalLike(article.getTotalLike())
+                .totalReply(article.getTotalReply())
+                .authorNickname(article.getUser().getNickname())
+                .profileImageUrl(article.getUser().getProfileImageUrl())
+                .createdDate(article.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
+                .build();
+    }
+
     public void editDocument(Article article) {
         this.title = article.getTitle().trim();
         this.body = article.getBody();
