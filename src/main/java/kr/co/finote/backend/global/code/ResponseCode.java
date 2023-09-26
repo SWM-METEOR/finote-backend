@@ -29,6 +29,7 @@ public enum ResponseCode {
     EMAIL_ALREADY_EXIST(BAD_REQUEST, "400_EMAIL_ALREADY_EXIST", "해당 이메일로 가입된 계정이 존재합니다."),
     EMAIL_NOT_VERIFIED(BAD_REQUEST, "400_NOT_VERIFIED_EMAIL", "인증되지 않은 이메일입니다."),
     EMAIL_CODE_NOT_MATCH(BAD_REQUEST, "400_EMAIL_CODE_NOT_MATCH", "인증 코드가 일치하지 않습니다."),
+    CATEGORY_ALREADY_EXIST(BAD_REQUEST, "400_CATEGORY_ALREADY_EXIST", "같은 이름의 카테고리가 이미 존재합니다."),
 
     /** article error */
     ARTICLE_NOT_FOUND(NOT_FOUND, "404_ARTICLE_NOT_FOUND", "해당 게시글을 찾을 수 없습니다."),

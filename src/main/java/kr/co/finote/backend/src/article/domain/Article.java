@@ -3,6 +3,7 @@ package kr.co.finote.backend.src.article.domain;
 import javax.persistence.*;
 import kr.co.finote.backend.global.entity.BaseEntity;
 import kr.co.finote.backend.src.article.dto.request.ArticleRequest;
+import kr.co.finote.backend.src.user.domain.Category;
 import kr.co.finote.backend.src.user.domain.User;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -21,6 +22,10 @@ public class Article extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @Column(nullable = false)
     private String title = "";
@@ -43,6 +48,7 @@ public class Article extends BaseEntity {
     public Article(
             Long id,
             User user,
+            Category category,
             String title,
             String body,
             int totalLike,
@@ -52,6 +58,7 @@ public class Article extends BaseEntity {
         super();
         this.id = id;
         this.user = user;
+        this.category = category;
         this.title = title;
         this.body = body;
         this.totalLike = totalLike;
