@@ -6,6 +6,7 @@ import javax.validation.Valid;
 import kr.co.finote.backend.global.annotation.Login;
 import kr.co.finote.backend.src.qna.dto.request.PostQuestionRequest;
 import kr.co.finote.backend.src.qna.dto.response.PostQuestionResponse;
+import kr.co.finote.backend.src.qna.dto.response.QuestionPreviewListResponse;
 import kr.co.finote.backend.src.qna.dto.response.QuestionResponse;
 import kr.co.finote.backend.src.qna.service.QuestionService;
 import kr.co.finote.backend.src.user.domain.User;
@@ -22,6 +23,13 @@ import org.springframework.web.bind.annotation.*;
 public class QuestionApi {
 
     QuestionService questionService;
+
+    @Operation(summary = "질문답변 커뮤니티 메인 페이지", description = "무한 스크롤에 대응하여 결과 제공")
+    @GetMapping("/main-page")
+    public QuestionPreviewListResponse mainPage(
+            @RequestParam int page, @RequestParam(required = false, defaultValue = "30") int size) {
+        return questionService.mainPage(page, size);
+    }
 
     @Operation(summary = "질문글 생성")
     @PostMapping("/write")

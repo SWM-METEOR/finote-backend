@@ -295,7 +295,7 @@ public class ArticleService {
     }
 
     public void updateEs() {
-        List<Article> articleList = articleRepository.findAll();
+        List<Article> articleList = articleRepository.findAllByIsDeleted(false);
         for (Article article : articleList) {
             articleEsService.addArticle(article); // article ES에 추가
         }
