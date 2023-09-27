@@ -25,7 +25,7 @@ public class QuestionApi {
     QuestionService questionService;
 
     @Operation(summary = "질문답변 커뮤니티 메인 페이지", description = "무한 스크롤에 대응하여 결과 제공")
-    @GetMapping("/main-page")
+    @GetMapping("/question-list")
     public QuestionPreviewListResponse mainPage(
             @RequestParam int page, @RequestParam(required = false, defaultValue = "30") int size) {
         return questionService.mainPage(page, size);
