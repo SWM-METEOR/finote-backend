@@ -1,18 +1,24 @@
 package kr.co.finote.backend.src.qna.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import kr.co.finote.backend.global.code.ResponseCode;
-import kr.co.finote.backend.global.exception.ConnectException;
 import kr.co.finote.backend.global.exception.InvalidInputException;
 import kr.co.finote.backend.global.exception.NotFoundException;
 import kr.co.finote.backend.src.qna.domain.Question;
 import kr.co.finote.backend.src.qna.dto.request.PostQuestionRequest;
 import kr.co.finote.backend.src.qna.dto.response.PostQuestionResponse;
+import kr.co.finote.backend.src.qna.dto.response.QuestionPreviewListResponse;
+import kr.co.finote.backend.src.qna.dto.response.QuestionPreviewResponse;
 import kr.co.finote.backend.src.qna.dto.response.QuestionResponse;
 import kr.co.finote.backend.src.qna.repository.QuestionRepository;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,27 +32,12 @@ public class QuestionService {
 
     private final UserService userService;
 
-    private final int MAX_CALL_COUNT = 3;
-
     @Transactional
     public PostQuestionResponse postQuestion(User author, PostQuestionRequest request) {
         isDuplicatedTitle(author, request);
-
-        int callCount = 0;
-        boolean isSaved = false;
         Question savedQuestion = questionRepository.save(Question.createQuestion(author, request));
 
-        while (callCount < MAX_CALL_COUNT) {
-            callCount += 1;
-            try {
-                questionEsService.saveDocument(savedQuestion, author);
-                isSaved = true;
-                break;
-            } catch (Exception e) {
-                log.info("Save Question Document : {}", callCount);
-            }
-        }
-        if (!isSaved) throw new ConnectException(ResponseCode.ES_NOT_CONNECT);
+        questionEsService.save(savedQuestion, author);
 
         return PostQuestionResponse.of(author, savedQuestion);
     }
@@ -94,6 +85,36 @@ public class QuestionService {
 
         question.delete();
         questionEsService.deleteDocument(question.getId());
+    }
+
+    public QuestionPreviewListResponse questionList(int page, int size) {
+        int pageNum = page - 1;
+        Pageable pageable = PageRequest.of(pageNum, size, mainPageSort());
+
+        List<Question> contents = questionRepository.findAllByIsDeleted(false, pageable);
+
+        List<QuestionPreviewResponse> questionPreviewResponseList =
+                ToQuestionPreviewResponses(contents);
+
+        return QuestionPreviewListResponse.createdQuestionPreviewListResponse(
+                page, size, questionPreviewResponseList);
+    }
+
+    private Sort mainPageSort() {
+        return Sort.by(Sort.Order.desc("totalAnswer"), Sort.Order.desc("createdDate"));
+    }
+
+    private List<QuestionPreviewResponse> ToQuestionPreviewResponses(List<?> list) {
+        List<QuestionPreviewResponse> questionPreviewResponseList = new ArrayList<>();
+
+        for (Object object : list) {
+            if (object instanceof Question) {
+                Question question = (Question) object;
+                questionPreviewResponseList.add(QuestionPreviewResponse.of(question));
+            }
+        }
+
+        return questionPreviewResponseList;
     }
 
     private static void checkQuestionAuthority(User loginUser, Question question) {
