@@ -5,12 +5,11 @@ import java.util.List;
 import kr.co.finote.backend.global.code.ResponseCode;
 import kr.co.finote.backend.global.exception.InvalidInputException;
 import kr.co.finote.backend.global.exception.NotFoundException;
+import kr.co.finote.backend.src.qna.document.QuestionDocument;
 import kr.co.finote.backend.src.qna.domain.Question;
+import kr.co.finote.backend.src.qna.dto.request.InlineQnaRequest;
 import kr.co.finote.backend.src.qna.dto.request.PostQuestionRequest;
-import kr.co.finote.backend.src.qna.dto.response.PostQuestionResponse;
-import kr.co.finote.backend.src.qna.dto.response.QuestionPreviewListResponse;
-import kr.co.finote.backend.src.qna.dto.response.QuestionPreviewResponse;
-import kr.co.finote.backend.src.qna.dto.response.QuestionResponse;
+import kr.co.finote.backend.src.qna.dto.response.*;
 import kr.co.finote.backend.src.qna.repository.QuestionRepository;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.service.UserService;
@@ -111,10 +110,21 @@ public class QuestionService {
             if (object instanceof Question) {
                 Question question = (Question) object;
                 questionPreviewResponseList.add(QuestionPreviewResponse.of(question));
+            } else if (object instanceof QuestionDocument) {
+                QuestionDocument document = (QuestionDocument) object;
+                questionPreviewResponseList.add(QuestionPreviewResponse.of(document));
             }
         }
 
         return questionPreviewResponseList;
+    }
+
+    public InlineQnaResponse inlineQna(InlineQnaRequest request) {
+        List<QuestionDocument> documents = questionEsService.inlineQna(request.getDragText());
+        List<QuestionPreviewResponse> questionPreviewResponseList =
+                ToQuestionPreviewResponses(documents);
+
+        return InlineQnaResponse.createInlineQnaResponse(questionPreviewResponseList);
     }
 
     private static void checkQuestionAuthority(User loginUser, Question question) {

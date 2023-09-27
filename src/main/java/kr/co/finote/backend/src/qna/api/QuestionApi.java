@@ -4,7 +4,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
 import kr.co.finote.backend.global.annotation.Login;
+import kr.co.finote.backend.src.qna.dto.request.InlineQnaRequest;
 import kr.co.finote.backend.src.qna.dto.request.PostQuestionRequest;
+import kr.co.finote.backend.src.qna.dto.response.InlineQnaResponse;
 import kr.co.finote.backend.src.qna.dto.response.PostQuestionResponse;
 import kr.co.finote.backend.src.qna.dto.response.QuestionPreviewListResponse;
 import kr.co.finote.backend.src.qna.dto.response.QuestionResponse;
@@ -64,5 +66,11 @@ public class QuestionApi {
     @PostMapping("/delete/{question-id}")
     public void deleteQuestion(@Login User loginUser, @PathVariable("question-id") Long questionId) {
         questionService.deleteQuestion(loginUser, questionId);
+    }
+
+    @Operation(summary = "스마트 드래그 - Q&A")
+    @PostMapping("/inline-question-list")
+    public InlineQnaResponse inlineQna(@RequestBody @Valid InlineQnaRequest request) {
+        return questionService.inlineQna(request);
     }
 }
