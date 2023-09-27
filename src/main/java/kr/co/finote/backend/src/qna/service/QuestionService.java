@@ -87,7 +87,7 @@ public class QuestionService {
         questionEsService.deleteDocument(question.getId());
     }
 
-    public QuestionPreviewListResponse mainPage(int page, int size) {
+    public QuestionPreviewListResponse questionList(int page, int size) {
         int pageNum = page - 1;
         Pageable pageable = PageRequest.of(pageNum, size, mainPageSort());
 
