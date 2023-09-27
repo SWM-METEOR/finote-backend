@@ -14,6 +14,7 @@ import kr.co.finote.backend.src.qna.repository.QuestionEsRepository;
 import kr.co.finote.backend.src.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.QueryStringQueryBuilder;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;

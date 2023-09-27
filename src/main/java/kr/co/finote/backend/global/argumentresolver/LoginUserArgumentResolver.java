@@ -2,6 +2,8 @@ package kr.co.finote.backend.global.argumentresolver;
 
 import kr.co.finote.backend.global.annotation.Login;
 import kr.co.finote.backend.global.authentication.PrincipalDetails;
+import kr.co.finote.backend.global.code.ResponseCode;
+import kr.co.finote.backend.global.exception.UnAuthorizedException;
 import kr.co.finote.backend.src.user.domain.User;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;
@@ -29,6 +31,9 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
             WebDataBinderFactory binderFactory)
             throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal().equals("anonymousUser")) {
+            throw new UnAuthorizedException(ResponseCode.UNAUTHENTICATED);
+        }
         PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
         return principal.getUser();
     }
