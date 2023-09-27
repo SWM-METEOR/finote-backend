@@ -1,6 +1,10 @@
 package kr.co.finote.backend.src.qna.service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 import kr.co.finote.backend.global.code.ResponseCode;
 import kr.co.finote.backend.global.exception.ConnectException;
 import kr.co.finote.backend.global.exception.NotFoundException;
@@ -10,6 +14,12 @@ import kr.co.finote.backend.src.qna.repository.QuestionEsRepository;
 import kr.co.finote.backend.src.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.QueryStringQueryBuilder;
+import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
+import org.springframework.data.elasticsearch.core.SearchHit;
+import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,6 +28,7 @@ import org.springframework.stereotype.Service;
 public class QuestionEsService {
 
     private final QuestionEsRepository questionEsRepository;
+    private final ElasticsearchRestTemplate elasticsearchRestTemplate;
 
     private final int MAX_CALL_COUNT = 3;
 
@@ -62,5 +73,36 @@ public class QuestionEsService {
 
     public void deleteDocument(Long questionId) {
         questionEsRepository.deleteByQuestionId(questionId);
+    }
+
+    public List<QuestionDocument> inlineQna(String searchText) {
+        SearchHits<QuestionDocument> results = search(searchText);
+
+        List<SearchHit<QuestionDocument>> searchHits =
+                results.getSearchHits().stream().sorted(scoreComparator()).collect(Collectors.toList());
+
+        return searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
+    }
+
+    private SearchHits<QuestionDocument> search(String searchText) {
+        NativeSearchQuery searchQuery = getNativeSearchQuery(searchText);
+        return elasticsearchRestTemplate.search(searchQuery, QuestionDocument.class);
+    }
+
+    private NativeSearchQuery getNativeSearchQuery(String searchText) {
+        QueryStringQueryBuilder builder = QueryBuilders.queryStringQuery(searchText);
+        return new NativeSearchQuery(builder);
+    }
+
+    public Comparator<SearchHit<QuestionDocument>> scoreComparator() {
+        return (o1, o2) -> {
+            if (o1.getScore() != o2.getScore()) {
+                return Float.compare(o2.getScore(), o1.getScore());
+            }
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+            LocalDate date1 = LocalDate.parse(o1.getContent().getCreatedDate(), formatter);
+            LocalDate date2 = LocalDate.parse(o2.getContent().getCreatedDate(), formatter);
+            return date2.compareTo(date1);
+        };
     }
 }
