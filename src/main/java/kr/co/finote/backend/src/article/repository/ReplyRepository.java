@@ -12,6 +12,6 @@ import org.springframework.stereotype.Repository;
 public interface ReplyRepository extends JpaRepository<Reply, Long> {
 
     @Query(
-            "select r from Reply r join fetch r.user where r.article = :article and r.isDeleted = false")
+            "select r from Reply r join fetch r.user where r.article = :article and r.isDeleted = false order by r.createdDate")
     List<Reply> findAllWithArticle(@Param("article") Article article);
 }
