@@ -15,4 +15,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     boolean existsByNameAndUserAndIsDeleted(String name, User user, Boolean isDeleted);
 
     List<Category> findAllByUserAndIsDeletedOrderByCreatedDate(User user, Boolean isDeleted);
+
+    Optional<Category> findByNameAndIsDeleted(String name, Boolean isDeleted);
 }

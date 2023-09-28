@@ -1,8 +1,10 @@
 package kr.co.finote.backend.src.user.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import kr.co.finote.backend.global.code.ResponseCode;
+import kr.co.finote.backend.global.exception.CustomException;
 import kr.co.finote.backend.global.exception.InvalidInputException;
 import kr.co.finote.backend.global.exception.NotFoundException;
 import kr.co.finote.backend.src.article.service.ArticleService;
@@ -77,23 +79,42 @@ public class CategoryService {
     }
 
     public CategoryListResponse getCategories(User loginUser) {
-        List<Category> categoryList = categoryRepository.findAllByUserAndIsDeletedOrderByCreatedDate(loginUser, false);
-        List<CategoryResponse> categoryResponseList = toCategoryResponseList(categoryList);
+        List<CategoryResponse> categoryResponseList =
+                getEtcCategoryInformation(loginUser); // 기타 카테고리 정보
+        getCategoriesInformation(loginUser, categoryResponseList); // 그 외 유저 생성한 카테고리 정보
         return CategoryListResponse.of(categoryResponseList);
     }
 
     @NotNull
-    private List<CategoryResponse> toCategoryResponseList(List<Category> categoryList) {
-        return categoryList.stream()
-                .map(
-                        category -> {
-                            int totalArticles = getTotalArticles(category);
-                            return CategoryResponse.of(category, totalArticles);
-                        })
-                .collect(Collectors.toList());
+    private List<CategoryResponse> getEtcCategoryInformation(User loginUser) {
+        List<CategoryResponse> categoryResponseList = new ArrayList<>();
+        Category etcCategory =
+                categoryRepository
+                        .findByNameAndIsDeleted("기타", false)
+                        .orElseThrow(() -> new CustomException(ResponseCode.CATEGORY_NOT_FOUND));
+        int etcCategoryTotalArticles = articleService.countByCategoryAndUser(etcCategory, loginUser);
+        CategoryResponse etcCategoryResponse =
+                CategoryResponse.of(etcCategory, etcCategoryTotalArticles);
+        categoryResponseList.add(etcCategoryResponse);
+        return categoryResponseList;
     }
 
-    private int getTotalArticles(Category category) {
-        return articleService.countByCategory(category);
+    private void getCategoriesInformation(
+            User loginUser, List<CategoryResponse> categoryResponseList) {
+        List<Category> categoryList =
+                categoryRepository.findAllByUserAndIsDeletedOrderByCreatedDate(loginUser, false);
+        List<CategoryResponse> customCateoyList =
+                categoryList.stream()
+                        .map(
+                                category -> {
+                                    int totalArticles = getTotalArticles(category, loginUser);
+                                    return CategoryResponse.of(category, totalArticles);
+                                })
+                        .collect(Collectors.toList());
+        categoryResponseList.addAll(customCateoyList);
+    }
+
+    private int getTotalArticles(Category category, User loginUser) {
+        return articleService.countByCategoryAndUser(category, loginUser);
     }
 }
