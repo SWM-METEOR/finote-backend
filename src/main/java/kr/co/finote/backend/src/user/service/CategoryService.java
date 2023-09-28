@@ -55,7 +55,7 @@ public class CategoryService {
 
     private Category findById(Long categoryId) {
         return categoryRepository
-                .findById(categoryId)
+                .findByIdAndIsDeleted(categoryId, false)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.CATEGORY_NOT_FOUND));
     }
 
