@@ -118,4 +118,19 @@ public class UserApi {
             @Login User loginUser, @RequestBody @Valid CategoryRequest request) {
         return categoryService.addCategory(loginUser, request);
     }
+
+    @Operation(summary = "카테고리 수정")
+    @PostMapping("/categories/edit/{category-id}")
+    public CategoryResponse editCategory(
+            @Login User loginUser,
+            @PathVariable("category-id") Long categoryId,
+            @RequestBody @Valid CategoryRequest request) {
+        return categoryService.editCategory(loginUser, categoryId, request);
+    }
+
+    @Operation(summary = "카테고리 삭제")
+    @PostMapping("/categories/delete/{category-id}")
+    public void deleteCategory(@Login User loginUser, @PathVariable("category-id") Long categoryId) {
+        categoryService.deleteCategory(loginUser, categoryId);
+    }
 }

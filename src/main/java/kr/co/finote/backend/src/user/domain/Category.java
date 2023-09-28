@@ -27,4 +27,12 @@ public class Category extends BaseEntity {
     public static Category createCategory(User user, String name) {
         return Category.builder().user(user).name(name).build();
     }
+
+    public void editCategory(String name) {
+        this.name = name;
+    }
+
+    public void deleteCategory() {
+        this.isDeleted = true;
+    }
 }

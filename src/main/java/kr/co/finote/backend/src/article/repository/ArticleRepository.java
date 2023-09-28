@@ -3,6 +3,7 @@ package kr.co.finote.backend.src.article.repository;
 import java.util.List;
 import java.util.Optional;
 import kr.co.finote.backend.src.article.domain.Article;
+import kr.co.finote.backend.src.user.domain.Category;
 import kr.co.finote.backend.src.user.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,4 +22,6 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     List<Article> findAllByIsDeleted(Boolean isDeleted);
 
     Optional<Article> findByUserAndTitleAndIsDeleted(User user, String title, boolean isDeleted);
+
+    boolean existsByCategoryAndIsDeleted(Category category, boolean isDeleted);
 }

@@ -19,6 +19,7 @@ import kr.co.finote.backend.src.article.dto.request.ArticleRequest;
 import kr.co.finote.backend.src.article.dto.request.DragArticleRequest;
 import kr.co.finote.backend.src.article.dto.response.*;
 import kr.co.finote.backend.src.article.repository.ArticleRepository;
+import kr.co.finote.backend.src.user.domain.Category;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -299,5 +300,9 @@ public class ArticleService {
         for (Article article : articleList) {
             articleEsService.addArticle(article); // article ES에 추가
         }
+    }
+
+    public boolean existsByCategory(Category category) {
+        return articleRepository.existsByCategoryAndIsDeleted(category, false);
     }
 }
