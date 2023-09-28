@@ -305,4 +305,8 @@ public class ArticleService {
     public boolean existsByCategory(Category category) {
         return articleRepository.existsByCategoryAndIsDeleted(category, false);
     }
+
+    public int countByCategory(Category category) {
+        return articleRepository.countAllByCategoryAndIsDeleted(category, false);
+    }
 }

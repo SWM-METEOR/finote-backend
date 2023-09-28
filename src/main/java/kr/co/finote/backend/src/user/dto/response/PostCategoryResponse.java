@@ -6,13 +6,12 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class CategoryResponse {
+public class PostCategoryResponse {
 
     private Long id;
     private String name;
-    private int totalArticles;
 
-    public static CategoryResponse of(Category category, int totalArticles) {
-        return new CategoryResponse(category.getId(), category.getName(), totalArticles);
+    public static PostCategoryResponse of(Category category) {
+        return new PostCategoryResponse(category.getId(), category.getName());
     }
 }
