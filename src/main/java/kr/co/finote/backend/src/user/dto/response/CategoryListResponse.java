@@ -10,7 +10,8 @@ public class CategoryListResponse {
 
     private List<CategoryResponse> categoryResponseList;
 
-    public static CategoryListResponse of(List<CategoryResponse> categoryResponseList) {
+    public static CategoryListResponse createCategoryListResponse(
+            List<CategoryResponse> categoryResponseList) {
         return new CategoryListResponse(categoryResponseList);
     }
 }

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import kr.co.finote.backend.global.code.ResponseCode;
-import kr.co.finote.backend.global.exception.CustomException;
 import kr.co.finote.backend.global.exception.InvalidInputException;
 import kr.co.finote.backend.global.exception.NotFoundException;
 import kr.co.finote.backend.src.article.service.ArticleService;
@@ -16,12 +15,14 @@ import kr.co.finote.backend.src.user.dto.response.CategoryResponse;
 import kr.co.finote.backend.src.user.dto.response.PostCategoryResponse;
 import kr.co.finote.backend.src.user.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
@@ -82,7 +83,7 @@ public class CategoryService {
         List<CategoryResponse> categoryResponseList =
                 getEtcCategoryInformation(loginUser); // 기타 카테고리 정보
         getCategoriesInformation(loginUser, categoryResponseList); // 그 외 유저 생성한 카테고리 정보
-        return CategoryListResponse.of(categoryResponseList);
+        return CategoryListResponse.createCategoryListResponse(categoryResponseList);
     }
 
     @NotNull
@@ -91,8 +92,8 @@ public class CategoryService {
         Category etcCategory =
                 categoryRepository
                         .findByNameAndIsDeleted("기타", false)
-                        .orElseThrow(() -> new CustomException(ResponseCode.CATEGORY_NOT_FOUND));
-        int etcCategoryTotalArticles = articleService.countByCategoryAndUser(etcCategory, loginUser);
+                        .orElseThrow(() -> new NotFoundException(ResponseCode.CATEGORY_NOT_FOUND));
+        Long etcCategoryTotalArticles = getTotalArticles(etcCategory, loginUser); // 기타 카테고리에 존재하는 글 개수
         CategoryResponse etcCategoryResponse =
                 CategoryResponse.of(etcCategory, etcCategoryTotalArticles);
         categoryResponseList.add(etcCategoryResponse);
@@ -103,18 +104,18 @@ public class CategoryService {
             User loginUser, List<CategoryResponse> categoryResponseList) {
         List<Category> categoryList =
                 categoryRepository.findAllByUserAndIsDeletedOrderByCreatedDate(loginUser, false);
-        List<CategoryResponse> customCateoyList =
+        List<CategoryResponse> customCategoryList =
                 categoryList.stream()
                         .map(
                                 category -> {
-                                    int totalArticles = getTotalArticles(category, loginUser);
+                                    Long totalArticles = getTotalArticles(category, loginUser);
                                     return CategoryResponse.of(category, totalArticles);
                                 })
                         .collect(Collectors.toList());
-        categoryResponseList.addAll(customCateoyList);
+        categoryResponseList.addAll(customCategoryList);
     }
 
-    private int getTotalArticles(Category category, User loginUser) {
+    private Long getTotalArticles(Category category, User loginUser) {
         return articleService.countByCategoryAndUser(category, loginUser);
     }
 }

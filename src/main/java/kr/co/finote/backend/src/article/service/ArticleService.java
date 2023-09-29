@@ -306,7 +306,7 @@ public class ArticleService {
         return articleRepository.existsByCategoryAndIsDeleted(category, false);
     }
 
-    public int countByCategoryAndUser(Category category, User loginUser) {
+    public Long countByCategoryAndUser(Category category, User loginUser) {
         return articleRepository.countAllByCategoryAndUserAndIsDeleted(category, loginUser, false);
     }
 }
