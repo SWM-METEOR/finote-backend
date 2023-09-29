@@ -112,16 +112,23 @@ public class UserApi {
         return articleLikeService.getLikeArticles(loginUser, page, size);
     }
 
+    /** category * */
+    @Operation(summary = "카테고리 목록")
+    @GetMapping("/categories")
+    public CategoryListResponse getCategories(@Login User loginUser) {
+        return categoryService.getCategories(loginUser);
+    }
+
     @Operation(summary = "카테고리 생성")
     @PostMapping("/categories/add")
-    public CategoryResponse addCategory(
+    public PostCategoryResponse addCategory(
             @Login User loginUser, @RequestBody @Valid CategoryRequest request) {
         return categoryService.addCategory(loginUser, request);
     }
 
     @Operation(summary = "카테고리 수정")
     @PostMapping("/categories/edit/{category-id}")
-    public CategoryResponse editCategory(
+    public PostCategoryResponse editCategory(
             @Login User loginUser,
             @PathVariable("category-id") Long categoryId,
             @RequestBody @Valid CategoryRequest request) {

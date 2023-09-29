@@ -24,4 +24,6 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     Optional<Article> findByUserAndTitleAndIsDeleted(User user, String title, boolean isDeleted);
 
     boolean existsByCategoryAndIsDeleted(Category category, boolean isDeleted);
+
+    Long countAllByCategoryAndUserAndIsDeleted(Category category, User user, boolean isDeleted);
 }
