@@ -38,7 +38,7 @@ jobs:
       with:
         arguments: clean build -x test
     - name: Test with Gradle
-      run: SPRING_PROFILES_ACTIVE=[test] ./gradlew test
+      run: ./gradlew test
 
   deploy:
     needs: build
