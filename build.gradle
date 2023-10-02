@@ -38,6 +38,10 @@ dependencies {
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+	//needed for test environment
+	testCompileOnly 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	runtimeOnly 'org.postgresql:postgresql'
@@ -75,6 +79,12 @@ dependencies {
 
 	// email code
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	//h2
+	runtimeOnly 'com.h2database:h2:1.4.199'
+
+	//webflux
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 }
 
 tasks.named('test') {

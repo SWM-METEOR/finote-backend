@@ -1,0 +1,120 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+    session:
+      cookie:
+        same-site: none
+        secure: true
+
+spring:
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+
+  jwt:
+    secret: ${JWT_SECRET_KEY}
+    token:
+      access-expiration-time: ${ACCESS_TOKEN_EXPIRE_TIME}
+      refresh-expiration-time: ${REFRESH_TOKEN_EXPIRE_TIME}
+
+  profiles:
+    active: test
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=PostgreSQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update #create update none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            url: ${GOOGLE_BASE_URL}
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            redirect-uri: ${GOOGLE_CALLBACK_URL}
+            token-uri: ${GOOGLE_TOKEN_URL}
+            userinfo-request-uri: ${GOOGLE_USERINFO_URL}
+            scope:
+              - profile
+              - email
+
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          timeout: 5000
+          ssl:
+            trust: ${MAIL_HOST}
+            enable: true
+            required: true
+    protocol: smtp
+    default-encoding: UTF-8
+    test-connection: true
+
+springdoc:
+  swagger-ui:
+    path: /finote-api-docs
+    disable-swagger-default-url: true
+    tags-sorter: alpha
+    operations-sorter: method, alpha
+  api-docs:
+    path: /api-docs
+
+
+# ChatGpt
+chatgpt:
+  api-key: ${FINOTE_GPT_KEY}
+  endpoint: ${GPT_ENDPOINT}
+  model: ${GPT_MODEL}
+  max-token: ${GPT_MAX_TOKEN}
+  temperature: ${GPT_TEMPERATURE}
+
+logging:
+  slack:
+    webhook-uri: ${SLACK_WEBHOOK_URI}
+  config: classpath:logback-slack.xml
+  level:
+    com:
+      amazonaws:
+        util:
+          com.amazonaws.util.EC2MetadataUtils: error
+
+# AWS S3 cloud
+cloud:
+  aws:
+    s3:
+      bucket: ${S3_BUCKET_NAME}
+    region:
+      static: ${S3_REGION}
+      auto: false
+    credentials:
+      access-key: ${S3_ACCESS_KEY}
+      secret-key: ${S3_SECRET_KEY}
+    stack:
+      auto: false
+
