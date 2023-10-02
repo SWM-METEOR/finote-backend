@@ -37,8 +37,10 @@ jobs:
       uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
       with:
         arguments: clean build -x test
+
     - name: Test with Gradle
-      run: ./gradlew test -Ptest
+    - run: echo "${{ secrets.TEST_PROPERTIES }}" > ./src/test/resources/application.properties
+    - run: ./gradlew test
 
   deploy:
     needs: build
