@@ -38,7 +38,7 @@ jobs:
       with:
         arguments: clean build -x test
     - name: Test with Gradle
-      run: ./gradlew test
+      run: ./gradlew test -Ptest
 
   deploy:
     needs: build
