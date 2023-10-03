@@ -38,6 +38,12 @@ jobs:
       with:
         arguments: clean build -x test
 
+    - name: Set up Test Properties
+      run: echo "${{ secrets.TEST_PROPERTIES }}" > ./src/test/resources/application.properties
+
+    - name: Test with Gradle
+      run: ./gradlew test
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
