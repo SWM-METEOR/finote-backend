@@ -40,7 +40,14 @@ public class SecurityConfig {
     @Value("${QNA_URLS}")
     private String[] qnaUrls;
 
+    @Value("${ANSWER_URLS}")
+    private String[] answerUrls;
+
+    @Value("${REPLY_URLS}")
+    private String[] replyUrls;
+
     private final JwtTokenProvider jwtTokenProvider;
+
     private final JwtService jwtService;
 
     @Bean
@@ -65,6 +72,10 @@ public class SecurityConfig {
                 .antMatchers(commonUrls)
                 .authenticated()
                 .antMatchers(qnaUrls)
+                .authenticated()
+                .antMatchers(answerUrls)
+                .authenticated()
+                .antMatchers(replyUrls)
                 .authenticated()
                 .anyRequest()
                 .permitAll()
