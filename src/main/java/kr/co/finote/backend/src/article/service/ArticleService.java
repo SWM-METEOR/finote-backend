@@ -51,6 +51,7 @@ public class ArticleService {
     private final ArticleLikeCacheService articleLikeCacheService;
     private final ArticleLikeService articleLikeService;
     private final ArticleViewCacheService articleViewCacheService;
+    private final KeywordService keywordService;
 
     @Transactional
     public PostArticleResponse save(ArticleRequest articleRequest, User loginUser)
@@ -59,6 +60,9 @@ public class ArticleService {
         // RDB 저장
         isDuplicateTitle(articleRequest, loginUser);
         Article saveArticle = articleRepository.save(Article.createArticle(articleRequest, loginUser));
+
+        // 키워드 추출 및 저장
+        keywordService.extractAndSaveKeywords(saveArticle);
 
         // ES 저장로직은 별도 ES 서비스로 분리
         articleEsService.save(articleRequest, loginUser, saveArticle.getId());
