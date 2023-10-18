@@ -70,7 +70,7 @@ public class ArticleService {
         // ES 저장로직은 별도 ES 서비스로 분리
         articleEsService.save(articleRequest, loginUser, saveArticle.getId());
 
-        //Message Queue에 데이터 추가
+        // Message Queue에 데이터 추가
         sqsSender.sendMessage(FeedRequest.createFeedRequest(loginUser.getId(), saveArticle.getId()));
 
         return PostArticleResponse.of(saveArticle);

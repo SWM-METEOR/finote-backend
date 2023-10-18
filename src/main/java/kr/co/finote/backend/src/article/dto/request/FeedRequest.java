@@ -1,6 +1,5 @@
 package kr.co.finote.backend.src.article.dto.request;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,9 +11,6 @@ public class FeedRequest {
     private Long articleId;
 
     public static FeedRequest createFeedRequest(String authorId, Long articleId) {
-        return FeedRequest.builder()
-                .authorId(authorId)
-                .articleId(articleId)
-                .build();
+        return FeedRequest.builder().authorId(authorId).articleId(articleId).build();
     }
 }
