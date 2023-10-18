@@ -17,8 +17,10 @@ import kr.co.finote.backend.src.article.domain.ArticleLike;
 import kr.co.finote.backend.src.article.dto.cache.ArticleLikeCache;
 import kr.co.finote.backend.src.article.dto.request.ArticleRequest;
 import kr.co.finote.backend.src.article.dto.request.DragArticleRequest;
+import kr.co.finote.backend.src.article.dto.request.FeedRequest;
 import kr.co.finote.backend.src.article.dto.response.*;
 import kr.co.finote.backend.src.article.repository.ArticleRepository;
+import kr.co.finote.backend.src.common.utils.SqsSender;
 import kr.co.finote.backend.src.user.domain.Category;
 import kr.co.finote.backend.src.user.domain.User;
 import kr.co.finote.backend.src.user.service.UserService;
@@ -52,6 +54,7 @@ public class ArticleService {
     private final ArticleLikeService articleLikeService;
     private final ArticleViewCacheService articleViewCacheService;
     private final KeywordService keywordService;
+    private final SqsSender sqsSender;
 
     @Transactional
     public PostArticleResponse save(ArticleRequest articleRequest, User loginUser)
@@ -66,6 +69,10 @@ public class ArticleService {
 
         // ES 저장로직은 별도 ES 서비스로 분리
         articleEsService.save(articleRequest, loginUser, saveArticle.getId());
+
+        //Message Queue에 데이터 추가
+        sqsSender.sendMessage(FeedRequest.createFeedRequest(loginUser.getId(), saveArticle.getId()));
+
         return PostArticleResponse.of(saveArticle);
     }
 
