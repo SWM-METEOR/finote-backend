@@ -114,4 +114,8 @@ cloud:
       secret-key: ${S3_SECRET_KEY}
     stack:
       auto: false
+    sqs:
+      queue:
+        name: ${QUEUE_NAME}
+        url: ${QUEUE_URL}
 
