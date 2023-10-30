@@ -1,11 +1,12 @@
 package kr.co.finote.backend.global.exception;
 
 import kr.co.finote.backend.global.code.ResponseCode;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+@AllArgsConstructor
 @Getter
-public class InvalidInputException extends CustomException {
-    public InvalidInputException(ResponseCode responseCode) {
-        super(responseCode);
-    }
+public class InvalidInputException extends RuntimeException {
+
+    private final ResponseCode responseCode;
 }

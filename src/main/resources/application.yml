@@ -127,3 +127,13 @@ cloud:
         name: ${QUEUE_NAME}
         url: ${QUEUE_URL}
 
+#sentry
+sentry:
+  dsn: ${SENTRY_DSN}
+  logging:
+    minimum-event-level: error
+    minimum-breadcrumb-level: error
+  # Set traces-sample-rate to 1.0 to capture 100% of transactions for performance monitoring.
+  # We recommend adjusting this value in production.
+  sentry.traces-sample-rate: 1.0
+  exception-resolver-order: -2147483647   # @ExceptionHandler에서 처리되는 예외들도 전송 가능
