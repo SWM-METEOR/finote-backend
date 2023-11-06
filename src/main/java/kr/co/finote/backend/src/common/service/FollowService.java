@@ -126,6 +126,11 @@ public class FollowService {
         return FollowerCheckResponse.createFollowerCheckResponse(isFollowed);
     }
 
+    public List<FollowInfo> followersByAuthorId(String authorId) {
+        User author = userService.findById(authorId);
+        return followInfoRepository.findAllWithToUser(author);
+    }
+
     private List<FollowUserResponse> FollowerUserList(List<FollowInfo> followInfos) {
         return followInfos.stream()
                 .map(followInfo -> FollowUserResponse.of(followInfo.getFromUser()))
