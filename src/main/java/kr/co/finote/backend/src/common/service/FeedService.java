@@ -3,6 +3,7 @@ package kr.co.finote.backend.src.common.service;
 import com.amazonaws.services.sqs.model.SendMessageResult;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 import kr.co.finote.backend.src.article.dto.request.FeedRequest;
 import kr.co.finote.backend.src.common.domain.FollowInfo;
 import kr.co.finote.backend.src.common.utils.SqsSender;
@@ -14,8 +15,6 @@ import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
