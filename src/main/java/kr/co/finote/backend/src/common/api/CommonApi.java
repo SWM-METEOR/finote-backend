@@ -8,6 +8,7 @@ import kr.co.finote.backend.src.article.dto.response.ArticlePreviewListResponse;
 import kr.co.finote.backend.src.article.service.ArticleService;
 import kr.co.finote.backend.src.common.dto.request.FileUploadRequest;
 import kr.co.finote.backend.src.common.dto.response.*;
+import kr.co.finote.backend.src.common.service.FeedService;
 import kr.co.finote.backend.src.common.service.FollowService;
 import kr.co.finote.backend.src.common.service.S3Service;
 import kr.co.finote.backend.src.user.domain.User;
@@ -26,6 +27,7 @@ public class CommonApi {
     FollowService followService;
     ArticleService articleService;
     S3Service s3Service;
+    FeedService feedService;
 
     @Operation(summary = "유저 팔로우", description = "팔로우 할 유저의 닉네임을 Path-variable로 전달")
     @PostMapping("/follow/{nickname}")
@@ -89,5 +91,11 @@ public class CommonApi {
     public FollowerCheckResponse checkFollow(
             @LoginOptional User loginUser, @PathVariable String nickname) {
         return followService.checkFollow(loginUser, nickname);
+    }
+
+    @Operation(summary = "유저 별 피드 조회")
+    @GetMapping("/feeds")
+    public FeedListResponse feeds(@Login User loginUser) {
+        return feedService.feeds(loginUser);
     }
 }

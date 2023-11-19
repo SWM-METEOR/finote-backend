@@ -92,7 +92,7 @@ public class ArticleService {
         return ArticleResponse.of(article);
     }
 
-    private Article findById(Long articleId) {
+    public Article findById(Long articleId) {
         return articleRepository
                 .findByIdAndIsDeleted(articleId, false)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
