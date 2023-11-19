@@ -1,13 +1,12 @@
 package kr.co.finote.backend.src.common.dto.response;
 
+import java.time.format.DateTimeFormatter;
 import kr.co.finote.backend.src.article.domain.Article;
 import kr.co.finote.backend.src.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.format.DateTimeFormatter;
 
 @Getter
 @Builder

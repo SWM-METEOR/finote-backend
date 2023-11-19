@@ -3,17 +3,14 @@ package kr.co.finote.backend.src.common.service;
 import com.amazonaws.services.sqs.model.SendMessageResult;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
 import kr.co.finote.backend.global.code.ResponseCode;
 import kr.co.finote.backend.global.exception.NotFoundException;
 import kr.co.finote.backend.src.article.domain.Article;
 import kr.co.finote.backend.src.article.dto.request.FeedRequest;
 import kr.co.finote.backend.src.article.repository.ArticleRepository;
-import kr.co.finote.backend.src.article.service.ArticleService;
 import kr.co.finote.backend.src.common.domain.FollowInfo;
 import kr.co.finote.backend.src.common.dto.response.FeedListResponse;
 import kr.co.finote.backend.src.common.dto.response.FeedResponse;
@@ -68,7 +65,8 @@ public class FeedService {
         String redisKey = user.getId() + FEED_SUFFIX;
 
         ListOperations<String, Object> listOps = getListOps();
-        List<Object> articleIds = Objects.requireNonNull(listOps.range(redisKey, FEED_OFFSET_START, FEED_OFFSET_END));
+        List<Object> articleIds =
+                Objects.requireNonNull(listOps.range(redisKey, FEED_OFFSET_START, FEED_OFFSET_END));
 
         List<FeedResponse> lists = new ArrayList<>();
 
@@ -86,7 +84,8 @@ public class FeedService {
     }
 
     private Article findByArticleId(Long id) {
-        return articleRepository.findByIdAndIsDeleted(id, false)
-                .orElseThrow(()-> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
+        return articleRepository
+                .findByIdAndIsDeleted(id, false)
+                .orElseThrow(() -> new NotFoundException(ResponseCode.ARTICLE_NOT_FOUND));
     }
 }
