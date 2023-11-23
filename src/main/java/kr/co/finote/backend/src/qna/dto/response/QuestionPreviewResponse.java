@@ -1,6 +1,7 @@
 package kr.co.finote.backend.src.qna.dto.response;
 
 import java.time.format.DateTimeFormatter;
+import kr.co.finote.backend.global.utils.StringUtils;
 import kr.co.finote.backend.src.qna.document.QuestionDocument;
 import kr.co.finote.backend.src.qna.domain.Question;
 import lombok.AllArgsConstructor;
@@ -20,6 +21,7 @@ public class QuestionPreviewResponse {
     private String authorNickname;
     private String profileImageUrl;
     private String createdDate;
+    private String contents;
 
     private int totalAnswer;
 
@@ -30,6 +32,7 @@ public class QuestionPreviewResponse {
                 .authorNickname(question.getUser().getNickname())
                 .profileImageUrl(question.getUser().getProfileImageUrl())
                 .createdDate(question.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
+                .contents(StringUtils.markdownToPreviewText(question.getBody()))
                 .totalAnswer(question.getTotalAnswer())
                 .build();
     }
